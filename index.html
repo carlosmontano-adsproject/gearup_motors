@@ -3550,12 +3550,52 @@ function initTach() {
   render(IDLE);
 }
 
+function initHeroParallax() {
+  const hero = document.querySelector('.hero');
+  const media = document.querySelector('.hero-media');
+  if (!hero || !media) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const fine = window.matchMedia('(pointer: fine)').matches;
+  let mx = 0, my = 0, sy = 0, raf = null, armed = false;
+
+  function apply() {
+    raf = null;
+    if (!armed) return;
+    const tx = (mx * 16).toFixed(1);
+    const ty = (my * 16 + sy * 0.08).toFixed(1);
+    const rx = (-my * 4).toFixed(2);
+    const ry = (mx * 5).toFixed(2);
+    media.style.transform = 'perspective(900px) translate3d(' + tx + 'px,' + ty + 'px,0) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg)';
+  }
+  function schedule() { if (!raf) raf = requestAnimationFrame(apply); }
+
+  if (fine) {
+    hero.addEventListener('pointermove', (e) => {
+      const r = hero.getBoundingClientRect();
+      mx = ((e.clientX - r.left) / r.width - 0.5) * 2;
+      my = ((e.clientY - r.top) / r.height - 0.5) * 2;
+      schedule();
+    });
+    hero.addEventListener('pointerleave', () => { mx = 0; my = 0; schedule(); });
+  }
+  window.addEventListener('scroll', () => { sy = Math.min(window.scrollY, 600); schedule(); }, { passive: true });
+
+  // Arma el parallax después de la animación de entrada para no chocar con ella
+  setTimeout(() => {
+    armed = true;
+    media.style.willChange = 'transform';
+    media.style.transition = 'transform 0.14s ease-out';
+    apply();
+  }, 1400);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   renderMotos();
   renderMarketplace();
   populateFinancingMotos();
   bindFilters();
   initTach();
+  initHeroParallax();
 
   const nav = document.querySelector('.nav');
   if (nav) {
