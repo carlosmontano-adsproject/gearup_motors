@@ -135,8 +135,6 @@
   .modal-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:26px;max-width:520px;width:100%}
   .modal-card h3{font-family:var(--display);font-size:24px;letter-spacing:1px;margin-bottom:10px}
   .modal-card p{color:var(--muted);font-size:13.5px;margin-bottom:10px}
-  .modal-card ol{color:var(--muted);font-size:13px;margin:0 0 14px 18px} .modal-card ol li{margin-bottom:5px}
-  .modal-card input{width:100%;padding:11px 13px;border-radius:9px;border:1px solid var(--line);background:var(--panel2);color:var(--white);margin-bottom:12px}
   .pub-log{font-size:12.5px;color:var(--muted);margin-top:10px;max-height:160px;overflow:auto;white-space:pre-wrap}
 </style>
 </head>
@@ -159,7 +157,7 @@
     <img src="img/logolight.png" alt="GEAR UP" />
     <span class="title">Administración</span>
     <span class="grow"></span>
-    <button class="btn small" id="btnToken">🔑 Conexión</button>
+    <button class="btn small" id="btnLogout">Salir</button>
     <button class="btn primary" id="btnPublish">⬆ Publicar cambios</button>
   </header>
 
@@ -198,31 +196,11 @@
   </div>
 </aside>
 
-<!-- ===== TOKEN MODAL ===== -->
-<div class="modal" id="tokenModal">
-  <div class="modal-card">
-    <h3>Conexión con GitHub</h3>
-    <p>Para que el panel publique cambios necesita un <b>token</b> de GitHub (se guarda solo en este navegador).</p>
-    <ol>
-      <li>Entra a github.com → Settings → Developer settings → <b>Personal access tokens → Fine-grained tokens</b>.</li>
-      <li>Generate new token → acceso solo al repo <b>gearup_motors</b> → permiso <b>Contents: Read and write</b>.</li>
-      <li>Copia el token (empieza con <code>github_pat_…</code>) y pégalo aquí abajo.</li>
-    </ol>
-    <input type="password" id="tokenInput" placeholder="github_pat_… o ghp_…" />
-    <div class="drawer-foot" style="border:none;padding:0">
-      <button class="btn" id="tokenCancel">Cancelar</button>
-      <button class="btn danger" id="tokenClear">Borrar token</button>
-      <button class="btn primary" id="tokenSave">Guardar</button>
-    </div>
-    <div class="pub-log" id="tokenStatus"></div>
-  </div>
-</div>
-
 <!-- ===== PUBLISH MODAL ===== -->
 <div class="modal" id="pubModal">
   <div class="modal-card">
     <h3>Publicando…</h3>
-    <p>Subiendo archivos y actualizando el inventario. No cierres esta ventana.</p>
+    <p>Guardando los cambios en el servidor. No cierres esta ventana.</p>
     <div class="pub-log" id="pubLog"></div>
     <div class="drawer-foot" style="border:none;padding:0">
       <button class="btn" id="pubClose" disabled>Cerrar</button>
@@ -234,10 +212,6 @@
 
 <script>
 /* ===================== CONFIG ===================== */
-const OWNER='carlosmontano-adsproject', REPO='gearup_motors', BRANCH='main';
-const DATA_PATH='data/inventario.json';
-const RAW_URL=`https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${DATA_PATH}`;
-const PASSWORD='Adsproject2026';
 const TYPES=['Adventure','Naked','Sport','Scrambler','Cruiser','Enduro','Touring'];
 const FACTURAS=['Original','Carta factura','Factura de agencia'];
 const PROCEDENCIAS=['Nacional','Importado'];
@@ -245,48 +219,46 @@ const MP_CATS=['Cascos','Equipo','Touring','Seguridad','Electrónica','Vehículo
 
 /* ===================== STATE ===================== */
 let data={motos:[],marketplace:[]};
-let dataSha=null;
 let tab='motos';
 let editing=null;           // {type:'moto'|'mp', index:number|null, item:{}}
-const uploads={};           // path -> {b64, dataUrl}  (pendientes de subir)
 let dirty=false;
 
 /* ===================== UTILES ===================== */
 const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const fmt=n=>'$'+Number(n||0).toLocaleString('es-MX');
-const token=()=>localStorage.getItem('gearup-gh-token')||'';
-function toast(msg,kind){const t=$('toast');t.textContent=msg;t.className=(kind||'')+' show';setTimeout(()=>t.className=t.className.replace('show',''),3200);}
-function b64Unicode(str){return btoa(unescape(encodeURIComponent(str)));}
+function toast(msg,kind){const t=$('toast');t.textContent=msg;t.className=(kind||'')+' show';setTimeout(()=>t.className=t.className.replace('show',''),3500);}
 function monthlyEstimate(price){const p=price*0.9,r=0.16/12,n=36;const pay=p*(r*Math.pow(1+r,n))/(Math.pow(1+r,n)-1);return Math.round(pay/100)*100;}
 function slugify(s){return String(s||'item').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40);}
 
-/* ===================== GITHUB API ===================== */
-function ghHeaders(){return{'Authorization':'Bearer '+token(),'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};}
-async function ghGetFile(path){
-  const r=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}?ref=${BRANCH}`,{headers:ghHeaders(),cache:'no-store'});
-  if(r.status===404)return null;
-  if(!r.ok)throw new Error('GitHub '+r.status+': '+(await r.text()).slice(0,140));
-  return await r.json();
+/* ===================== BACKEND (PHP) ===================== */
+const PANEL_HEADERS={'X-Gearup-Panel':'1'};
+async function apiLogin(password){
+  const r=await fetch('api.php?action=login',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({password})});
+  return r.ok;
 }
-async function ghPutFile(path,b64,message,sha){
-  const body={message,content:b64,branch:BRANCH};
-  if(sha)body.sha=sha;
-  const r=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}`,{method:'PUT',headers:ghHeaders(),body:JSON.stringify(body)});
-  if(!r.ok)throw new Error('GitHub '+r.status+': '+(await r.text()).slice(0,160));
-  return await r.json();
+async function apiCheck(){
+  try{const r=await fetch('api.php?action=check',{credentials:'same-origin',cache:'no-store'});const j=await r.json();return !!(j&&j.auth);}catch(e){return false;}
+}
+async function apiSave(payload){
+  const r=await fetch('api.php?action=save',{method:'POST',credentials:'same-origin',headers:Object.assign({'Content-Type':'application/json'},PANEL_HEADERS),body:JSON.stringify(payload)});
+  const j=await r.json().catch(()=>({ok:false,error:'Respuesta inválida del servidor'}));
+  if(!r.ok||!j.ok)throw new Error(j.error||('Error '+r.status));
+  return j;
+}
+async function uploadFile(file,kind,slug){
+  const fd=new FormData();fd.append('file',file);fd.append('kind',kind);fd.append('slug',slug||'item');
+  const r=await fetch('upload.php',{method:'POST',credentials:'same-origin',headers:PANEL_HEADERS,body:fd});
+  const j=await r.json().catch(()=>({ok:false,error:'Respuesta inválida del servidor'}));
+  if(!r.ok||!j.ok)throw new Error(j.error||('Error '+r.status));
+  return j.path;
 }
 
 /* ===================== CARGA DE DATOS ===================== */
 async function loadData(){
   try{
-    if(token()){
-      const f=await ghGetFile(DATA_PATH);
-      if(f){dataSha=f.sha;data=JSON.parse(decodeURIComponent(escape(atob(f.content.replace(/\n/g,'')))));}
-    }else{
-      const r=await fetch(RAW_URL+'?t='+Date.now(),{cache:'no-store'});
-      if(r.ok)data=await r.json();
-    }
+    const r=await fetch('data/inventario.json?t='+Date.now(),{cache:'no-store'});
+    if(r.ok)data=await r.json();
   }catch(e){toast('No se pudo cargar el inventario: '+e.message,'err');}
   data.motos=data.motos||[]; data.marketplace=data.marketplace||[];
   renderList();
@@ -306,9 +278,8 @@ function renderList(){
   }
 }
 function thumbBg(item){
-  if(item.images&&item.images[0]){const u=uploads[item.images[0]];return `style="background-image:url('${u?u.dataUrl:('../'+item.images[0]).replace('../','')}')"`;}
-  if(item.image){const u=uploads[item.image];return `style="background-image:url('${u?u.dataUrl:item.image}')"`;}
-  return '';
+  const p=(item.images&&item.images[0])||item.image;
+  return p?`style="background-image:url('${p}')"`:'';
 }
 function motoRow(m,i){
   return `<div class="row ${m.sold?'sold':''}">
@@ -387,14 +358,14 @@ function motoForm(m){
     <label class="check"><input type="checkbox" data-f="sold" ${m.sold?'checked':''}> Vendida</label>
   </div>
   <div class="section-label">Fotos</div>
-  <div class="drop" id="dropImg">Haz clic o arrastra imágenes aquí (JPG/PNG)</div>
+  <div class="drop" id="dropImg">Haz clic o arrastra imágenes aquí (JPG/PNG). Se suben al instante.</div>
   <input type="file" id="fileImg" accept="image/*" multiple hidden>
   <div class="thumbs" id="thumbsImg"></div>
   <div class="section-label">Video (opcional)</div>
   <div class="drop" id="dropVid">Haz clic para subir un video (MP4)</div>
   <input type="file" id="fileVid" accept="video/*" hidden>
   <div class="hint" id="vidName">${m.video?('Actual: '+m.video.split('/').pop()):''}</div>
-  <div class="hint warn">⚠ Videos de más de ~25 MB pueden no subir por el panel. Para esos, usa el link de Drive o compártelos comprimidos.</div>`;
+  <div class="hint warn">⚠ Los videos se suben al servidor. Si uno muy pesado falla, comprímelo o usa el link de Drive.</div>`;
 }
 function mpForm(m){
   return `
@@ -432,35 +403,34 @@ function bindForm(){
     renderMpThumbs();
   }
 }
-function fileToData(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file);});}
 async function addImages(files){
   for(const file of files){
-    const ext=(file.name.split('.').pop()||'jpg').toLowerCase();
-    const path=`img/inv/${slugify(editing.item.brand+'-'+editing.item.model)||'moto'}-${Date.now()}-${Math.floor(Math.random()*1e4)}.${ext}`;
-    const dataUrl=await fileToData(file);
-    uploads[path]={b64:dataUrl.split(',')[1],dataUrl};
-    editing.item.images=editing.item.images||[];editing.item.images.push(path);
+    try{
+      toast('Subiendo '+file.name+'…');
+      const path=await uploadFile(file,'inv',(editing.item.brand+'-'+editing.item.model)||'moto');
+      editing.item.images=editing.item.images||[];editing.item.images.push(path);
+      renderImgThumbs();updatePreview();
+    }catch(e){toast('No se pudo subir '+file.name+': '+e.message,'err');}
   }
-  renderImgThumbs();updatePreview();
 }
 async function addVideo(file){
   if(!file)return;
-  if(file.size>40*1024*1024){toast('El video pesa '+(file.size/1048576).toFixed(0)+' MB; puede fallar al publicar. Mejor usa Drive.','err');}
-  const ext=(file.name.split('.').pop()||'mp4').toLowerCase();
-  const path=`img/inv/${slugify(editing.item.brand+'-'+editing.item.model)||'moto'}-${Date.now()}.${ext}`;
-  const dataUrl=await fileToData(file);
-  uploads[path]={b64:dataUrl.split(',')[1],dataUrl};
-  editing.item.video=path;$('vidName').textContent='Nuevo: '+file.name;updatePreview();
+  try{
+    toast('Subiendo video… (puede tardar)');
+    const path=await uploadFile(file,'inv',(editing.item.brand+'-'+editing.item.model)||'moto');
+    editing.item.video=path;$('vidName').textContent='Video: '+path.split('/').pop();updatePreview();
+    toast('Video subido ✅','ok');
+  }catch(e){toast('No se pudo subir el video: '+e.message,'err');}
 }
 async function addMpImage(file){
   if(!file)return;
-  const ext=(file.name.split('.').pop()||'jpg').toLowerCase();
-  const path=`img/mp/${slugify(editing.item.name)||'producto'}-${Date.now()}.${ext}`;
-  const dataUrl=await fileToData(file);
-  uploads[path]={b64:dataUrl.split(',')[1],dataUrl};
-  editing.item.image=path;renderMpThumbs();updatePreview();
+  try{
+    toast('Subiendo imagen…');
+    const path=await uploadFile(file,'mp',editing.item.name||'producto');
+    editing.item.image=path;renderMpThumbs();updatePreview();
+  }catch(e){toast('No se pudo subir: '+e.message,'err');}
 }
-function imgSrc(p){return uploads[p]?uploads[p].dataUrl:p;}
+function imgSrc(p){return p;}
 function renderImgThumbs(){
   const host=$('thumbsImg');if(!host)return;
   host.innerHTML=(editing.item.images||[]).map((p,i)=>`<div class="t" style="background-image:url('${imgSrc(p)}')"><button onclick="delImg(${i})">✕</button></div>`).join('');
@@ -524,38 +494,18 @@ function saveLocal(){
     if(!m.name){toast('Falta el nombre','err');return;}
     if(editing.index==null)data.marketplace.push(m);else data.marketplace[editing.index]=m;
   }
-  dirty=true;closeEditor();renderList();toast('Guardado. Pulsa “Publicar cambios” para subirlo al sitio.');
+  dirty=true;closeEditor();renderList();toast('Guardado. Pulsa “Publicar cambios” para que aparezca en el sitio.');
 }
 
 /* ===================== PUBLICAR ===================== */
 async function publish(){
-  if(!token()){openTokenModal();toast('Primero conecta tu token de GitHub','err');return;}
   const log=[];const pl=$('pubLog');$('pubModal').classList.add('open');$('pubClose').disabled=true;
   const say=s=>{log.push(s);pl.textContent=log.join('\n');};
   try{
-    const pending=Object.entries(uploads);
-    say(`Archivos por subir: ${pending.length}`);
-    for(const [path,obj] of pending){
-      say('Subiendo '+path+' …');
-      await ghPutFile(path,obj.b64,'Panel: sube '+path);
-      delete uploads[path];
-    }
-    say('Actualizando inventario…');
-    data.updatedAt=new Date().toISOString();
-    const json=JSON.stringify(data,null,2);
-    try{
-      const res=await ghPutFile(DATA_PATH,b64Unicode(json),'Panel: actualiza inventario',dataSha);
-      dataSha=res.content.sha;
-    }catch(e){
-      if(String(e.message).includes('409')){ // sha desactualizado → reintenta
-        say('Conflicto de versión, reintentando…');
-        const f=await ghGetFile(DATA_PATH);dataSha=f?f.sha:null;
-        const res=await ghPutFile(DATA_PATH,b64Unicode(json),'Panel: actualiza inventario',dataSha);
-        dataSha=res.content.sha;
-      }else throw e;
-    }
+    say('Guardando inventario en el servidor…');
+    await apiSave(data);
     dirty=false;
-    say('✅ ¡Listo! El sitio se actualizará en 1–2 minutos.');
+    say('✅ ¡Listo! Los cambios ya están publicados en el sitio.');
     toast('Publicado ✅','ok');
   }catch(e){
     say('❌ Error: '+e.message);
@@ -565,27 +515,17 @@ async function publish(){
   }
 }
 
-/* ===================== TOKEN MODAL ===================== */
-function openTokenModal(){$('tokenInput').value=token();$('tokenStatus').textContent=token()?'Token guardado en este navegador.':'';$('tokenModal').classList.add('open');}
-async function saveToken(){
-  const v=$('tokenInput').value.trim();
-  if(!v){toast('Pega un token','err');return;}
-  localStorage.setItem('gearup-gh-token',v);
-  $('tokenStatus').textContent='Verificando…';
-  try{const f=await ghGetFile(DATA_PATH);$('tokenStatus').textContent='✅ Conectado correctamente.';if(f){dataSha=f.sha;data=JSON.parse(decodeURIComponent(escape(atob(f.content.replace(/\n/g,'')))));renderList();}toast('Conectado ✅','ok');}
-  catch(e){$('tokenStatus').textContent='❌ '+e.message;}
-}
-
 /* ===================== INIT ===================== */
-$('gateForm').addEventListener('submit',e=>{
-  e.preventDefault();
-  if($('gatePass').value===PASSWORD){sessionStorage.setItem('gearup-admin-ok','1');startApp();}
-  else{$('gateErr').textContent='Contraseña incorrecta';}
+$('gateForm').addEventListener('submit',async e=>{
+  e.preventDefault();$('gateErr').textContent='';
+  try{
+    if(await apiLogin($('gatePass').value)){startApp();}
+    else{$('gateErr').textContent='Contraseña incorrecta';}
+  }catch(err){$('gateErr').textContent='Error de conexión con el servidor';}
 });
-function startApp(){
-  $('gate').style.display='none';$('app').hidden=false;
-  loadData();
-}
+function startApp(){$('gate').style.display='none';$('app').hidden=false;loadData();}
+async function logout(){try{await fetch('api.php?action=logout',{credentials:'same-origin'});}catch(e){}location.reload();}
+
 function bindUI(){
   document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{tab=t.dataset.tab;document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===t));renderList();});
   $('search').oninput=renderList;
@@ -593,15 +533,12 @@ function bindUI(){
   $('btnSaveLocal').onclick=saveLocal;
   $('btnCancel').onclick=closeEditor;$('drawerClose').onclick=closeEditor;$('overlay').onclick=closeEditor;
   $('btnPublish').onclick=publish;
-  $('btnToken').onclick=openTokenModal;
-  $('tokenSave').onclick=saveToken;
-  $('tokenCancel').onclick=()=>$('tokenModal').classList.remove('open');
-  $('tokenClear').onclick=()=>{localStorage.removeItem('gearup-gh-token');$('tokenInput').value='';$('tokenStatus').textContent='Token borrado.';};
+  $('btnLogout').onclick=logout;
   $('pubClose').onclick=()=>$('pubModal').classList.remove('open');
   window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
 }
 bindUI();
-if(sessionStorage.getItem('gearup-admin-ok')==='1')startApp();
+apiCheck().then(ok=>{ if(ok) startApp(); });
 </script>
 </body>
 </html>
