@@ -443,6 +443,26 @@
     text-transform: uppercase; border-radius: 10px; padding: 13px; font-size: 14px; cursor: not-allowed;
   }
 
+  /* ===== Cursor personalizado ===== */
+  @media (hover: hover) and (pointer: fine) {
+    body.cursor-on, body.cursor-on * { cursor: none; }
+    .cursor-dot, .cursor-ring {
+      position: fixed; top: 0; left: 0; border-radius: 50%;
+      pointer-events: none; z-index: 9999; transform: translate(-50%, -50%);
+    }
+    .cursor-dot { width: 7px; height: 7px; background: var(--purple-electric); box-shadow: 0 0 10px rgba(8,77,249,0.7); }
+    .cursor-ring {
+      width: 34px; height: 34px; border: 2px solid rgba(8,77,249,0.55);
+      transition: width .2s ease, height .2s ease, border-color .2s ease, background .2s ease, opacity .2s;
+    }
+    .cursor-ring.hover { width: 56px; height: 56px; border-color: var(--purple-electric); background: rgba(8,77,249,0.10); }
+    .cursor-ring.down { width: 26px; height: 26px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cursor-dot, .cursor-ring { display: none !important; }
+    body.cursor-on, body.cursor-on * { cursor: auto !important; }
+  }
+
   /* Nav link animated underline */
   .nav-link {
     position: relative;
@@ -3637,6 +3657,32 @@ function initTach() {
   render(IDLE);
 }
 
+function initCursor() {
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const dot = document.createElement('div'); dot.className = 'cursor-dot';
+  const ring = document.createElement('div'); ring.className = 'cursor-ring';
+  document.body.appendChild(dot); document.body.appendChild(ring);
+  document.body.classList.add('cursor-on');
+  const HOV = 'a,button,input,select,textarea,label,.moto-card,.mp-card,.tach-throttle,.theme-toggle,.chip,.filter-select,[onclick]';
+  let mx = 0, my = 0, rx = 0, ry = 0, raf = null;
+  function loop() {
+    rx += (mx - rx) * 0.18; ry += (my - ry) * 0.18;
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    if (Math.abs(mx - rx) > 0.4 || Math.abs(my - ry) > 0.4) raf = requestAnimationFrame(loop); else raf = null;
+  }
+  window.addEventListener('pointermove', (e) => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left = mx + 'px'; dot.style.top = my + 'px';
+    if (e.target && e.target.closest) ring.classList.toggle('hover', !!e.target.closest(HOV));
+    if (!raf) raf = requestAnimationFrame(loop);
+  }, { passive: true });
+  window.addEventListener('pointerdown', () => ring.classList.add('down'));
+  window.addEventListener('pointerup', () => ring.classList.remove('down'));
+  document.addEventListener('mouseleave', () => { dot.style.opacity = '0'; ring.style.opacity = '0'; });
+  document.addEventListener('mouseenter', () => { dot.style.opacity = '1'; ring.style.opacity = '1'; });
+}
+
 function initHeroParallax() {
   const hero = document.querySelector('.hero');
   const media = document.querySelector('.hero-media');
@@ -3729,6 +3775,7 @@ document.addEventListener('DOMContentLoaded', () => {
   bindFilters();
   initTach();
   initHeroParallax();
+  initCursor();
   loadData().then(() => {
     renderMotos();
     renderMarketplace();
