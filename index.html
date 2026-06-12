@@ -1,0 +1,3442 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GEAR UP Motorcycles — Seminuevas con garantía. Tu próxima máquina te espera.</title>
+<meta name="description" content="Catálogo de motocicletas seminuevas certificadas. BMW, Ducati, Aprilia, KTM, Triumph, Kawasaki y más. Financiamiento, consignación y compramos tu moto al mejor precio." />
+
+<!-- Open Graph -->
+<meta property="og:title" content="GEAR UP Motorcycles — Seminuevas certificadas" />
+<meta property="og:description" content="Encuentra la moto de tus sueños. Revisión de 240 puntos, financiamiento y garantía." />
+<meta property="og:type" content="website" />
+
+<!-- Fonts: Bebas Neue (display racing) + Outfit (body) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700;800;900&family=Saira+Condensed:wght@500;700;800&display=swap" rel="stylesheet">
+
+<script>
+  // Apply theme as early as possible to avoid flash
+  (function(){
+    try {
+      var saved = localStorage.getItem('gearup-theme');
+      document.documentElement.setAttribute('data-theme', saved || 'light');
+    } catch(e) {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  })();
+</script>
+
+<style>
+  :root {
+    /* Brand palette derived from logo */
+    --purple-electric: #084DF9;
+    --purple-deep: #0637B0;
+    --purple-glow: #084DF9;
+    --blue-cobalt: #2E5BFF;
+    --blue-electric: #4F7CFF;
+    --black: #0A0A0B;
+    --carbon: #131316;
+    --graphite: #1C1C20;
+    --steel: #26262C;
+    --ash: #3F3F46;
+    --silver: #A1A1AA;
+    --fog: #D4D4D8;
+    --white: #FFFFFF;
+    --warning: #FBBF24;
+    --success: #10B981;
+    --danger: #EF4444;
+    /* Type */
+    --font-display: 'Bebas Neue', 'Saira Condensed', Impact, sans-serif;
+    --font-condensed: 'Saira Condensed', 'Bebas Neue', sans-serif;
+    --font-body: 'Outfit', system-ui, sans-serif;
+    /* Layout */
+    --container: 1280px;
+    --radius-sm: 6px;
+    --radius: 12px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+    /* Shadows */
+    --shadow-glow: 0 0 40px rgba(8, 77, 249, 0.35);
+    --shadow-card: 0 10px 40px rgba(0, 0, 0, 0.4);
+    --shadow-card-hover: 0 20px 60px rgba(8, 77, 249, 0.25);
+
+    /* Border tokens (light/dark agnostic via theme override) */
+    --border-soft: rgba(255,255,255,0.06);
+    --border-mid:  rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.12);
+    --overlay-hover: rgba(255,255,255,0.06);
+    --overlay-subtle: rgba(255,255,255,0.03);
+  }
+
+  /* ============ LIGHT THEME ============ */
+  [data-theme="light"] {
+    --black: #FFFFFF;
+    --carbon: #F7F7F8;
+    --graphite: #F1F1F4;
+    --steel: #E4E4E7;
+    --ash: #D4D4D8;
+    --silver: #6B6B72;
+    --fog: #2A2A2D;
+    --white: #0A0A0B;
+
+    --shadow-glow: 0 0 40px rgba(8, 77, 249, 0.18);
+    --shadow-card: 0 10px 30px rgba(15, 23, 42, 0.08);
+    --shadow-card-hover: 0 18px 48px rgba(8, 77, 249, 0.18);
+
+    --border-soft: rgba(8, 18, 50, 0.07);
+    --border-mid:  rgba(8, 18, 50, 0.10);
+    --border-strong: rgba(8, 18, 50, 0.15);
+    --overlay-hover: rgba(8, 18, 50, 0.05);
+    --overlay-subtle: rgba(8, 18, 50, 0.025);
+  }
+
+  /* === Light: surface-level overrides === */
+  [data-theme="light"] body { background: #FFFFFF; }
+  [data-theme="light"] .nav {
+    background: rgba(255, 255, 255, 0.85);
+    border-bottom-color: var(--border-soft);
+  }
+  [data-theme="light"] .nav.scrolled {
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 6px 24px rgba(8, 18, 50, 0.08);
+  }
+  [data-theme="light"] .hero {
+    background:
+      radial-gradient(ellipse at 20% 30%, rgba(8, 77, 249, 0.10), transparent 55%),
+      radial-gradient(ellipse at 80% 70%, rgba(46, 91, 255, 0.08), transparent 55%),
+      linear-gradient(180deg, #FFFFFF 0%, #F4F6FB 100%);
+  }
+  [data-theme="light"] .hero::before {
+    background-image:
+      linear-gradient(rgba(8, 18, 50, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(8, 18, 50, 0.05) 1px, transparent 1px);
+  }
+  [data-theme="light"] .hero-media {
+    background: linear-gradient(135deg, rgba(8,77,249,0.10), rgba(46,91,255,0.04)), #F1F1F4;
+    border-color: var(--border-mid);
+    box-shadow: 0 22px 50px rgba(8, 77, 249, 0.18), 0 0 0 1px rgba(8,18,50,0.04) inset;
+  }
+  [data-theme="light"] .hero-media-tag {
+    background: rgba(255,255,255,0.85);
+    border-color: var(--border-mid);
+    color: #0A0A0B;
+  }
+
+  /* Borders that were rgba(255,255,255,X) — switched via tokens */
+  [data-theme="light"] .search-bar,
+  [data-theme="light"] .search-field select,
+  [data-theme="light"] .filters,
+  [data-theme="light"] .filter-select,
+  [data-theme="light"] .filter-input,
+  [data-theme="light"] .chip,
+  [data-theme="light"] .service-card,
+  [data-theme="light"] .partner-badge,
+  [data-theme="light"] .fin-stats,
+  [data-theme="light"] .fin-scheme,
+  [data-theme="light"] .financing-form,
+  [data-theme="light"] .form-field input,
+  [data-theme="light"] .form-field select,
+  [data-theme="light"] .file-drop,
+  [data-theme="light"] .marketplace-card,
+  [data-theme="light"] .mp-card,
+  [data-theme="light"] .moto-card,
+  [data-theme="light"] .service-btn,
+  [data-theme="light"] .trust,
+  [data-theme="light"] .perks,
+  [data-theme="light"] .perk,
+  [data-theme="light"] .results-bar,
+  [data-theme="light"] .sort-select,
+  [data-theme="light"] .lb-nav,
+  [data-theme="light"] .cta-btn-secondary,
+  [data-theme="light"] .form-submit {
+    border-color: var(--border-mid);
+  }
+  [data-theme="light"] .nav-link:hover { background: var(--overlay-hover); }
+  [data-theme="light"] .search-field:hover { background: var(--overlay-subtle); }
+
+  /* Service / accent buttons keep white text on blue gradient */
+  [data-theme="light"] .search-submit,
+  [data-theme="light"] .form-submit,
+  [data-theme="light"] .cta-btn-primary,
+  [data-theme="light"] .moto-cta,
+  [data-theme="light"] .service-icon svg,
+  [data-theme="light"] .service-card.featured::before,
+  [data-theme="light"] .service-card.featured .service-btn,
+  [data-theme="light"] .chip.active,
+  [data-theme="light"] .whatsapp-float,
+  [data-theme="light"] .nav-cta {
+    color: #FFFFFF !important;
+  }
+  [data-theme="light"] .service-btn:hover {
+    background: #0A0A0B;
+    color: #FFFFFF;
+    border-color: #0A0A0B;
+  }
+  [data-theme="light"] .cta-btn-secondary:hover {
+    background: var(--overlay-hover);
+    border-color: #0A0A0B;
+    color: #0A0A0B;
+  }
+
+  /* Featured service card lighter accent bg */
+  [data-theme="light"] .service-card.featured {
+    background: linear-gradient(135deg, rgba(8,77,249,0.08), rgba(46,91,255,0.03)), #FFFFFF;
+    border-color: rgba(8, 77, 249, 0.32);
+  }
+
+  /* Select arrows — darker SVG for visibility on white */
+  [data-theme="light"] .search-field select,
+  [data-theme="light"] .filter-select,
+  [data-theme="light"] .form-field select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2352525B' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  }
+  [data-theme="light"] .search-field select option,
+  [data-theme="light"] .filter-select option,
+  [data-theme="light"] .form-field select option { background: #FFFFFF; color: #0A0A0B; }
+
+  /* Hero h1 stroke variant (if used) */
+  [data-theme="light"] .hero h1 .stroke { -webkit-text-stroke-color: #0A0A0B; }
+
+  /* Footer */
+  [data-theme="light"] footer { background: #F4F4F6; }
+  [data-theme="light"] .footer-bottom { border-top-color: var(--border-mid); }
+  [data-theme="light"] .footer-social a {
+    background: #FFFFFF;
+    border: 1px solid var(--border-mid);
+    color: #0A0A0B;
+  }
+  [data-theme="light"] .footer-social a:hover { color: var(--purple-glow); border-color: var(--purple-glow); }
+
+  /* Fin-note: soften blue tint */
+  [data-theme="light"] .fin-note {
+    background: rgba(8, 77, 249, 0.06);
+    border-color: rgba(8, 77, 249, 0.22);
+  }
+
+  /* Featured popular badge: darker shadow */
+  [data-theme="light"] .service-card.featured::before {
+    box-shadow: 0 6px 18px rgba(8, 77, 249, 0.30);
+  }
+
+  /* Smooth theme transition */
+  body, .nav, .service-card, .moto-card, .filters, .search-bar,
+  .partner-badge, .fin-stats, .financing-form, .fin-scheme, .fin-note,
+  footer, .trust, .hero, .hero-media, .marketplace-card, .mp-card {
+    transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  /* ============ SUBTLE ANIMATIONS ============ */
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes float-in-right {
+    from { opacity: 0; transform: translateX(28px) scale(0.98); }
+    to   { opacity: 1; transform: translateX(0) scale(1); }
+  }
+  @keyframes hero-media-float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-8px); }
+  }
+
+  /* Hero entrance — staggered */
+  .hero-badge      { animation: fade-up 0.7s 0.05s ease-out backwards; }
+  .hero-content h1 { animation: fade-up 0.8s 0.15s ease-out backwards; }
+  .hero-lead       { animation: fade-up 0.8s 0.30s ease-out backwards; }
+  .search-bar      { animation: fade-up 0.8s 0.45s ease-out backwards; }
+  .hero-stats      { animation: fade-up 0.8s 0.60s ease-out backwards; }
+  .hero-media      { animation: float-in-right 1.0s 0.25s ease-out backwards; }
+  .hero-media video {
+    animation: hero-media-float 7s ease-in-out 1.5s infinite;
+  }
+
+  /* Reveal-on-scroll pattern */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+    will-change: opacity, transform;
+  }
+  .reveal.in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  /* Stagger children of a grid that has .reveal-stagger */
+  .reveal-stagger > * {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  .reveal-stagger.in > *      { opacity: 1; transform: translateY(0); }
+  .reveal-stagger.in > *:nth-child(1) { transition-delay: 0.05s; }
+  .reveal-stagger.in > *:nth-child(2) { transition-delay: 0.15s; }
+  .reveal-stagger.in > *:nth-child(3) { transition-delay: 0.25s; }
+  .reveal-stagger.in > *:nth-child(4) { transition-delay: 0.35s; }
+  .reveal-stagger.in > *:nth-child(5) { transition-delay: 0.45s; }
+  .reveal-stagger.in > *:nth-child(6) { transition-delay: 0.55s; }
+
+  /* Nav link animated underline */
+  .nav-link {
+    position: relative;
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 4px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--purple-electric), var(--blue-electric));
+    border-radius: 2px;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.3s ease;
+  }
+  .nav-link:hover::after { transform: scaleX(1); }
+
+  /* Logo subtle hover */
+  .logo { transition: transform 0.3s ease; }
+  .logo:hover { transform: scale(1.03); }
+
+  /* Card lift refinement */
+  .moto-card, .marketplace-card, .mp-card {
+    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+                box-shadow 0.35s ease,
+                border-color 0.25s ease;
+  }
+
+  /* Buttons get a subtle shine on hover */
+  .search-submit, .form-submit, .cta-btn-primary, .service-btn, .moto-cta {
+    position: relative;
+    overflow: hidden;
+  }
+  .search-submit::after, .form-submit::after, .cta-btn-primary::after,
+  .service-btn::after, .moto-cta::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.6s ease;
+    pointer-events: none;
+  }
+  .search-submit:hover::after, .form-submit:hover::after,
+  .cta-btn-primary:hover::after, .service-btn:hover::after,
+  .moto-cta:hover::after { left: 125%; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-badge, .hero-content h1, .hero-lead, .search-bar, .hero-stats,
+    .hero-media, .hero-media video, .reveal, .reveal-stagger > * {
+      animation: none !important;
+      transition: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  }
+
+  /* Theme toggle button */
+  .theme-toggle {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    border: 1px solid var(--border-mid);
+    background: transparent;
+    color: var(--white);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    animation: theme-toggle-breathe 2.6s ease-in-out infinite;
+  }
+  .theme-toggle::before,
+  .theme-toggle::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 999px;
+    border: 2px solid #084DF9;
+    pointer-events: none;
+    animation: theme-toggle-ping 2.6s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+  .theme-toggle::after { animation-delay: 1.3s; }
+  .theme-toggle:hover {
+    background: var(--overlay-hover);
+    border-color: var(--purple-glow);
+    color: var(--purple-glow);
+    animation: none;
+  }
+  .theme-toggle:hover::before,
+  .theme-toggle:hover::after { opacity: 0; }
+  .theme-toggle.seen {
+    animation: none;
+  }
+  .theme-toggle.seen::before,
+  .theme-toggle.seen::after { display: none; }
+  .theme-toggle svg { width: 18px; height: 18px; position: relative; z-index: 1; }
+  .theme-toggle .icon-sun { display: none; }
+  .theme-toggle .icon-moon { display: block; }
+  [data-theme="light"] .theme-toggle .icon-sun { display: block; }
+  [data-theme="light"] .theme-toggle .icon-moon { display: none; }
+  @keyframes theme-toggle-breathe {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(8, 77, 249, 0); }
+    50%      { box-shadow: 0 0 14px 1px rgba(8, 77, 249, 0.35); }
+  }
+  @keyframes theme-toggle-ping {
+    0%   { transform: scale(0.95); opacity: 0.7; }
+    80%  { transform: scale(1.55); opacity: 0; }
+    100% { transform: scale(1.55); opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .theme-toggle,
+    .theme-toggle::before,
+    .theme-toggle::after { animation: none; }
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    background: var(--black);
+    color: var(--white);
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+  .container {
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ============ NAV ============ */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10, 10, 11, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    transition: background 0.25s ease;
+  }
+  .nav.scrolled {
+    background: rgba(10, 10, 11, 0.95);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+  }
+  .nav .logo-mark {
+    transition: width 0.25s ease, height 0.25s ease;
+  }
+  .nav.scrolled .logo-mark {
+    width: 60px;
+    height: 60px;
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    max-width: var(--container);
+    margin: 0 auto;
+    gap: 32px;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    text-decoration: none;
+  }
+  .logo-mark {
+    width: 150px;
+    height: 150px;
+    flex-shrink: 0;
+    display: block;
+  }
+  .logo-mark img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  .logo-mark .logo-light { display: none; }
+  [data-theme="light"] .logo-mark .logo-dark { display: none; }
+  [data-theme="light"] .logo-mark .logo-light { display: block; }
+  .logo-wordmark {
+    display: none; /* logo image already includes wordmark */
+  }
+  /* In footer, allow larger logo without wordmark */
+  .footer-brand .logo-mark {
+    width: 180px;
+    height: 180px;
+    margin-bottom: 12px;
+  }
+  .nav-links {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+  .nav-link {
+    padding: 10px 16px;
+    font-weight: 500;
+    font-size: 14.5px;
+    color: var(--fog);
+    border-radius: 8px;
+    transition: all 0.2s;
+    letter-spacing: 0.2px;
+  }
+  .nav-link:hover { background: rgba(255, 255, 255, 0.06); color: var(--white); }
+  .nav-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: #25D366;
+    color: var(--white);
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s;
+  }
+  .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4); }
+  .nav-cta svg { width: 18px; height: 18px; }
+  .menu-toggle { display: none; padding: 8px; }
+  .menu-toggle svg { width: 28px; height: 28px; }
+
+  @media (max-width: 980px) {
+    .nav-links { display: none; }
+    .nav-links.open {
+      display: flex;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      align-items: stretch;
+      background: var(--carbon);
+      padding: 16px;
+      gap: 4px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .menu-toggle { display: block; }
+    .nav-cta-desktop { display: none; }
+  }
+
+  /* ============ HERO ============ */
+  .hero {
+    position: relative;
+    padding: 80px 0 60px;
+    background:
+      radial-gradient(ellipse at 20% 30%, rgba(8, 77, 249, 0.25), transparent 50%),
+      radial-gradient(ellipse at 80% 70%, rgba(46, 91, 255, 0.2), transparent 50%),
+      linear-gradient(180deg, var(--black) 0%, var(--carbon) 100%);
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+    pointer-events: none;
+  }
+  .hero-inner { position: relative; z-index: 1; }
+  .hero-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: 56px;
+    align-items: center;
+    margin-bottom: 48px;
+  }
+  .hero-content { min-width: 0; }
+  .hero-media {
+    position: relative;
+    border-radius: 22px;
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+    background: linear-gradient(135deg, rgba(8,77,249,0.18), rgba(46,91,255,0.08)), var(--carbon);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow:
+      0 30px 70px rgba(8, 77, 249, 0.28),
+      0 0 0 1px rgba(255,255,255,0.04) inset;
+  }
+  .hero-media::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    padding: 2px;
+    background: linear-gradient(135deg, rgba(8,77,249,0.55), transparent 45%, rgba(46,91,255,0.4));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .hero-media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 110%, rgba(8,77,249,0.35), transparent 60%);
+    pointer-events: none;
+    z-index: 1;
+  }
+  .hero-media video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .hero-media-tag {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+  .hero-media-tag::before {
+    content: '';
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #ff3b3b;
+    box-shadow: 0 0 10px #ff3b3b;
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+  @media (max-width: 980px) {
+    .hero-layout {
+      grid-template-columns: 1fr;
+      gap: 36px;
+    }
+    .hero-media {
+      max-width: 480px;
+      margin: 0 auto;
+      aspect-ratio: 16 / 10;
+      width: 100%;
+    }
+  }
+  @media (max-width: 560px) {
+    .hero-media { aspect-ratio: 4 / 3; border-radius: 16px; }
+    .hero-media-tag { font-size: 10px; padding: 5px 10px; }
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    background: rgba(8, 77, 249, 0.15);
+    border: 1px solid rgba(8, 77, 249, 0.4);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--purple-glow);
+    margin-bottom: 24px;
+  }
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--purple-glow);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--purple-glow);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(48px, 8vw, 104px);
+    line-height: 0.92;
+    letter-spacing: 1px;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+  }
+  .hero h1 .accent {
+    background: linear-gradient(135deg, var(--purple-glow) 0%, var(--blue-electric) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero h1 .stroke {
+    -webkit-text-stroke: 1.5px var(--white);
+    color: transparent;
+  }
+  .hero-lead {
+    font-size: clamp(16px, 1.6vw, 19px);
+    color: var(--fog);
+    max-width: 620px;
+    margin-bottom: 40px;
+    font-weight: 400;
+  }
+  .hero-lead strong { color: var(--white); font-weight: 600; }
+
+  /* Search bar */
+  .search-bar {
+    background: var(--carbon);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius-lg);
+    padding: 8px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    gap: 4px;
+    max-width: 980px;
+    box-shadow: var(--shadow-glow);
+  }
+  .search-field {
+    position: relative;
+    padding: 14px 18px;
+    border-radius: var(--radius);
+    transition: background 0.2s;
+  }
+  .search-field:hover { background: rgba(255,255,255,0.03); }
+  .search-field label {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    color: var(--silver);
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  .search-field select, .search-field input {
+    width: 100%;
+    background: transparent;
+    color: var(--white);
+    border: none;
+    outline: none;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 0;
+    cursor: pointer;
+  }
+  .search-field select { appearance: none; -webkit-appearance: none; padding-right: 24px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23A1A1AA' d='M6 9L1 4h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0 center; }
+  .search-field select option { background: var(--carbon); color: var(--white); }
+  .search-submit {
+    background: linear-gradient(135deg, var(--purple-electric), var(--blue-cobalt));
+    color: var(--white);
+    padding: 0 28px;
+    border-radius: var(--radius);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+  }
+  .search-submit:hover { transform: translateY(-1px); box-shadow: 0 12px 32px rgba(8, 77, 249, 0.5); }
+
+  @media (max-width: 780px) {
+    .search-bar { grid-template-columns: 1fr 1fr; }
+    .search-submit { grid-column: span 2; padding: 14px; justify-content: center; }
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 48px;
+    margin-top: 48px;
+    flex-wrap: wrap;
+  }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 40px;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--white), var(--purple-glow));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .stat-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--silver);
+    margin-top: 4px;
+  }
+
+  /* ============ TRUST STRIP ============ */
+  .trust {
+    background: var(--carbon);
+    border-top: 1px solid rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding: 32px 0;
+  }
+  .trust-inner {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+  }
+  .trust-item {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .trust-icon {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(8, 77, 249, 0.12);
+    border: 1px solid rgba(8, 77, 249, 0.3);
+    display: grid;
+    place-items: center;
+    color: var(--purple-glow);
+  }
+  .trust-icon svg { width: 22px; height: 22px; }
+  .trust-title {
+    font-family: var(--font-condensed);
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: 0.3px;
+    margin-bottom: 2px;
+  }
+  .trust-desc {
+    font-size: 13px;
+    color: var(--silver);
+    line-height: 1.45;
+  }
+  @media (max-width: 880px) { .trust-inner { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .trust-inner { grid-template-columns: 1fr; } }
+
+  /* ============ SECTIONS ============ */
+  section.block { padding: 96px 0; }
+  @media (max-width: 780px) { section.block { padding: 64px 0; } }
+  .section-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 48px;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .section-eyebrow {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 700;
+    color: var(--purple-glow);
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 5vw, 64px);
+    line-height: 1;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .section-title .accent {
+    background: linear-gradient(135deg, var(--purple-glow), var(--blue-electric));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .section-sub {
+    color: var(--silver);
+    max-width: 480px;
+    font-size: 16px;
+  }
+
+  /* ============ FILTERS + INVENTORY ============ */
+  .inventory-shell { display: grid; grid-template-columns: 280px 1fr; gap: 32px; }
+  @media (max-width: 980px) { .inventory-shell { grid-template-columns: 1fr; } }
+
+  .filters {
+    background: var(--carbon);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    position: sticky;
+    top: 96px;
+    height: fit-content;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+  }
+  .filters::-webkit-scrollbar { width: 6px; }
+  .filters::-webkit-scrollbar-thumb { background: var(--ash); border-radius: 3px; }
+  .filters-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .filters-title { font-family: var(--font-condensed); font-weight: 700; font-size: 18px; letter-spacing: 0.5px; text-transform: uppercase; }
+  .filters-clear { font-size: 12px; color: var(--purple-glow); font-weight: 600; }
+  .filter-group { margin-bottom: 24px; }
+  .filter-label {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    color: var(--silver);
+    margin-bottom: 10px;
+  }
+  .filter-select, .filter-input {
+    width: 100%;
+    padding: 10px 14px;
+    background: var(--graphite);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    color: var(--white);
+    font-family: inherit;
+    font-size: 14px;
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+  }
+  .filter-select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23A1A1AA' d='M6 9L1 4h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+  .filter-select option { background: var(--graphite); }
+  .filter-range { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    padding: 7px 12px;
+    background: var(--graphite);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--fog);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .chip:hover { border-color: var(--purple-glow); color: var(--white); }
+  .chip.active {
+    background: linear-gradient(135deg, var(--purple-electric), var(--blue-cobalt));
+    border-color: transparent;
+    color: var(--white);
+  }
+
+  .results-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .results-count {
+    font-family: var(--font-condensed);
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: 0.3px;
+  }
+  .results-count span { color: var(--purple-glow); }
+  .sort-select {
+    padding: 8px 12px;
+    background: var(--carbon);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    color: var(--white);
+    font-family: inherit;
+    font-size: 13px;
+  }
+  .sort-select option { background: var(--carbon); }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .moto-card {
+    background: var(--carbon);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: all 0.25s;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .moto-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(8, 77, 249, 0.5);
+    box-shadow: var(--shadow-card-hover);
+  }
+  .moto-img {
+    aspect-ratio: 4/3;
+    position: relative;
+    overflow: hidden;
+    background: var(--graphite);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  /* Real photo mode */
+  .moto-img.has-photo {
+    background: #000;
+  }
+  .moto-img-photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    transition: transform 0.4s ease;
+  }
+  .moto-card:hover .moto-img-photo {
+    transform: scale(1.04);
+  }
+  .moto-img-photo-shade {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(180deg, rgba(0,0,0,0.0) 35%, rgba(0,0,0,0.55) 100%);
+    pointer-events: none;
+  }
+  .moto-img-gallery-count {
+    position: absolute;
+    bottom: 12px;
+    right: 14px;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    background: rgba(10,10,11,0.78);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #fff;
+    pointer-events: none;
+  }
+  .moto-img-gallery-count svg {
+    width: 12px;
+    height: 12px;
+  }
+  .moto-img-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  /* Diagonal racing stripes overlay */
+  .moto-img-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      115deg,
+      transparent 0,
+      transparent 38px,
+      rgba(255,255,255,0.04) 38px,
+      rgba(255,255,255,0.04) 40px
+    );
+    pointer-events: none;
+  }
+  /* Subtle grid */
+  .moto-img::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 28px 28px;
+    pointer-events: none;
+    z-index: 1;
+  }
+  /* Decorative radial glow */
+  .moto-img::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 60%, rgba(255,255,255,0.08), transparent 65%);
+    pointer-events: none;
+    z-index: 1;
+  }
+  .moto-hero-display {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 0 18px;
+    width: 100%;
+  }
+  .moto-hero-brand {
+    font-family: var(--font-condensed);
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 4px;
+  }
+  .moto-hero-model {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(34px, 5.2vw, 48px);
+    line-height: 0.92;
+    letter-spacing: 1.5px;
+    color: #fff;
+    text-shadow: 0 4px 28px rgba(0,0,0,0.5);
+    word-wrap: break-word;
+  }
+  .moto-hero-cc {
+    margin-top: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-condensed);
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.85);
+  }
+  .moto-hero-cc::before,
+  .moto-hero-cc::after {
+    content: '';
+    width: 18px;
+    height: 1px;
+    background: rgba(255,255,255,0.4);
+  }
+  /* Small motorcycle icon watermark, bottom-right corner */
+  .moto-icon-wm {
+    position: absolute;
+    bottom: 12px;
+    right: 14px;
+    width: 56px;
+    height: auto;
+    opacity: 0.55;
+    z-index: 2;
+    color: rgba(255,255,255,0.9);
+  }
+  .moto-brand-tag {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 3;
+    padding: 5px 10px;
+    background: rgba(10, 10, 11, 0.78);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 6px;
+    font-family: var(--font-condensed);
+    font-weight: 700;
+    font-size: 10.5px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .moto-year-tag {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 3;
+    padding: 5px 10px;
+    background: rgba(8, 77, 249, 0.92);
+    backdrop-filter: blur(8px);
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 11.5px;
+    letter-spacing: 0.5px;
+  }
+  .moto-type-tag {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    z-index: 3;
+    padding: 4px 10px;
+    background: rgba(10, 10, 11, 0.78);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--fog);
+  }
+  /* Featured ribbon */
+  .moto-featured {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    background: linear-gradient(90deg, #FFB800, #FF6B00);
+    color: #0a0a0b;
+    font-family: var(--font-condensed);
+    font-weight: 800;
+    font-size: 9.5px;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    padding: 4px 9px;
+    border-radius: 999px;
+    box-shadow: 0 4px 14px rgba(255, 107, 0, 0.35);
+  }
+
+  .moto-body {
+    padding: 18px 18px 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .moto-name {
+    font-family: var(--font-condensed);
+    font-weight: 700;
+    font-size: 19px;
+    line-height: 1.15;
+    letter-spacing: 0.2px;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+  }
+  .moto-cc {
+    color: var(--silver);
+    font-size: 13px;
+    margin-bottom: 14px;
+  }
+  .moto-specs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 10px 0;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    margin-bottom: 14px;
+  }
+  .spec-mini {
+    text-align: center;
+  }
+  .spec-mini-value {
+    font-family: var(--font-condensed);
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--white);
+    line-height: 1.1;
+  }
+  .spec-mini-label {
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--silver);
+    margin-top: 3px;
+  }
+  .moto-perks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  .perk {
+    font-size: 10.5px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .perk.fin { background: rgba(46, 91, 255, 0.15); color: var(--blue-electric); border: 1px solid rgba(46, 91, 255, 0.3); }
+  .perk.switch { background: rgba(8, 77, 249, 0.15); color: var(--purple-glow); border: 1px solid rgba(8, 77, 249, 0.3); }
+  .perk.toma { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
+  .perk.tdc { background: rgba(251, 191, 36, 0.15); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.3); }
+
+  .moto-price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: auto;
+    margin-bottom: 14px;
+  }
+  .moto-price {
+    font-family: var(--font-condensed);
+    font-weight: 800;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: 0.3px;
+  }
+  .moto-price-label {
+    font-size: 10px;
+    color: var(--silver);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 4px;
+  }
+  .moto-financing {
+    text-align: right;
+    font-size: 11.5px;
+    color: var(--fog);
+  }
+  .moto-financing strong { color: var(--purple-glow); font-weight: 700; }
+
+  .moto-cta {
+    width: 100%;
+    padding: 12px;
+    background: #25D366;
+    color: var(--white);
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 13.5px;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+  .moto-cta:hover { background: #20BA5A; transform: translateY(-1px); box-shadow: 0 8px 20px rgba(37, 211, 102, 0.35); }
+  .moto-cta svg { width: 17px; height: 17px; }
+
+  .no-results {
+    text-align: center;
+    padding: 80px 24px;
+    color: var(--silver);
+    background: var(--carbon);
+    border-radius: var(--radius-lg);
+    border: 1px dashed rgba(255,255,255,0.1);
+  }
+  .no-results h3 { font-family: var(--font-condensed); font-size: 24px; color: var(--white); margin-bottom: 8px; }
+
+  /* ============ SERVICES (VENDE TU MOTO) ============ */
+  .services-section {
+    background:
+      radial-gradient(ellipse at 80% 20%, rgba(8, 77, 249, 0.18), transparent 50%),
+      radial-gradient(ellipse at 20% 80%, rgba(46, 91, 255, 0.15), transparent 50%),
+      var(--black);
+  }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  @media (max-width: 980px) { .services-grid { grid-template-columns: 1fr; } }
+
+  .service-card {
+    padding: 36px 30px;
+    background: var(--carbon);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius-lg);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+  .service-card:hover { transform: translateY(-6px); border-color: rgba(8, 77, 249, 0.4); }
+  .service-card.featured {
+    background: linear-gradient(135deg, rgba(8, 77, 249, 0.15), rgba(46, 91, 255, 0.08)), var(--carbon);
+    border-color: rgba(8, 77, 249, 0.4);
+  }
+  .service-card.featured::before {
+    content: '★ MÁS POPULAR';
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    background: linear-gradient(135deg, var(--purple-electric), var(--blue-cobalt));
+    color: var(--white);
+    padding: 6px 14px;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 1.3px;
+    border-radius: 999px;
+    box-shadow: 0 6px 18px rgba(8, 77, 249, 0.45);
+    z-index: 2;
+  }
+  .service-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--purple-electric), var(--blue-cobalt));
+    display: grid;
+    place-items: center;
+    margin-bottom: 24px;
+    box-shadow: 0 8px 24px rgba(8, 77, 249, 0.35);
+  }
+  .service-icon svg { width: 28px; height: 28px; color: var(--white); }
+  .service-name {
+    font-family: var(--font-display);
+    font-size: 32px;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .service-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--purple-glow);
+    margin-bottom: 14px;
+  }
+  .service-desc {
+    color: var(--fog);
+    font-size: 15px;
+    line-height: 1.65;
+    margin-bottom: 24px;
+  }
+  .service-features {
+    list-style: none;
+    margin-bottom: 28px;
+  }
+  .service-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 7px 0;
+    font-size: 14px;
+    color: var(--fog);
+  }
+  .service-features li::before {
+    content: '✓';
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    background: rgba(16, 185, 129, 0.18);
+    color: var(--success);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 11px;
+    font-weight: 700;
+    margin-top: 1px;
+  }
+  .service-btn {
+    width: 100%;
+    padding: 14px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 13.5px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .service-btn:hover {
+    background: var(--white);
+    color: var(--black);
+    border-color: var(--white);
+  }
+  .service-card.featured .service-btn {
+    background: linear-gradient(135deg, var(--purple-electric), var(--blue-cobalt));
+    border-color: transparent;
+  }
+  .service-card.featured .service-btn:hover {
+    color: var(--white);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 28px rgba(8, 77, 249, 0.5);
+  }
+
+  /* ============ FINANCIAMIENTO ============ */
+  .financing-section {
+    background: var(--carbon);
+    border-top: 1px solid rgba(255,255,255,0.04);
+  }
+  .financing-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 64px;
+    align-items: start;
+  }
+  @media (max-width: 980px) { .financing-grid { grid-template-columns: 1fr; gap: 40px; } }
+
+  .financing-info h2 {
+    font-family: var(--font-display);
+    font-size: clamp(40px, 5vw, 64px);
+    line-height: 1;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .financing-partners {
+    display: flex;
+    gap: 16px;
+    margin: 28px 0;
+    flex-wrap: wrap;
+  }
+  .partner-badge {
+    padding: 14px 22px;
+    background: var(--graphite);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .partner-name {
+    font-family: var(--font-condensed);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+  }
+  .partner-tag {
+    font-size: 11px;
+    color: var(--silver);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .fin-schemes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 28px;
+  }
+  @media (max-width: 640px) { .fin-schemes { grid-template-columns: 1fr; } }
+  .fin-scheme {
+    position: relative;
+    padding: 22px 22px 20px;
+    background: linear-gradient(180deg, rgba(8,77,249,0.08), transparent 70%), var(--graphite);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .fin-scheme::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--purple-electric), var(--blue-cobalt));
+  }
+  .fin-scheme-eyebrow {
+    display: inline-block;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: var(--purple-glow);
+    margin-bottom: 8px;
+  }
+  .fin-scheme-title {
+    font-family: var(--font-condensed);
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    color: var(--white);
+  }
+  .fin-scheme-row {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 12px;
+  }
+  .fin-scheme-row > div { flex: 1; min-width: 0; }
+  .fin-scheme-num {
+    font-family: var(--font-display);
+    font-size: 28px;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--white), var(--purple-glow));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .fin-scheme-label {
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--silver);
+    margin-top: 4px;
+  }
+  .fin-scheme-desc {
+    font-size: 13px;
+    color: var(--fog);
+    line-height: 1.55;
+  }
+  .fin-note {
+    margin-top: 16px;
+    padding: 16px 18px;
+    background: rgba(8, 77, 249, 0.08);
+    border: 1px solid rgba(8, 77, 249, 0.25);
+    border-radius: var(--radius);
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--fog);
+  }
+  .fin-note strong { color: var(--white); font-weight: 600; }
+  .financing-side {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .fin-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    padding: 24px;
+    background: var(--graphite);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius-lg);
+  }
+  .fin-stat-num {
+    font-family: var(--font-display);
+    font-size: 36px;
+    line-height: 1;
+    color: var(--purple-glow);
+  }
+  .fin-stat-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--silver);
+    margin-top: 6px;
+  }
+
+  .financing-form {
+    background: var(--graphite);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius-lg);
+    padding: 36px;
+  }
+  .form-title {
+    font-family: var(--font-condensed);
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .form-sub {
+    color: var(--silver);
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .form-row.single { grid-template-columns: 1fr; }
+  @media (max-width: 540px) { .form-row { grid-template-columns: 1fr; } }
+  .form-field { display: flex; flex-direction: column; gap: 6px; }
+  .form-field label { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--silver); font-weight: 600; }
+  .form-field input, .form-field select {
+    padding: 12px 14px;
+    background: var(--carbon);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    color: var(--white);
+    font-family: inherit;
+    font-size: 14.5px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .form-field input:focus, .form-field select:focus { border-color: var(--purple-glow); }
+  .form-field select { appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23A1A1AA' d='M6 9L1 4h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+  .form-field select option { background: var(--carbon); }
+
+  .file-uploads {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 8px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 540px) { .file-uploads { grid-template-columns: 1fr; } }
+  .file-drop {
+    padding: 18px 14px;
+    background: var(--carbon);
+    border: 1.5px dashed rgba(255,255,255,0.18);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .file-drop:hover { border-color: var(--purple-glow); background: rgba(8, 77, 249, 0.05); }
+  .file-drop input { display: none; }
+  .file-drop-icon { color: var(--purple-glow); margin-bottom: 6px; }
+  .file-drop-icon svg { width: 24px; height: 24px; margin: 0 auto; }
+  .file-drop-text { font-size: 12.5px; font-weight: 600; color: var(--white); }
+  .file-drop-sub { font-size: 10.5px; color: var(--silver); margin-top: 2px; letter-spacing: 0.3px; }
+  .file-drop.has-file { border-style: solid; border-color: var(--success); }
+  .file-drop.has-file .file-drop-icon { color: var(--success); }
+
+  .form-submit {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--purple-electric), var(--blue-cobalt));
+    color: var(--white);
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-top: 12px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  .form-submit:hover { transform: translateY(-1px); box-shadow: 0 12px 32px rgba(8, 77, 249, 0.5); }
+  .form-disclaimer {
+    font-size: 11.5px;
+    color: var(--silver);
+    margin-top: 14px;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  /* ============ MARKETPLACE ============ */
+  .marketplace-section { background: var(--black); }
+  .marketplace-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 18px;
+  }
+  .mp-card {
+    background: var(--carbon);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .mp-card:hover { transform: translateY(-3px); border-color: rgba(8, 77, 249, 0.4); }
+  .mp-img {
+    aspect-ratio: 1;
+    background: var(--graphite);
+    display: grid;
+    place-items: center;
+    color: var(--purple-glow);
+    position: relative;
+    overflow: hidden;
+  }
+  .mp-img::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(8, 77, 249, 0.15), transparent 70%);
+  }
+  .mp-img svg { width: 56px; height: 56px; position: relative; z-index: 1; }
+  .mp-body { padding: 14px 16px; }
+  .mp-cat { font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--purple-glow); font-weight: 700; margin-bottom: 4px; }
+  .mp-name { font-family: var(--font-condensed); font-weight: 700; font-size: 15px; margin-bottom: 6px; line-height: 1.25; }
+  .mp-price { font-family: var(--font-condensed); font-weight: 700; font-size: 18px; color: var(--white); }
+  .mp-price small { font-size: 12px; color: var(--silver); font-weight: 400; }
+
+  /* ============ CTA FINAL ============ */
+  .cta-final {
+    padding: 100px 0;
+    background:
+      radial-gradient(ellipse at center, rgba(8, 77, 249, 0.4), transparent 60%),
+      var(--carbon);
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+  .cta-final::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  }
+  .cta-final-inner { position: relative; z-index: 1; }
+  .cta-final h2 {
+    font-family: var(--font-display);
+    font-size: clamp(48px, 8vw, 96px);
+    line-height: 0.92;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+  .cta-final h2 .accent {
+    background: linear-gradient(135deg, var(--purple-glow), var(--blue-electric));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .cta-final p {
+    color: var(--fog);
+    font-size: 18px;
+    max-width: 600px;
+    margin: 0 auto 40px;
+  }
+  .cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .cta-btn-primary {
+    padding: 16px 32px;
+    background: linear-gradient(135deg, var(--purple-electric), var(--blue-cobalt));
+    color: var(--white);
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .cta-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 16px 40px rgba(8, 77, 249, 0.5); }
+  .cta-btn-secondary {
+    padding: 16px 32px;
+    background: transparent;
+    border: 2px solid rgba(255,255,255,0.2);
+    color: var(--white);
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .cta-btn-secondary:hover { border-color: var(--white); background: rgba(255,255,255,0.05); }
+
+  /* ============ FOOTER ============ */
+  footer {
+    background: var(--black);
+    border-top: 1px solid rgba(255,255,255,0.05);
+    padding: 64px 0 32px;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 48px;
+  }
+  @media (max-width: 780px) { .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; } }
+  @media (max-width: 480px) { .footer-grid { grid-template-columns: 1fr; } }
+  .footer-brand p {
+    color: var(--silver);
+    font-size: 14px;
+    margin-top: 16px;
+    max-width: 320px;
+    line-height: 1.65;
+  }
+  .footer-col h4 {
+    font-family: var(--font-condensed);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+  .footer-col a {
+    display: block;
+    color: var(--silver);
+    font-size: 14px;
+    padding: 6px 0;
+    transition: color 0.15s;
+  }
+  .footer-col a:hover { color: var(--purple-glow); }
+  .footer-social {
+    display: flex;
+    gap: 10px;
+    margin-top: 24px;
+  }
+  .footer-social a {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: var(--carbon);
+    border: 1px solid rgba(255,255,255,0.08);
+    display: grid;
+    place-items: center;
+    transition: all 0.2s;
+    padding: 0;
+  }
+  .footer-social a:hover {
+    border-color: var(--purple-glow);
+    color: var(--purple-glow);
+    transform: translateY(-2px);
+  }
+  .footer-social svg { width: 18px; height: 18px; }
+  .footer-bottom {
+    padding-top: 32px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    color: var(--silver);
+    font-size: 13px;
+  }
+
+  /* ============ FLOATING WHATSAPP ============ */
+  .whatsapp-float {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 50;
+    width: 60px;
+    height: 60px;
+    background: #25D366;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 12px 32px rgba(37, 211, 102, 0.4);
+    color: var(--white);
+    transition: all 0.2s;
+    animation: float-pulse 3s ease-in-out infinite;
+  }
+  @keyframes float-pulse {
+    0%, 100% { transform: translateY(0); box-shadow: 0 12px 32px rgba(37, 211, 102, 0.4); }
+    50% { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(37, 211, 102, 0.6); }
+  }
+  .whatsapp-float:hover { transform: scale(1.1); }
+  .whatsapp-float svg { width: 30px; height: 30px; }
+
+  /* ============ LIGHTBOX / GALLERY ============ */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(5, 5, 8, 0.96);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .lightbox.show { display: flex; }
+  .lb-inner {
+    position: relative;
+    width: 100%;
+    max-width: 1100px;
+    height: 100%;
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .lb-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    color: #fff;
+  }
+  .lb-title {
+    font-family: var(--font-condensed);
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .lb-meta {
+    font-size: 13px;
+    color: var(--silver);
+    margin-top: 2px;
+  }
+  .lb-close {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: all 0.2s;
+  }
+  .lb-close:hover { background: rgba(255,255,255,0.15); }
+  .lb-close svg { width: 18px; height: 18px; }
+  .lb-stage {
+    flex: 1;
+    position: relative;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+  }
+  .lb-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  .lb-media {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .lb-media img, .lb-media video {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+    background: #000;
+  }
+  .lb-thumb.is-video { position: relative; }
+  .lb-thumb.is-video::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    pointer-events: none;
+  }
+  .lb-thumb.is-video::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 0; height: 0;
+    border-left: 12px solid #fff;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    z-index: 1;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.6));
+  }
+  .moto-img-video-tag {
+    position: absolute;
+    bottom: 12px;
+    left: 14px;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    background: rgba(8, 77, 249, 0.85);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    pointer-events: none;
+    letter-spacing: 0.3px;
+  }
+  .moto-img-video-tag svg { width: 12px; height: 12px; }
+  .lb-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #fff;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: all 0.2s;
+  }
+  .lb-nav:hover { background: rgba(8, 77, 249, 0.7); border-color: var(--purple-glow); }
+  .lb-nav.prev { left: 14px; }
+  .lb-nav.next { right: 14px; }
+  .lb-nav svg { width: 22px; height: 22px; }
+  .lb-thumbs {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+  .lb-thumb {
+    width: 72px;
+    height: 54px;
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    flex-shrink: 0;
+    background: #000;
+    transition: border-color 0.2s;
+  }
+  .lb-thumb.active { border-color: var(--purple-glow); }
+  .lb-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .lb-counter {
+    position: absolute;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 6px 12px;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 999px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .lb-cta {
+    margin-top: 14px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .lb-cta a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.2s;
+  }
+  .lb-cta a:hover { transform: translateY(-1px); }
+  .lb-cta .lb-wa {
+    background: var(--whatsapp);
+    color: #fff;
+  }
+  .lb-cta .lb-price {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #fff;
+    font-family: var(--font-condensed);
+    font-size: 20px;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: default;
+  }
+  .lb-cta .lb-price::before {
+    content: 'Precio · ';
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    color: var(--silver);
+    text-transform: uppercase;
+    margin-right: 4px;
+  }
+  @media (max-width: 720px) {
+    .lb-inner { max-height: 100vh; }
+    .lb-title { font-size: 16px; }
+    .lb-meta { font-size: 11px; }
+    .lb-nav { width: 40px; height: 40px; }
+    .lb-thumb { width: 56px; height: 42px; }
+  }
+
+  /* ============ TOAST ============ */
+  .toast {
+    position: fixed;
+    bottom: 100px;
+    right: 24px;
+    z-index: 60;
+    background: var(--carbon);
+    border: 1px solid var(--success);
+    color: var(--white);
+    padding: 14px 20px;
+    border-radius: 10px;
+    box-shadow: var(--shadow-card);
+    transform: translateX(400px);
+    transition: transform 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: 320px;
+  }
+  .toast.show { transform: translateX(0); }
+  .toast-icon { color: var(--success); flex-shrink: 0; }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s, transform 0.6s;
+  }
+  .reveal.in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="logo" aria-label="GEAR UP Motorcycles">
+      <div class="logo-mark">
+        <img class="logo-dark" src="img/logo2.png" alt="GEAR UP Motorcycles" />
+        <img class="logo-light" src="img/logolight.png" alt="GEAR UP Motorcycles" />
+      </div>
+    </a>
+
+    <div class="nav-links" id="navLinks">
+      <a class="nav-link" href="#catalogo">Catálogo</a>
+      <a class="nav-link" href="#vende">Vende tu moto</a>
+      <a class="nav-link" href="#financiamiento">Financiamiento</a>
+      <a class="nav-link" href="#marketplace">Marketplace</a>
+      <a class="nav-link" href="#contacto">Contacto</a>
+    </div>
+
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+    </button>
+
+    <a href="https://wa.me/5214429121551?text=Hola%20GEAR%20UP%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n" class="nav-cta nav-cta-desktop" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.48A11.94 11.94 0 0 0 12.04 0C5.46 0 .12 5.34.12 11.92c0 2.1.55 4.15 1.6 5.96L0 24l6.27-1.64a11.92 11.92 0 0 0 5.77 1.47h.01c6.58 0 11.92-5.34 11.92-11.92 0-3.18-1.24-6.17-3.45-8.43Zm-8.48 18.34h-.01a9.9 9.9 0 0 1-5.05-1.38l-.36-.22-3.72.98 1-3.63-.24-.37a9.92 9.92 0 0 1-1.52-5.28c0-5.47 4.45-9.92 9.92-9.92 2.65 0 5.14 1.03 7.01 2.91a9.85 9.85 0 0 1 2.91 7.01c0 5.47-4.45 9.93-9.94 9.93Z"/></svg>
+      WhatsApp
+    </a>
+
+    <button class="menu-toggle" id="menuToggle" aria-label="Menú">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="hero-layout">
+      <div class="hero-content">
+        <div class="hero-badge">🏁 Inventario actualizado · 60+ máquinas certificadas</div>
+        <h1>
+          Encuentra<br/>
+          la moto<br/>
+          <span class="accent">que mereces.</span>
+        </h1>
+        <p class="hero-lead">
+          Seminuevas de las mejores marcas del mundo: <strong>BMW, Ducati, Aprilia, KTM, Triumph, Kawasaki, Honda</strong> y más. Cada unidad pasa por una <strong>revisión técnica de 240 puntos</strong> antes de salir de nuestro piso. Financiamiento, consignación y compra inmediata.
+        </p>
+      </div>
+
+      <div class="hero-media" aria-hidden="true">
+        <span class="hero-media-tag">En vivo</span>
+        <video autoplay muted loop playsinline preload="metadata" poster="img/gearup-logo.png">
+          <source src="img/Logo animado History.mp4" type="video/mp4" />
+        </video>
+      </div>
+    </div>
+
+    <!-- Search bar -->
+    <form class="search-bar" onsubmit="event.preventDefault(); applySearchFromHero();">
+      <div class="search-field">
+        <label>Tipo</label>
+        <select id="heroType">
+          <option value="">Todos los tipos</option>
+          <option value="Sport">Sport / Deportiva</option>
+          <option value="Naked">Naked</option>
+          <option value="Adventure">Adventure / Touring</option>
+          <option value="Cruiser">Cruiser</option>
+          <option value="Enduro">Enduro / Doble propósito</option>
+          <option value="Scrambler">Scrambler / Café Racer</option>
+        </select>
+      </div>
+      <div class="search-field">
+        <label>Marca</label>
+        <select id="heroBrand">
+          <option value="">Todas las marcas</option>
+          <option>APRILIA</option>
+          <option>BMW</option>
+          <option>CFMOTO</option>
+          <option>DUCATI</option>
+          <option>HONDA</option>
+          <option>HUSQVARNA</option>
+          <option>KAWASAKI</option>
+          <option>KTM</option>
+          <option>SUZUKI</option>
+          <option>TRIUMPH</option>
+          <option>YAMAHA</option>
+        </select>
+      </div>
+      <div class="search-field">
+        <label>Presupuesto máx.</label>
+        <select id="heroPrice">
+          <option value="">Cualquier precio</option>
+          <option value="100000">Hasta $100,000</option>
+          <option value="180000">Hasta $180,000</option>
+          <option value="280000">Hasta $280,000</option>
+          <option value="400000">Hasta $400,000</option>
+          <option value="600000">Hasta $600,000</option>
+        </select>
+      </div>
+      <button class="search-submit" type="submit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        Buscar
+      </button>
+    </form>
+
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">60+</div>
+        <div class="stat-label">Motos en piso</div>
+      </div>
+      <div>
+        <div class="stat-num">240</div>
+        <div class="stat-label">Puntos de revisión</div>
+      </div>
+      <div>
+        <div class="stat-num">24h</div>
+        <div class="stat-label">Oferta de compra</div>
+      </div>
+      <div>
+        <div class="stat-num">36</div>
+        <div class="stat-label">Meses de plazo</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TRUST STRIP ============ -->
+<div class="trust">
+  <div class="container">
+    <div class="trust-inner reveal-stagger">
+      <div class="trust-item">
+        <div class="trust-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        </div>
+        <div>
+          <div class="trust-title">Revisión 240 puntos</div>
+          <div class="trust-desc">Inspección mecánica y estética por técnicos certificados.</div>
+        </div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M6 12h.01M18 12h.01"/></svg>
+        </div>
+        <div>
+          <div class="trust-title">Financiamiento</div>
+          <div class="trust-desc">Hasta 36 meses con 10% de enganche. Aprobación en 24h.</div>
+        </div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M21 3l-8 8M8 21H3v-5M3 21l8-8"/></svg>
+        </div>
+        <div>
+          <div class="trust-title">Motoswitch</div>
+          <div class="trust-desc">Cambia tu moto por otra de nuestro catálogo el mismo día.</div>
+        </div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M5 9h14M5 15h14"/></svg>
+        </div>
+        <div>
+          <div class="trust-title">Factura legítima</div>
+          <div class="trust-desc">Procedencia verificada y documentación 100% en regla.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CATÁLOGO ============ -->
+<section class="block" id="catalogo">
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <div class="section-eyebrow">▸ Catálogo</div>
+        <h2 class="section-title">Inventario <span class="accent">en piso.</span></h2>
+      </div>
+      <p class="section-sub">Cada moto pasa por nuestra revisión 240 puntos. Filtra por marca, tipo, año o presupuesto y solicita info al instante por WhatsApp.</p>
+    </div>
+
+    <div class="inventory-shell">
+      <!-- FILTERS -->
+      <aside class="filters" id="filters">
+        <div class="filters-head">
+          <div class="filters-title">Filtros</div>
+          <button class="filters-clear" onclick="clearFilters()">Limpiar</button>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label">Tipo</label>
+          <div class="chip-row" id="typeChips">
+            <button class="chip active" data-type="">Todos</button>
+            <button class="chip" data-type="Sport">Sport</button>
+            <button class="chip" data-type="Naked">Naked</button>
+            <button class="chip" data-type="Adventure">Adventure</button>
+            <button class="chip" data-type="Cruiser">Cruiser</button>
+            <button class="chip" data-type="Enduro">Enduro</button>
+            <button class="chip" data-type="Scrambler">Scrambler</button>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label">Marca</label>
+          <select class="filter-select" id="filterBrand">
+            <option value="">Todas las marcas</option>
+            <option>APRILIA</option>
+            <option>BMW</option>
+            <option>CFMOTO</option>
+            <option>DUCATI</option>
+            <option>HONDA</option>
+            <option>HUSQVARNA</option>
+            <option>KAWASAKI</option>
+            <option>KTM</option>
+            <option>SUZUKI</option>
+            <option>TRIUMPH</option>
+            <option>YAMAHA</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label">Año</label>
+          <div class="filter-range">
+            <input type="number" class="filter-input" id="yearMin" placeholder="Desde" min="2000" max="2026"/>
+            <input type="number" class="filter-input" id="yearMax" placeholder="Hasta" min="2000" max="2026"/>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label">Precio (MXN)</label>
+          <div class="filter-range">
+            <input type="number" class="filter-input" id="priceMin" placeholder="Min" step="10000"/>
+            <input type="number" class="filter-input" id="priceMax" placeholder="Max" step="10000"/>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label">Cilindrada</label>
+          <select class="filter-select" id="filterCC">
+            <option value="">Cualquiera</option>
+            <option value="0-400">Hasta 400 cc</option>
+            <option value="400-700">400 – 700 cc</option>
+            <option value="700-1000">700 – 1000 cc</option>
+            <option value="1000-9999">Más de 1000 cc</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label">Kilometraje máx.</label>
+          <select class="filter-select" id="filterKM">
+            <option value="">Cualquiera</option>
+            <option value="5000">Hasta 5,000 km</option>
+            <option value="15000">Hasta 15,000 km</option>
+            <option value="30000">Hasta 30,000 km</option>
+            <option value="60000">Hasta 60,000 km</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label">Opciones</label>
+          <div class="chip-row" id="perkChips">
+            <button class="chip" data-perk="fin">Con financiamiento</button>
+            <button class="chip" data-perk="switch">Motoswitch</button>
+            <button class="chip" data-perk="toma">Toma a cuenta</button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- RESULTS -->
+      <div>
+        <div class="results-bar">
+          <div class="results-count"><span id="resultsCount">0</span> motos encontradas</div>
+          <select class="sort-select" id="sortBy">
+            <option value="featured">Destacadas primero</option>
+            <option value="price-asc">Precio: menor a mayor</option>
+            <option value="price-desc">Precio: mayor a menor</option>
+            <option value="year-desc">Más recientes</option>
+            <option value="km-asc">Menor kilometraje</option>
+          </select>
+        </div>
+
+        <div class="grid" id="motoGrid"></div>
+        <div class="no-results" id="noResults" style="display:none;">
+          <h3>No encontramos motos con esos filtros</h3>
+          <p>Intenta ampliar el rango de precio o limpia los filtros para ver todo el inventario.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VENDE TU MOTO ============ -->
+<section class="block services-section" id="vende">
+  <div class="container">
+    <div class="section-head reveal" style="justify-content: center; text-align: center; flex-direction: column; align-items: center;">
+      <div>
+        <div class="section-eyebrow">▸ Vende tu moto</div>
+        <h2 class="section-title">Tres formas de <span class="accent">salir de tu moto.</span></h2>
+        <p class="section-sub" style="margin: 16px auto 0;">Elige el esquema que más te conviene. Nosotros nos encargamos del resto.</p>
+      </div>
+    </div>
+
+    <div class="services-grid reveal-stagger">
+      <!-- CONSIGNACIÓN -->
+      <div class="service-card featured">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+        </div>
+        <div class="service-tag">Comisión 6%</div>
+        <h3 class="service-name">Consignación</h3>
+        <p class="service-desc">Déjanos tu moto y nosotros nos encargamos de venderla. No arriesgues tu patrimonio ni tu seguridad — el proceso completo corre por nuestra cuenta.</p>
+        <ul class="service-features">
+          <li>Solo pagas comisión cuando vendemos</li>
+          <li>Fotografía y video profesional incluidos</li>
+          <li>Publicación en todos nuestros canales</li>
+          <li>Resguardo seguro en nuestras instalaciones</li>
+          <li>Atención a interesados y filtrado de leads</li>
+        </ul>
+        <button class="service-btn" onclick="openWhatsApp('Hola GEAR UP, quiero información de Consignación para mi moto.')">
+          Solicitar consignación →
+        </button>
+      </div>
+
+      <!-- COMPRAMOS TU MOTO -->
+      <div class="service-card">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div class="service-tag">Pago en 24 horas</div>
+        <h3 class="service-name">Compramos tu moto</h3>
+        <p class="service-desc">¿Te urge el dinero? Te hacemos una oferta en firme con base en el Libro Azul / Guía EBC, kilometraje, procedencia y revisión física-mecánica.</p>
+        <ul class="service-features">
+          <li>Oferta en firme en menos de 24 horas</li>
+          <li>Pago inmediato al cerrar trato</li>
+          <li>Avalúo basado en Libro Azul / EBC</li>
+          <li>Aplican restricciones en modelo y marca</li>
+          <li>Sin papeleo complicado — nosotros lo hacemos</li>
+        </ul>
+        <button class="service-btn" onclick="openWhatsApp('Hola GEAR UP, quiero que me hagan una oferta para comprar mi moto.')">
+          Quiero mi oferta →
+        </button>
+      </div>
+
+      <!-- MOTOSWITCH -->
+      <div class="service-card">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M21 3l-8 8M8 21H3v-5M3 21l8-8"/></svg>
+        </div>
+        <div class="service-tag">Cambia el mismo día</div>
+        <h3 class="service-name">MotoSwitch</h3>
+        <p class="service-desc">Deja tu moto en consignación y llévate <strong style="color:var(--white)">hoy mismo</strong> otra del catálogo. Cuando se venda la tuya, pagas o recibes la diferencia.</p>
+        <ul class="service-features">
+          <li>Estrena moto sin esperar a vender</li>
+          <li>Recibes la diferencia al cierre</li>
+          <li>O pagas el saldo a tu ritmo</li>
+          <li>Combinable con financiamiento</li>
+          <li>Sin estrés, sin compradores extraños en tu casa</li>
+        </ul>
+        <button class="service-btn" onclick="openWhatsApp('Hola GEAR UP, me interesa el esquema MotoSwitch para cambiar mi moto.')">
+          Quiero hacer switch →
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FINANCIAMIENTO ============ -->
+<section class="block financing-section" id="financiamiento">
+  <div class="container">
+    <div class="financing-grid">
+      <div class="financing-info reveal">
+        <div class="section-eyebrow">▸ Financiamiento</div>
+        <h2>Llévate tu moto<br/><span class="accent" style="background: linear-gradient(135deg, var(--purple-glow), var(--blue-electric)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">desde 10% de enganche.</span></h2>
+        <p style="color: var(--fog); font-size: 16px; line-height: 1.7;">
+          Trabajamos con instituciones financieras reconocidas para que estrenes tu próxima máquina sin descapitalizarte. Aprobación rápida y planes flexibles hasta 48 meses.
+        </p>
+
+        <div class="financing-partners reveal-stagger">
+          <div class="partner-badge">
+            <div>
+              <div class="partner-name">Caja Morelia Valladolid</div>
+              <div class="partner-tag">Aliado financiero</div>
+            </div>
+          </div>
+          <div class="partner-badge">
+            <div>
+              <div class="partner-name">HEY Banco</div>
+              <div class="partner-tag">Aliado financiero</div>
+            </div>
+          </div>
+          <div class="partner-badge">
+            <div>
+              <div class="partner-name">Banregio</div>
+              <div class="partner-tag">Aliado financiero</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fin-schemes reveal-stagger">
+          <div class="fin-scheme">
+            <span class="fin-scheme-eyebrow">Esquema local</span>
+            <div class="fin-scheme-title">Unidades legalizadas</div>
+            <div class="fin-scheme-row">
+              <div>
+                <div class="fin-scheme-num">10%</div>
+                <div class="fin-scheme-label">Enganche</div>
+              </div>
+              <div>
+                <div class="fin-scheme-num">36</div>
+                <div class="fin-scheme-label">Meses</div>
+              </div>
+            </div>
+            <div class="fin-scheme-desc">Modelos 2021 en adelante. Solo para residentes en Querétaro y municipios colindantes. Sujeto a aprobación.</div>
+          </div>
+
+          <div class="fin-scheme">
+            <span class="fin-scheme-eyebrow">Esquema nacional</span>
+            <div class="fin-scheme-title">Unidades nacionales</div>
+            <div class="fin-scheme-row">
+              <div>
+                <div class="fin-scheme-num">20%</div>
+                <div class="fin-scheme-label">Enganche</div>
+              </div>
+              <div>
+                <div class="fin-scheme-num">48</div>
+                <div class="fin-scheme-label">Meses</div>
+              </div>
+            </div>
+            <div class="fin-scheme-desc">Modelos 2021 en adelante. Disponible a nivel nacional. Sujeto a aprobación de la institución.</div>
+          </div>
+        </div>
+
+        <div class="fin-note">
+          Nuestro financiamiento se opera a través de <strong>HEY Banco</strong>, filial de <strong>BanRegio</strong>: <strong>20% de enganche</strong>, plazos de <strong>hasta 48 meses</strong>, con la opción de hacer <strong>pagos directo a capital</strong> y <strong>liquidar sin penalización</strong>.
+        </div>
+      </div>
+
+      <div class="financing-side reveal">
+        <div class="fin-stats">
+          <div>
+            <div class="fin-stat-num">10%</div>
+            <div class="fin-stat-label">Enganche desde</div>
+          </div>
+          <div>
+            <div class="fin-stat-num">48</div>
+            <div class="fin-stat-label">Meses máximos</div>
+          </div>
+          <div>
+            <div class="fin-stat-num">24h</div>
+            <div class="fin-stat-label">Pre-aprobación</div>
+          </div>
+        </div>
+
+      <form class="financing-form" id="finForm" onsubmit="event.preventDefault(); submitFinancing();">
+        <div class="form-title">Solicita tu pre-aprobación</div>
+        <div class="form-sub">Adjunta tus documentos y te contactamos en menos de 24 horas.</div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label>Nombre completo</label>
+            <input type="text" required placeholder="Ej. Juan Pérez García"/>
+          </div>
+          <div class="form-field">
+            <label>WhatsApp</label>
+            <input type="tel" required placeholder="55 1234 5678"/>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label>Correo electrónico</label>
+            <input type="email" required placeholder="tu@correo.com"/>
+          </div>
+          <div class="form-field">
+            <label>Moto de interés</label>
+            <select required id="finMoto">
+              <option value="">Selecciona una moto</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label>Plazo deseado</label>
+            <select required>
+              <option value="">Selecciona plazo</option>
+              <option>12 meses</option>
+              <option>18 meses</option>
+              <option>24 meses</option>
+              <option>36 meses</option>
+              <option>48 meses</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Enganche que puedes dar</label>
+            <select required>
+              <option value="">Selecciona</option>
+              <option>10% (mínimo)</option>
+              <option>20%</option>
+              <option>30%</option>
+              <option>40% o más</option>
+            </select>
+          </div>
+        </div>
+
+        <label class="filter-label" style="margin: 16px 0 8px;">Documentos requeridos</label>
+        <div class="file-uploads">
+          <label class="file-drop">
+            <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="markFileUpload(this)"/>
+            <div class="file-drop-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="12" cy="12" r="3"/></svg></div>
+            <div class="file-drop-text">INE (ambos lados)</div>
+            <div class="file-drop-sub">PDF o foto</div>
+          </label>
+          <label class="file-drop">
+            <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="markFileUpload(this)"/>
+            <div class="file-drop-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg></div>
+            <div class="file-drop-text">Comprobante domicilio</div>
+            <div class="file-drop-sub">No mayor a 3 meses</div>
+          </label>
+          <label class="file-drop">
+            <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="markFileUpload(this)"/>
+            <div class="file-drop-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></div>
+            <div class="file-drop-text">Comprobante ingresos</div>
+            <div class="file-drop-sub">Últimos 3 meses</div>
+          </label>
+          <label class="file-drop">
+            <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="markFileUpload(this)"/>
+            <div class="file-drop-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg></div>
+            <div class="file-drop-text">Otro documento</div>
+            <div class="file-drop-sub">Opcional</div>
+          </label>
+        </div>
+
+        <button class="form-submit" type="submit">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="m5 12 7-7 7 7M12 5v14"/></svg>
+          Enviar solicitud
+        </button>
+        <div class="form-disclaimer">Al enviar aceptas que GEAR UP te contacte por WhatsApp, correo o teléfono para gestionar tu solicitud. Sujeto a aprobación de la institución financiera.</div>
+      </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MARKETPLACE ============ -->
+<section class="block marketplace-section" id="marketplace">
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <div class="section-eyebrow">▸ Marketplace</div>
+        <h2 class="section-title">Todo para tu moto,<br/><span class="accent">en un solo lugar.</span></h2>
+      </div>
+      <p class="section-sub">Cascos, chamarras, partes, candados y todo lo que necesitas para complementar tu moto. Stock rotativo.</p>
+    </div>
+
+    <div class="marketplace-grid" id="mpGrid"></div>
+  </div>
+</section>
+
+<!-- ============ CTA FINAL ============ -->
+<section class="cta-final">
+  <div class="container cta-final-inner reveal">
+    <h2>¿Listo para <span class="accent">arrancar?</span></h2>
+    <p>Habla directo con uno de nuestros asesores. Te ayudamos a encontrar la moto correcta para ti — sin presión, sin venderte humo.</p>
+    <div class="cta-buttons">
+      <a href="https://wa.me/5214429121551?text=Hola%20GEAR%20UP%2C%20quiero%20agendar%20una%20visita" target="_blank" rel="noopener" class="cta-btn-primary">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M20.52 3.48A11.94 11.94 0 0 0 12.04 0C5.46 0 .12 5.34.12 11.92c0 2.1.55 4.15 1.6 5.96L0 24l6.27-1.64a11.92 11.92 0 0 0 5.77 1.47h.01c6.58 0 11.92-5.34 11.92-11.92 0-3.18-1.24-6.17-3.45-8.43Z"/></svg>
+        Hablar por WhatsApp
+      </a>
+      <a href="#catalogo" class="cta-btn-secondary">Ver catálogo completo</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer id="contacto">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="logo" aria-label="GEAR UP Motorcycles">
+          <div class="logo-mark">
+            <img class="logo-dark" src="img/gearup-logo.png" alt="GEAR UP Motorcycles" />
+            <img class="logo-light" src="img/logolight.png" alt="GEAR UP Motorcycles" />
+          </div>
+        </a>
+        <p>La forma más confiable de comprar, vender o cambiar tu motocicleta. Inventario seleccionado, garantía y financiamiento.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+          <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+          <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.6 6.32a4.85 4.85 0 0 1-3.77-4.32h-3.21v13.66a2.86 2.86 0 0 1-5.41 1.31 2.86 2.86 0 0 1 3.99-3.66V9.95a6.16 6.16 0 0 0-7.07 6.1 6.07 6.07 0 0 0 10.34 4.31 6.04 6.04 0 0 0 1.79-4.31V9.51a8.06 8.06 0 0 0 4.7 1.5V7.83a4.85 4.85 0 0 1-1.36-1.51z"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48" fill="#0A0A0B"/></svg></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Comprar</h4>
+        <a href="#catalogo">Catálogo completo</a>
+        <a href="#catalogo">Por marca</a>
+        <a href="#catalogo">Por tipo</a>
+        <a href="#financiamiento">Financiamiento</a>
+        <a href="#marketplace">Accesorios</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Vender</h4>
+        <a href="#vende">Consignación</a>
+        <a href="#vende">Compramos tu moto</a>
+        <a href="#vende">MotoSwitch</a>
+        <a href="#vende">Avalúo gratis</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <a href="https://wa.me/5214429121551" target="_blank" rel="noopener">WhatsApp directo</a>
+        <a href="tel:+524429121551">442 912 15 51</a>
+        <a href="mailto:contacto@gearupmoto.mx">contacto@gearupmoto.mx</a>
+        <a href="https://maps.google.com/?q=San+Juan+618,+El+Salitre,+Santiago+de+Quer%C3%A9taro,+Quer%C3%A9taro" target="_blank" rel="noopener">San Juan 618, El Salitre,<br/>Santiago de Querétaro, Qro.</a>
+        <a href="#">Lun – Sáb · 10am – 7pm</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>© 2026 GEAR UP Motorcycles. Todos los derechos reservados.</div>
+      <div style="display:flex; gap:24px;">
+        <a href="#" style="color:var(--silver);">Aviso de privacidad</a>
+        <a href="#" style="color:var(--silver);">Términos y condiciones</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Floating WhatsApp -->
+<a href="https://wa.me/5214429121551?text=Hola%20GEAR%20UP%2C%20vi%20su%20cat%C3%A1logo%20y%20quiero%20m%C3%A1s%20informaci%C3%B3n" target="_blank" rel="noopener" class="whatsapp-float" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.48A11.94 11.94 0 0 0 12.04 0C5.46 0 .12 5.34.12 11.92c0 2.1.55 4.15 1.6 5.96L0 24l6.27-1.64a11.92 11.92 0 0 0 5.77 1.47h.01c6.58 0 11.92-5.34 11.92-11.92 0-3.18-1.24-6.17-3.45-8.43Zm-8.48 18.34h-.01a9.9 9.9 0 0 1-5.05-1.38l-.36-.22-3.72.98 1-3.63-.24-.37a9.92 9.92 0 0 1-1.52-5.28c0-5.47 4.45-9.92 9.92-9.92 2.65 0 5.14 1.03 7.01 2.91a9.85 9.85 0 0 1 2.91 7.01c0 5.47-4.45 9.93-9.94 9.93Z"/></svg>
+</a>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <div class="toast-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg>
+  </div>
+  <div id="toastMsg">Solicitud enviada.</div>
+</div>
+
+<!-- Lightbox / Gallery -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Galería de fotos">
+  <div class="lb-inner">
+    <div class="lb-header">
+      <div>
+        <div class="lb-title" id="lbTitle"></div>
+        <div class="lb-meta" id="lbMeta"></div>
+      </div>
+      <button class="lb-close" onclick="closeGallery()" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 6l12 12M6 18L18 6"/></svg>
+      </button>
+    </div>
+    <div class="lb-stage">
+      <div class="lb-media" id="lbMedia"></div>
+      <button class="lb-nav prev" onclick="lbPrev()" aria-label="Anterior">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 6l-6 6 6 6"/></svg>
+      </button>
+      <button class="lb-nav next" onclick="lbNext()" aria-label="Siguiente">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+      <div class="lb-counter" id="lbCounter">1 / 1</div>
+    </div>
+    <div class="lb-thumbs" id="lbThumbs"></div>
+    <div class="lb-cta">
+      <span class="lb-price" id="lbPrice"></span>
+      <a class="lb-wa" id="lbWa" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M20.52 3.48A11.94 11.94 0 0 0 12.04 0C5.46 0 .12 5.34.12 11.92c0 2.1.55 4.15 1.6 5.96L0 24l6.27-1.64a11.92 11.92 0 0 0 5.77 1.47h.01c6.58 0 11.92-5.34 11.92-11.92 0-3.18-1.24-6.17-3.45-8.43Z"/></svg>
+        Preguntar por esta moto
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============ INVENTARIO ============ */
+const WA_PHONE = '5214429121551'; // ← REEMPLAZAR con número real de GEAR UP
+
+// Single iconic motorcycle silhouette — clean, universally readable, used as accent watermark
+const MOTO_ICON = `<svg viewBox="0 0 120 70" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Rear wheel -->
+  <circle cx="22" cy="52" r="14"/>
+  <circle cx="22" cy="52" r="4" fill="currentColor" stroke="none" opacity="0.5"/>
+  <!-- Front wheel -->
+  <circle cx="98" cy="52" r="14"/>
+  <circle cx="98" cy="52" r="4" fill="currentColor" stroke="none" opacity="0.5"/>
+  <!-- Frame: rear seat → tank → forks -->
+  <path d="M22 52 L34 38 L52 36 L66 26 L82 26 L88 36 L98 52" stroke-width="2.8"/>
+  <!-- Fuel tank top line -->
+  <path d="M52 36 Q60 30 66 30"/>
+  <!-- Seat hump -->
+  <path d="M34 38 Q40 32 52 36"/>
+  <!-- Forks down to front wheel -->
+  <path d="M88 36 L98 52"/>
+  <!-- Handlebar -->
+  <path d="M84 22 L92 22"/>
+  <path d="M88 22 L88 30"/>
+  <!-- Headlight -->
+  <circle cx="92" cy="32" r="3" fill="currentColor" stroke="none" opacity="0.7"/>
+  <!-- Exhaust -->
+  <path d="M40 52 L18 56" stroke-width="2.2" opacity="0.7"/>
+</svg>`;
+
+// Gradient backgrounds per type — brand-aligned, vibrant
+const TYPE_GRADIENTS = {
+  Sport:     'linear-gradient(135deg, #2d0a14 0%, #5b1424 45%, #1a0a14 100%)',
+  Naked:     'linear-gradient(135deg, #1a1408 0%, #4a3614 45%, #14100a 100%)',
+  Adventure: 'linear-gradient(135deg, #14100a 0%, #4a2e10 45%, #1a1408 100%)',
+  Cruiser:   'linear-gradient(135deg, #14140e 0%, #3a3a30 45%, #1a1a14 100%)',
+  Enduro:    'linear-gradient(135deg, #0a1a14 0%, #144a36 45%, #0a1410 100%)',
+  Scrambler: 'linear-gradient(135deg, #14081a 0%, #3a1858 45%, #1a0a24 100%)'
+};
+
+// Accent color per type — used for type-tag border and small accents
+const TYPE_COLOR = {
+  Sport:     '#ff6b7e',
+  Naked:     '#fbbf24',
+  Adventure: '#f59e0b',
+  Cruiser:   '#d4d4d8',
+  Enduro:    '#34d399',
+  Scrambler: '#c084fc'
+};
+
+
+const motos = [
+  // BMW
+  { id:1, brand:'BMW', model:'R1250 GS Rallye', year:2022, type:'Adventure', cc:1254, km:9800, price:425000, owners:1, procedencia:'Nacional', factura:'Original', financiamiento:true, motoswitch:true, tomaCuenta:true, featured:true },
+  { id:2, brand:'BMW', model:'R1250 RT', year:2024, type:'Adventure', cc:1254, km:3500, price:520000, owners:1, procedencia:'Nacional', factura:'Original', financiamiento:true, motoswitch:true, tomaCuenta:true, featured:true },
+  { id:3, brand:'BMW', model:'S1000 XR', year:2023, type:'Adventure', cc:999, km:7400, price:385000, owners:1, procedencia:'Nacional', factura:'Original', financiamiento:true, motoswitch:true, tomaCuenta:true },
+  { id:4, brand:'BMW', model:'R1250 HP Rallye', year:2021, type:'Adventure', cc:1254, km:14200, price:445000, owners:1, procedencia:'Nacional', factura:'Original', financiamiento:true, motoswitch:true, tomaCuenta:true },
+  { id:5, brand:'BMW', model:'G310 R', year:2021, type:'Naked', cc:313, km:8900, price:89000, owners:1, procedencia:'Nacional', factura:'Original', financiamiento:true, motoswitch:true, tomaCuenta:true },
+  { id:6, brand:'BMW', model:'R1200 GS', year:2006, type:'Adventure', cc:1170, km:48000, price:115000, owners:2, procedencia:'Nacional', factura:'Carta factura', financiamiento:false, motoswitch:true, tomaCuenta:true },
+
+  // DUCATI
+  { id:7, brand:'DUCATI', model:'Panigale V4', year:2022, type:'Sport', cc:1103, km:5200, price:485000, owners:1, procedencia:'Nacional', factura:'Original', financiamiento:true, motoswitch:true, tomaCuenta:true, featured:true },
+  { id:8, brand:'DUCATI', model:'Multistrada V4 S', year:2023, type:'Adventure', cc:1158, km:6300, price:425000, owners:1, procedencia:'Nacional', factura:'Original', financiamiento:true, motoswitch:true, tomaCuenta:true },
+  { id:9, brand:'DUCATI', model:'Multistrada 950', year:2020, type:'Adventure', cc:937, km:18500, price:265000, owners:1, procedencia:'Nacional', factura:'Original', financiamiento:true, motoswitch:true, tomaCuenta:true },
+  { id:10, brand:'DUCATI', model:'Scrambler 800', year:2017, type:'Scrambler', cc:803, km:14500, price:110000, owners:1, procedencia:'Nacional', factura:'Original', financiamiento:false, motoswitch:false, tomaCuenta:true, tdc:true, featured:true, video:'img/ducati-scrambler-800-2017-1.mp4', images:['img/ducati-scrambler-800-2017-1.png','img/ducati-scrambler-800-2017-2.jpg','img/ducati-scrambler-800-2017-3.jpg','img/ducati-scrambler-800-2017-4.jpg','img/ducati-scrambler-800-2017-5.jpg','img/ducati-scrambler-800-2017-6.jpg'] },
+  { id:11, brand:'DUCATI', model:'SuperSport 950', year:2022, type:'Sport', cc:937, km:8400, price:295000, owners:1, procedencia:'Nacional', factura:'Original', financiamiento:true, motoswitch:true, tomaCuenta:true },
+
+  // APRILIA
+  { id:12, brand:'APRILIA', model:'Tuono 660', year:2023, type:'Naked', cc:659, km:4800, price:225000, owners:1, procedencia:'Nacional', factura:'Original', financiamiento:true, motoswitch:true, tomaCuenta:true },
+  { id:13, brand:'APRILIA', model:'RS 660', year:2024, type:'Sport', cc:659, km:2100, price:255000, owners:1, procedencia:'Nacional', factura:'Original', financiamiento:true, motoswitch:true, tomaCuenta:true, featured:true },
+  { id:14, brand:'APRILIA', model:'Tuono V4 1100', year:2022, type:'Naked', cc:1077, km:7800, price:295000, owners:1, procedencia:'Nacional', factura:'Original', financiamiento:true, motoswitch:true, tomaCuenta:true },
+  { id:15, brand:'APRILIA', model:'Tuono 1100 V4 Factory', year:2021, type:'Naked', cc:1077, km:9600, price:275000, owners:1, procedencia:'Nacional', factura:'Original', financiamiento:true, motoswitch:true, tomaCuenta:true },
+
+  // KAWASAKI
+  { id:16, brand:'KAWASAKI', model:'Z900', year:2024, type:'Naked', cc:948, km:3200, price:235000, owners:1, procedencia:'Nacional', factura:'Original', financiamiento:true, motoswitch:true, tomaCuenta:true },
+  { id:17, brand:'KAWASAKI', model:'Z900 SR', year:2023, type:'Naked', cc:948, km:5400, price:245000, owners:1, procedencia:'Nacional', factura:'Original', financiamiento:true, motoswitch:true, tomaCuenta:true },
+  { id:18, brand:'KAWASAKI', model:'KLR 650', year:2023, type:'Enduro', cc:652, km:8200, price:159000, owners:1, procedencia:'Nacional', factura:'Original', financiamiento:true, motoswitch:true, tomaCuenta:true },
+  { id:19, brand:'KAWASAKI', model:'Ninja 650', year:2022, type:'Sport', cc:649, km:9800, price:145000, owners:1, procedencia:'Nacional', factura:'Original', financiamiento:true, motoswitch:true, tomaCuenta:true },
+
+  // KTM
+  { id:20, brand:'KTM', model:'Adventure 1290', year:2020, type:'Adventure', cc:1301, km:21500, price:265000, owners:1, procedencia:'Nacional', factura:'Original', financiamiento:true, motoswitch:true, tomaCuenta:true },
+  { id:21, brand:'KTM', model:'390 Adventure', year:2023, type:'Adventure', cc:373, km:6800, price:135000, owners:1, procedencia:'Nacional', factura:'Original', financiamiento:true, motoswitch:true, tomaCuenta:true },
+
+  // TRIUMPH
+  { id:22, brand:'TRIUMPH', model:'Scrambler 1200 XE', year:2022, type:'Scrambler', cc:1200, km:8400, price:225000, owners:1, procedencia:'Nacional', factura:'Original', financiamiento:true, motoswitch:true, tomaCuenta:true },
+  { id:23, brand:'TRIUMPH', model:'Street Triple RS', year:2023, type:'Naked', cc:765, km:5200, price:215000, owners:1, procedencia:'Nacional', factura:'Original', financiamiento:true, motoswitch:true, tomaCuenta:true },
+  { id:24, brand:'TRIUMPH', model:'Trident 660', year:2023, type:'Naked', cc:660, km:6400, price:189000, owners:1, procedencia:'Nacional', factura:'Original', financiamiento:true, motoswitch:true, tomaCuenta:true },
+  { id:25, brand:'TRIUMPH', model:'Tiger Sport 660', year:2023, type:'Adventure', cc:660, km:7100, price:235000, owners:1, procedencia:'Nacional', factura:'Original', financiamiento:true, motoswitch:true, tomaCuenta:true },
+
+  // CFMOTO
+  { id:26, brand:'CFMOTO', model:'MT 450', year:2025, type:'Adventure', cc:449, km:1200, price:115000, owners:1, procedencia:'Nacional', factura:'Original', financiamiento:true, motoswitch:true, tomaCuenta:true },
+  { id:27, brand:'CFMOTO', model:'MT 650', year:2023, type:'Adventure', cc:649, km:6800, price:135000, owners:1, procedencia:'Nacional', factura:'Original', financiamiento:true, motoswitch:true, tomaCuenta:true },
+
+  // HONDA
+  { id:28, brand:'HONDA', model:'Rebel 1100', year:2023, type:'Cruiser', cc:1084, km:5800, price:245000, owners:1, procedencia:'Nacional', factura:'Original', financiamiento:true, motoswitch:true, tomaCuenta:true },
+  { id:29, brand:'HONDA', model:'CB350', year:2023, type:'Naked', cc:348, km:4200, price:98000, owners:1, procedencia:'Nacional', factura:'Original', financiamiento:true, motoswitch:true, tomaCuenta:true },
+
+  // HUSQVARNA
+  { id:30, brand:'HUSQVARNA', model:'Enduro 701', year:2022, type:'Enduro', cc:692, km:7400, price:149000, owners:1, procedencia:'Nacional', factura:'Original', financiamiento:true, motoswitch:true, tomaCuenta:true },
+
+  // SUZUKI
+  { id:31, brand:'SUZUKI', model:'GSX-R 600', year:2018, type:'Sport', cc:599, km:24800, price:139000, owners:2, procedencia:'Nacional', factura:'Original', financiamiento:true, motoswitch:true, tomaCuenta:true },
+
+  // YAMAHA
+  { id:32, brand:'YAMAHA', model:'SR 400', year:2016, type:'Scrambler', cc:399, km:28500, price:98000, owners:2, procedencia:'Nacional', factura:'Original', financiamiento:false, motoswitch:true, tomaCuenta:true },
+];
+
+/* ============ MARKETPLACE ============ */
+const marketplace = [
+  { name:'Casco AGV K6 S', cat:'Cascos', price:18500, icon:'helmet' },
+  { name:'Casco Shoei RF-1400', cat:'Cascos', price:24500, icon:'helmet' },
+  { name:'Chamarra Alpinestars GP Plus R', cat:'Equipo', price:15800, icon:'jacket' },
+  { name:'Botas Sidi Crossfire 3', cat:'Equipo', price:14200, icon:'boot' },
+  { name:'Guantes Dainese 4-Stroke 2', cat:'Equipo', price:4500, icon:'glove' },
+  { name:'Maleta Givi Trekker 33L', cat:'Touring', price:7200, icon:'case' },
+  { name:'Candado Abus Bordo 6500', cat:'Seguridad', price:3200, icon:'lock' },
+  { name:'GPS Garmin Zumo XT', cat:'Electrónica', price:14500, icon:'gps' },
+];
+
+const MP_ICONS = {
+  helmet: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 36c0-12 9-22 20-22s20 10 20 22v8H12z"/><path d="M22 36h28M16 44h32"/><circle cx="32" cy="30" r="6"/></svg>`,
+  jacket: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14L14 22v32h36V22l-6-8M20 14h24M32 14v40M22 28h4M38 28h4"/></svg>`,
+  boot: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v32l-8 8v4h36v-4l-6-4V30h-8V10z"/><path d="M22 30h14"/></svg>`,
+  glove: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 32V18a4 4 0 0 1 8 0v10M26 28V14a4 4 0 0 1 8 0v14M34 28V16a4 4 0 0 1 8 0v18M42 30v-4a4 4 0 0 1 8 0v18a14 14 0 0 1-14 14H26L14 46V34a4 4 0 0 1 8 0z"/></svg>`,
+  case: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="10" y="20" width="44" height="32" rx="2"/><path d="M24 20v-6h16v6M10 34h44"/></svg>`,
+  lock: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="14" y="28" width="36" height="26" rx="3"/><path d="M22 28v-6a10 10 0 0 1 20 0v6"/></svg>`,
+  gps: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="10" width="32" height="44" rx="3"/><path d="M24 22h16M24 30h16M24 38h10"/></svg>`,
+};
+
+/* ============ STATE ============ */
+const state = {
+  type: '',
+  brand: '',
+  yearMin: null,
+  yearMax: null,
+  priceMin: null,
+  priceMax: null,
+  cc: '',
+  kmMax: null,
+  perks: new Set(),
+  sort: 'featured'
+};
+
+/* ============ RENDER ============ */
+function fmtPrice(n) {
+  return '$' + n.toLocaleString('es-MX');
+}
+function fmtKM(n) {
+  return n.toLocaleString('es-MX') + ' km';
+}
+function monthlyEstimate(price) {
+  // simple est. 90% financiado @ 36m, ~16% anual
+  const principal = price * 0.9;
+  const months = 36;
+  const monthlyRate = 0.16 / 12;
+  const payment = principal * (monthlyRate * Math.pow(1+monthlyRate, months)) / (Math.pow(1+monthlyRate, months) - 1);
+  return Math.round(payment / 100) * 100;
+}
+
+function renderMotos() {
+  const grid = document.getElementById('motoGrid');
+  const noRes = document.getElementById('noResults');
+  let filtered = motos.filter(m => {
+    if (state.type && m.type !== state.type) return false;
+    if (state.brand && m.brand !== state.brand) return false;
+    if (state.yearMin && m.year < state.yearMin) return false;
+    if (state.yearMax && m.year > state.yearMax) return false;
+    if (state.priceMin && m.price < state.priceMin) return false;
+    if (state.priceMax && m.price > state.priceMax) return false;
+    if (state.cc) {
+      const [lo, hi] = state.cc.split('-').map(Number);
+      if (m.cc < lo || m.cc > hi) return false;
+    }
+    if (state.kmMax && m.km > state.kmMax) return false;
+    if (state.perks.has('fin') && !m.financiamiento) return false;
+    if (state.perks.has('switch') && !m.motoswitch) return false;
+    if (state.perks.has('toma') && !m.tomaCuenta) return false;
+    return true;
+  });
+
+  // Sort
+  if (state.sort === 'featured') {
+    filtered.sort((a,b) => (b.featured?1:0) - (a.featured?1:0));
+  } else if (state.sort === 'price-asc') {
+    filtered.sort((a,b) => a.price - b.price);
+  } else if (state.sort === 'price-desc') {
+    filtered.sort((a,b) => b.price - a.price);
+  } else if (state.sort === 'year-desc') {
+    filtered.sort((a,b) => b.year - a.year);
+  } else if (state.sort === 'km-asc') {
+    filtered.sort((a,b) => a.km - b.km);
+  }
+
+  document.getElementById('resultsCount').textContent = filtered.length;
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '';
+    noRes.style.display = 'block';
+    return;
+  }
+  noRes.style.display = 'none';
+
+  grid.innerHTML = filtered.map(m => {
+    const gradient = TYPE_GRADIENTS[m.type] || TYPE_GRADIENTS.Naked;
+    const monthly = monthlyEstimate(m.price);
+    const perks = [];
+    if (m.financiamiento) perks.push('<span class="perk fin">Financiamiento</span>');
+    if (m.motoswitch) perks.push('<span class="perk switch">MotoSwitch</span>');
+    if (m.tomaCuenta) perks.push('<span class="perk toma">Toma a cuenta</span>');
+    if (m.tdc) perks.push('<span class="perk tdc">Aparta con TDC</span>');
+
+    const waMsg = encodeURIComponent(`Hola GEAR UP, me interesa la ${m.brand} ${m.model} ${m.year} (ID #${m.id}) que tienen en $${m.price.toLocaleString('es-MX')}. ¿Sigue disponible? ¿Puedo ir a verla?`);
+
+    const hasPhotos = Array.isArray(m.images) && m.images.length > 0;
+    const imgSection = hasPhotos
+      ? `<div class="moto-img has-photo" onclick="openGallery(${m.id})">
+          <img class="moto-img-photo" src="${m.images[0]}" alt="${m.brand} ${m.model} ${m.year}" loading="lazy" />
+          <div class="moto-img-photo-shade"></div>
+          <span class="moto-brand-tag">${m.brand}</span>
+          <span class="moto-year-tag">${m.year}</span>
+          ${m.featured ? '<span class="moto-featured">★ Destacada</span>' : ''}
+          <span class="moto-type-tag">${m.type}</span>
+          ${m.images.length > 1 ? `<span class="moto-img-gallery-count">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="14" rx="2"/><circle cx="9" cy="9" r="1.5" fill="currentColor"/><path d="M21 14l-5-5L5 17"/></svg>
+            ${m.images.length} fotos
+          </span>` : ''}
+          ${m.video ? `<span class="moto-img-video-tag">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            Video
+          </span>` : ''}
+        </div>`
+      : `<div class="moto-img">
+          <div class="moto-img-bg" style="background:${gradient};"></div>
+          <span class="moto-brand-tag">${m.brand}</span>
+          <span class="moto-year-tag">${m.year}</span>
+          ${m.featured ? '<span class="moto-featured">★ Destacada</span>' : ''}
+          <span class="moto-type-tag">${m.type}</span>
+          <div class="moto-hero-display">
+            <div class="moto-hero-model">${m.model}</div>
+            <div class="moto-hero-cc">${m.cc} cc</div>
+          </div>
+          <div class="moto-icon-wm">${MOTO_ICON}</div>
+        </div>`;
+
+    return `
+      <div class="moto-card">
+        ${imgSection}
+        <div class="moto-body">
+          <div class="moto-name">${m.model}</div>
+          <div class="moto-cc">${m.cc} cc · ${fmtKM(m.km)} · ${m.owners} dueño${m.owners>1?'s':''}</div>
+          <div class="moto-specs">
+            <div class="spec-mini">
+              <div class="spec-mini-value">${m.cc}cc</div>
+              <div class="spec-mini-label">Motor</div>
+            </div>
+            <div class="spec-mini">
+              <div class="spec-mini-value">${(m.km/1000).toFixed(1)}k</div>
+              <div class="spec-mini-label">Km</div>
+            </div>
+            <div class="spec-mini">
+              <div class="spec-mini-value">${m.factura.split(' ')[0]}</div>
+              <div class="spec-mini-label">Factura</div>
+            </div>
+          </div>
+          <div class="moto-perks">${perks.join('')}</div>
+          <div class="moto-price-row">
+            <div>
+              <div class="moto-price-label">Precio</div>
+              <div class="moto-price">${fmtPrice(m.price)}</div>
+            </div>
+            <div class="moto-financing">
+              o desde<br/>
+              <strong>${fmtPrice(monthly)}/mes</strong>
+            </div>
+          </div>
+          <a class="moto-cta" href="https://wa.me/${WA_PHONE}?text=${waMsg}" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.48A11.94 11.94 0 0 0 12.04 0C5.46 0 .12 5.34.12 11.92c0 2.1.55 4.15 1.6 5.96L0 24l6.27-1.64a11.92 11.92 0 0 0 5.77 1.47h.01c6.58 0 11.92-5.34 11.92-11.92 0-3.18-1.24-6.17-3.45-8.43Z"/></svg>
+            Preguntar por esta moto
+          </a>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderMarketplace() {
+  const grid = document.getElementById('mpGrid');
+  grid.innerHTML = marketplace.map(item => `
+    <div class="mp-card">
+      <div class="mp-img">${MP_ICONS[item.icon] || ''}</div>
+      <div class="mp-body">
+        <div class="mp-cat">${item.cat}</div>
+        <div class="mp-name">${item.name}</div>
+        <div class="mp-price">${fmtPrice(item.price)} <small>MXN</small></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function populateFinancingMotos() {
+  const sel = document.getElementById('finMoto');
+  motos.forEach(m => {
+    const opt = document.createElement('option');
+    opt.value = `${m.brand} ${m.model} ${m.year}`;
+    opt.textContent = `${m.brand} ${m.model} (${m.year}) — ${fmtPrice(m.price)}`;
+    sel.appendChild(opt);
+  });
+}
+
+/* ============ FILTERS ============ */
+function bindFilters() {
+  document.querySelectorAll('#typeChips .chip').forEach(c => {
+    c.addEventListener('click', () => {
+      document.querySelectorAll('#typeChips .chip').forEach(x => x.classList.remove('active'));
+      c.classList.add('active');
+      state.type = c.dataset.type;
+      renderMotos();
+    });
+  });
+
+  document.querySelectorAll('#perkChips .chip').forEach(c => {
+    c.addEventListener('click', () => {
+      c.classList.toggle('active');
+      const perk = c.dataset.perk;
+      if (c.classList.contains('active')) state.perks.add(perk);
+      else state.perks.delete(perk);
+      renderMotos();
+    });
+  });
+
+  document.getElementById('filterBrand').addEventListener('change', e => { state.brand = e.target.value; renderMotos(); });
+  document.getElementById('yearMin').addEventListener('input', e => { state.yearMin = e.target.value ? +e.target.value : null; renderMotos(); });
+  document.getElementById('yearMax').addEventListener('input', e => { state.yearMax = e.target.value ? +e.target.value : null; renderMotos(); });
+  document.getElementById('priceMin').addEventListener('input', e => { state.priceMin = e.target.value ? +e.target.value : null; renderMotos(); });
+  document.getElementById('priceMax').addEventListener('input', e => { state.priceMax = e.target.value ? +e.target.value : null; renderMotos(); });
+  document.getElementById('filterCC').addEventListener('change', e => { state.cc = e.target.value; renderMotos(); });
+  document.getElementById('filterKM').addEventListener('change', e => { state.kmMax = e.target.value ? +e.target.value : null; renderMotos(); });
+  document.getElementById('sortBy').addEventListener('change', e => { state.sort = e.target.value; renderMotos(); });
+}
+
+function clearFilters() {
+  state.type = '';
+  state.brand = '';
+  state.yearMin = state.yearMax = state.priceMin = state.priceMax = state.kmMax = null;
+  state.cc = '';
+  state.perks.clear();
+  document.querySelectorAll('#typeChips .chip').forEach(c => c.classList.remove('active'));
+  document.querySelector('#typeChips .chip[data-type=""]').classList.add('active');
+  document.querySelectorAll('#perkChips .chip').forEach(c => c.classList.remove('active'));
+  document.getElementById('filterBrand').value = '';
+  document.getElementById('yearMin').value = '';
+  document.getElementById('yearMax').value = '';
+  document.getElementById('priceMin').value = '';
+  document.getElementById('priceMax').value = '';
+  document.getElementById('filterCC').value = '';
+  document.getElementById('filterKM').value = '';
+  renderMotos();
+}
+
+function applySearchFromHero() {
+  state.type = document.getElementById('heroType').value;
+  state.brand = document.getElementById('heroBrand').value;
+  state.priceMax = document.getElementById('heroPrice').value ? +document.getElementById('heroPrice').value : null;
+
+  // Reflect in side filters
+  document.querySelectorAll('#typeChips .chip').forEach(c => c.classList.toggle('active', c.dataset.type === state.type));
+  document.getElementById('filterBrand').value = state.brand;
+  document.getElementById('priceMax').value = state.priceMax || '';
+
+  document.getElementById('catalogo').scrollIntoView({behavior: 'smooth'});
+  renderMotos();
+}
+
+/* ============ MENU ============ */
+document.getElementById('menuToggle').addEventListener('click', () => {
+  document.getElementById('navLinks').classList.toggle('open');
+});
+document.querySelectorAll('#navLinks a').forEach(a => {
+  a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open'));
+});
+
+/* ============ WHATSAPP ============ */
+function openWhatsApp(msg) {
+  window.open(`https://wa.me/${WA_PHONE}?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+/* ============ FILE UPLOAD ============ */
+function markFileUpload(input) {
+  const drop = input.closest('.file-drop');
+  if (input.files && input.files[0]) {
+    drop.classList.add('has-file');
+    const text = drop.querySelector('.file-drop-text');
+    text.textContent = input.files[0].name.length > 22 ? input.files[0].name.slice(0,20) + '…' : input.files[0].name;
+  }
+}
+
+/* ============ FINANCING SUBMIT ============ */
+function submitFinancing() {
+  // Acá iría tu integración: webhook → Zapier / Make → Sheet + email/WhatsApp al asesor
+  showToast('¡Solicitud recibida! Te contactamos en menos de 24h.');
+  document.getElementById('finForm').reset();
+  document.querySelectorAll('.file-drop').forEach(d => d.classList.remove('has-file'));
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 4500);
+}
+
+/* ============ LIGHTBOX / GALLERY ============ */
+let lbState = { moto: null, items: [], index: 0 };
+
+function buildGalleryItems(m) {
+  const items = [];
+  if (m.video) items.push({ type: 'video', src: m.video, poster: (m.images && m.images[0]) || '' });
+  if (Array.isArray(m.images)) m.images.forEach(src => items.push({ type: 'image', src }));
+  return items;
+}
+
+function openGallery(motoId) {
+  const m = motos.find(x => x.id === motoId);
+  if (!m) return;
+  const items = buildGalleryItems(m);
+  if (items.length === 0) return;
+  lbState.moto = m;
+  lbState.items = items;
+  lbState.index = 0;
+  document.getElementById('lbTitle').textContent = `${m.brand} ${m.model}`;
+  document.getElementById('lbMeta').textContent = `${m.year} · ${m.cc}cc · ${fmtKM(m.km)} · ${m.owners} dueño${m.owners>1?'s':''} · Factura ${m.factura}`;
+  document.getElementById('lbPrice').textContent = fmtPrice(m.price);
+  const waMsg = encodeURIComponent(`Hola GEAR UP, me interesa la ${m.brand} ${m.model} ${m.year} (ID #${m.id}) en $${m.price.toLocaleString('es-MX')}. ¿Sigue disponible?`);
+  document.getElementById('lbWa').href = `https://wa.me/${WA_PHONE}?text=${waMsg}`;
+  // Render thumbs
+  const thumbs = document.getElementById('lbThumbs');
+  thumbs.innerHTML = items.map((it, i) => {
+    const thumbSrc = it.type === 'video' ? (it.poster || '') : it.src;
+    const videoCls = it.type === 'video' ? ' is-video' : '';
+    return `<div class="lb-thumb${videoCls} ${i===0?'active':''}" onclick="lbGoTo(${i})"><img src="${thumbSrc}" alt="" loading="lazy"/></div>`;
+  }).join('');
+  lbRender();
+  document.getElementById('lightbox').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function lbRender() {
+  const m = lbState.moto;
+  const items = lbState.items;
+  if (!m || !items.length) return;
+  const it = items[lbState.index];
+  const media = document.getElementById('lbMedia');
+  // Stop any playing video before swapping
+  const oldVideo = media.querySelector('video');
+  if (oldVideo) { try { oldVideo.pause(); } catch(e){} }
+  if (it.type === 'video') {
+    const poster = it.poster ? ` poster="${it.poster}"` : '';
+    media.innerHTML = `<video class="lb-img" src="${it.src}"${poster} controls autoplay muted playsinline preload="metadata" aria-label="${m.brand} ${m.model} ${m.year} - video"></video>`;
+  } else {
+    media.innerHTML = `<img class="lb-img" src="${it.src}" alt="${m.brand} ${m.model} ${m.year} - foto ${lbState.index+1}" />`;
+  }
+  document.getElementById('lbCounter').textContent = `${lbState.index+1} / ${items.length}`;
+  document.querySelectorAll('.lb-thumb').forEach((el, i) => {
+    el.classList.toggle('active', i === lbState.index);
+  });
+}
+
+function lbGoTo(i) {
+  lbState.index = i;
+  lbRender();
+}
+
+function lbNext() {
+  if (!lbState.items.length) return;
+  lbState.index = (lbState.index + 1) % lbState.items.length;
+  lbRender();
+}
+
+function lbPrev() {
+  if (!lbState.items.length) return;
+  lbState.index = (lbState.index - 1 + lbState.items.length) % lbState.items.length;
+  lbRender();
+}
+
+function closeGallery() {
+  const media = document.getElementById('lbMedia');
+  const v = media && media.querySelector('video');
+  if (v) { try { v.pause(); } catch(e){} }
+  if (media) media.innerHTML = '';
+  document.getElementById('lightbox').classList.remove('show');
+  document.body.style.overflow = '';
+  lbState.moto = null;
+  lbState.items = [];
+}
+
+// Keyboard + click-outside support for lightbox
+document.addEventListener('keydown', (e) => {
+  if (!document.getElementById('lightbox').classList.contains('show')) return;
+  if (e.key === 'Escape') closeGallery();
+  if (e.key === 'ArrowRight') lbNext();
+  if (e.key === 'ArrowLeft') lbPrev();
+});
+document.getElementById('lightbox').addEventListener('click', (e) => {
+  if (e.target.id === 'lightbox') closeGallery();
+});
+
+/* ============ INIT ============ */
+document.addEventListener('DOMContentLoaded', () => {
+  renderMotos();
+  renderMarketplace();
+  populateFinancingMotos();
+  bindFilters();
+
+  const nav = document.querySelector('.nav');
+  if (nav) {
+    const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 40);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+
+  // Reveal-on-scroll observer
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!prefersReducedMotion && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+    document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => io.observe(el));
+  } else {
+    document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => el.classList.add('in'));
+  }
+
+  // Stat counter animation
+  if (!prefersReducedMotion && 'IntersectionObserver' in window) {
+    const statObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target;
+        statObserver.unobserve(el);
+        const text = el.textContent.trim();
+        const match = text.match(/^(\d+)(.*)$/);
+        if (!match) return;
+        const end = parseInt(match[1], 10);
+        const suffix = match[2];
+        if (!isFinite(end) || end === 0) return;
+        const duration = 1100;
+        const startTime = performance.now();
+        const step = (now) => {
+          const p = Math.min(1, (now - startTime) / duration);
+          const eased = 1 - Math.pow(1 - p, 3);
+          el.textContent = Math.round(end * eased) + suffix;
+          if (p < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      });
+    }, { threshold: 0.4 });
+    document.querySelectorAll('.stat-num, .fin-stat-num').forEach(el => statObserver.observe(el));
+  }
+
+  const themeBtn = document.getElementById('themeToggle');
+  if (themeBtn) {
+    let seen = false;
+    try { seen = localStorage.getItem('gearup-theme-seen') === '1'; } catch(e) {}
+    if (seen) themeBtn.classList.add('seen');
+    themeBtn.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      const next = current === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      themeBtn.classList.add('seen');
+      try {
+        localStorage.setItem('gearup-theme', next);
+        localStorage.setItem('gearup-theme-seen', '1');
+      } catch(e) {}
+    });
+  }
+});
+</script>
+
+</body>
+</html>
