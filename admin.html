@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Panel de administración — GEAR UP Motorcycles</title>
+<link rel="icon" type="image/png" href="favicon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#084DF9; --blue2:#4F7CFF; --ink:#0A0A0B; --panel:#15151a; --panel2:#1d1d24;
+    --line:#2a2a32; --muted:#9a9aa6; --soft:#26262c; --white:#f4f4f6; --green:#25D366;
+    --danger:#EF4444; --warn:#FBBF24; --ok:#10B981;
+    --radius:14px; --font:'Outfit',system-ui,sans-serif; --display:'Bebas Neue',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--font);background:#0a0a0b;color:var(--white);line-height:1.5;-webkit-font-smoothing:antialiased}
+  button{font-family:inherit;cursor:pointer}
+  input,select,textarea{font-family:inherit}
+  a{color:var(--blue2)}
+
+  /* ===== LOGIN GATE ===== */
+  #gate{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 30% 20%,rgba(8,77,249,.18),transparent 60%),#0a0a0b;z-index:100;padding:24px}
+  .gate-card{width:100%;max-width:380px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:34px 30px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+  .gate-card h1{font-family:var(--display);font-size:34px;letter-spacing:1px;margin-bottom:4px}
+  .gate-card p{color:var(--muted);font-size:14px;margin-bottom:22px}
+  .gate-card input{width:100%;padding:13px 15px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--white);font-size:15px;margin-bottom:12px}
+  .gate-card input:focus{outline:none;border-color:var(--blue)}
+  .gate-card button{width:100%;padding:13px;border:none;border-radius:10px;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;font-weight:700;font-size:15px;letter-spacing:.5px}
+  .gate-err{color:var(--danger);font-size:13px;min-height:18px;margin-top:8px}
+
+  /* ===== LAYOUT ===== */
+  header.top{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:16px;padding:12px 20px;background:rgba(13,13,16,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);flex-wrap:wrap}
+  header.top img{height:34px;width:auto;display:block}
+  header.top .title{font-family:var(--display);font-size:22px;letter-spacing:1px}
+  header.top .grow{flex:1}
+  .btn{border:1px solid var(--line);background:var(--panel2);color:var(--white);padding:9px 16px;border-radius:10px;font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:7px;transition:.15s}
+  .btn:hover{border-color:var(--blue)}
+  .btn.primary{background:linear-gradient(135deg,var(--blue),var(--blue2));border:none;color:#fff}
+  .btn.green{background:var(--green);border:none;color:#06281a}
+  .btn.danger{background:transparent;border-color:#5b2330;color:#ff8a8a}
+  .btn.small{padding:6px 11px;font-size:12.5px;border-radius:8px}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .wrap{max-width:1180px;margin:0 auto;padding:22px 20px 80px}
+  .tabs{display:flex;gap:8px;margin-bottom:20px}
+  .tab{padding:10px 20px;border-radius:10px;background:var(--panel);border:1px solid var(--line);color:var(--muted);font-weight:700;letter-spacing:.5px}
+  .tab.active{background:var(--panel2);color:var(--white);border-color:var(--blue)}
+  .toolbar{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+  .toolbar input.search{flex:1;min-width:180px;padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--white)}
+  .toolbar input.search:focus{outline:none;border-color:var(--blue)}
+
+  /* ===== LIST ===== */
+  .list{display:grid;gap:10px}
+  .row{display:flex;align-items:center;gap:14px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:11px 14px}
+  .row.sold{opacity:.62}
+  .row .thumb{width:60px;height:46px;border-radius:8px;background:var(--soft);background-size:cover;background-position:center;flex-shrink:0;display:grid;place-items:center;color:var(--muted);font-size:10px;overflow:hidden}
+  .row .info{flex:1;min-width:0}
+  .row .info b{font-size:15px;font-weight:700}
+  .row .info .meta{color:var(--muted);font-size:12.5px;margin-top:2px}
+  .row .price{font-family:var(--display);font-size:22px;letter-spacing:.5px;white-space:nowrap}
+  .row .acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+  .tag-sold{background:var(--danger);color:#fff;font-size:10px;font-weight:800;letter-spacing:1px;padding:3px 8px;border-radius:6px;text-transform:uppercase}
+  .tag-feat{background:var(--warn);color:#3a2a00;font-size:10px;font-weight:800;letter-spacing:.5px;padding:3px 8px;border-radius:6px}
+  .empty{color:var(--muted);text-align:center;padding:48px 0}
+
+  /* ===== EDITOR (drawer) ===== */
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:40;display:none}
+  .overlay.open{display:block}
+  .drawer{position:fixed;top:0;right:0;bottom:0;width:min(960px,100%);background:#101015;border-left:1px solid var(--line);z-index:41;transform:translateX(100%);transition:transform .25s ease;display:flex;flex-direction:column}
+  .drawer.open{transform:none}
+  .drawer-head{display:flex;align-items:center;gap:12px;padding:16px 22px;border-bottom:1px solid var(--line)}
+  .drawer-head h2{font-family:var(--display);font-size:24px;letter-spacing:1px;flex:1}
+  .drawer-body{flex:1;overflow:auto;display:grid;grid-template-columns:1.15fr .85fr;gap:0}
+  .form-col{padding:22px;overflow:auto}
+  .prev-col{padding:22px;background:#0a0a0b;border-left:1px solid var(--line);overflow:auto}
+  @media(max-width:820px){.drawer-body{grid-template-columns:1fr}.prev-col{border-left:none;border-top:1px solid var(--line)}}
+  .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .field{margin-bottom:12px}
+  .field.full{grid-column:1/-1}
+  .field label{display:block;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px;font-weight:600}
+  .field input,.field select,.field textarea{width:100%;padding:10px 12px;border-radius:9px;border:1px solid var(--line);background:var(--panel);color:var(--white);font-size:14px}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--blue)}
+  .checks{display:flex;flex-wrap:wrap;gap:14px;margin:6px 0 14px}
+  .check{display:flex;align-items:center;gap:7px;font-size:13.5px;color:var(--white)}
+  .check input{width:17px;height:17px;accent-color:var(--blue)}
+  .section-label{font-family:var(--display);font-size:18px;letter-spacing:1px;margin:18px 0 10px;color:var(--blue2)}
+  .drop{border:1.5px dashed var(--line);border-radius:10px;padding:16px;text-align:center;color:var(--muted);font-size:13px;cursor:pointer;transition:.15s}
+  .drop:hover{border-color:var(--blue);color:var(--white)}
+  .thumbs{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .thumbs .t{position:relative;width:74px;height:56px;border-radius:8px;background-size:cover;background-position:center;background-color:var(--soft);border:1px solid var(--line)}
+  .thumbs .t button{position:absolute;top:-7px;right:-7px;width:20px;height:20px;border-radius:50%;background:var(--danger);color:#fff;border:none;font-size:12px;line-height:1;display:grid;place-items:center}
+  .hint{font-size:12px;color:var(--muted);margin-top:5px}
+  .hint.warn{color:var(--warn)}
+  .drawer-foot{display:flex;gap:10px;justify-content:flex-end;padding:14px 22px;border-top:1px solid var(--line)}
+
+  /* ===== PREVIEW CARD (réplica del sitio) ===== */
+  .pv-note{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+  .pv-card{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;max-width:340px;margin:0 auto}
+  .pv-img{position:relative;aspect-ratio:4/3;background:linear-gradient(135deg,#1a2456,#0c1330);display:flex;align-items:center;justify-content:center}
+  .pv-img img{width:100%;height:100%;object-fit:cover}
+  .pv-img .ph{color:#5b6b9a;font-family:var(--display);font-size:26px;letter-spacing:1px;text-align:center;padding:0 14px}
+  .pv-tag{position:absolute;font-size:11px;font-weight:700;padding:4px 9px;border-radius:7px;backdrop-filter:blur(6px)}
+  .pv-brand{top:12px;left:12px;background:rgba(8,77,249,.85);color:#fff}
+  .pv-year{top:12px;right:12px;background:rgba(0,0,0,.55);color:#fff}
+  .pv-type{bottom:12px;left:12px;background:rgba(0,0,0,.55);color:#fff}
+  .pv-feat{bottom:12px;right:12px;background:var(--warn);color:#3a2a00}
+  .pv-sold{position:absolute;top:46%;left:50%;transform:translate(-50%,-50%) rotate(-8deg);background:var(--danger);color:#fff;font-family:'Bebas Neue',sans-serif;font-weight:800;letter-spacing:3px;font-size:22px;padding:8px 26px;border-radius:8px;border:2px solid rgba(255,255,255,.85)}
+  .pv-body{padding:16px}
+  .pv-name{font-family:var(--display);font-size:24px;letter-spacing:.5px}
+  .pv-cc{color:var(--muted);font-size:13px;margin:2px 0 12px}
+  .pv-specs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+  .pv-spec{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:7px;text-align:center}
+  .pv-spec .v{font-weight:700;font-size:14px}
+  .pv-spec .l{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.5px}
+  .pv-perks{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+  .pv-perk{font-size:10.5px;font-weight:600;padding:3px 8px;border-radius:6px;background:rgba(8,77,249,.15);color:var(--blue2);border:1px solid rgba(8,77,249,.3)}
+  .pv-price-row{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:14px}
+  .pv-plabel{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+  .pv-price{font-family:var(--display);font-size:30px;letter-spacing:.5px}
+  .pv-fin{text-align:right;color:var(--muted);font-size:11px}
+  .pv-fin b{color:var(--white);font-size:14px}
+  .pv-cta{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--green);color:#06281a;font-weight:700;padding:12px;border-radius:10px;font-size:14px}
+  .pv-cta.sold{background:var(--soft);color:var(--muted);font-family:var(--display);letter-spacing:1.5px;text-transform:uppercase}
+  .pv-drive{display:block;text-align:center;margin-top:10px;font-size:13px}
+
+  /* ===== TOAST / STATUS ===== */
+  #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120%);background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px 20px;z-index:60;transition:.3s;max-width:90vw;box-shadow:0 20px 50px rgba(0,0,0,.5)}
+  #toast.show{transform:translateX(-50%)}
+  #toast.ok{border-color:var(--ok)} #toast.err{border-color:var(--danger)}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:70;display:none;align-items:center;justify-content:center;padding:24px}
+  .modal.open{display:flex}
+  .modal-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:26px;max-width:520px;width:100%}
+  .modal-card h3{font-family:var(--display);font-size:24px;letter-spacing:1px;margin-bottom:10px}
+  .modal-card p{color:var(--muted);font-size:13.5px;margin-bottom:10px}
+  .modal-card ol{color:var(--muted);font-size:13px;margin:0 0 14px 18px} .modal-card ol li{margin-bottom:5px}
+  .modal-card input{width:100%;padding:11px 13px;border-radius:9px;border:1px solid var(--line);background:var(--panel2);color:var(--white);margin-bottom:12px}
+  .pub-log{font-size:12.5px;color:var(--muted);margin-top:10px;max-height:160px;overflow:auto;white-space:pre-wrap}
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div id="gate">
+  <form class="gate-card" id="gateForm">
+    <h1>Panel GEAR UP</h1>
+    <p>Acceso privado de administración</p>
+    <input type="password" id="gatePass" placeholder="Contraseña" autocomplete="current-password" autofocus />
+    <button type="submit">Entrar</button>
+    <div class="gate-err" id="gateErr"></div>
+  </form>
+</div>
+
+<!-- ===== APP ===== -->
+<div id="app" hidden>
+  <header class="top">
+    <img src="img/logolight.png" alt="GEAR UP" />
+    <span class="title">Administración</span>
+    <span class="grow"></span>
+    <button class="btn small" id="btnToken">🔑 Conexión</button>
+    <button class="btn primary" id="btnPublish">⬆ Publicar cambios</button>
+  </header>
+
+  <div class="wrap">
+    <div class="tabs">
+      <button class="tab active" data-tab="motos">🏍️ Motos</button>
+      <button class="tab" data-tab="mp">🛒 Marketplace</button>
+    </div>
+
+    <div class="toolbar">
+      <input class="search" id="search" placeholder="Buscar…" />
+      <button class="btn primary" id="btnAdd">＋ Agregar</button>
+    </div>
+
+    <div class="list" id="list"></div>
+  </div>
+</div>
+
+<!-- ===== EDITOR DRAWER ===== -->
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h2 id="drawerTitle">Editar</h2>
+    <button class="btn small" id="drawerClose">✕ Cerrar</button>
+  </div>
+  <div class="drawer-body">
+    <div class="form-col" id="formCol"><!-- form injected --></div>
+    <div class="prev-col">
+      <div class="pv-note">▸ Vista previa (cómo se verá en el sitio)</div>
+      <div id="preview"></div>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn" id="btnCancel">Cancelar</button>
+    <button class="btn primary" id="btnSaveLocal">Guardar</button>
+  </div>
+</aside>
+
+<!-- ===== TOKEN MODAL ===== -->
+<div class="modal" id="tokenModal">
+  <div class="modal-card">
+    <h3>Conexión con GitHub</h3>
+    <p>Para que el panel publique cambios necesita un <b>token</b> de GitHub (se guarda solo en este navegador).</p>
+    <ol>
+      <li>Entra a github.com → Settings → Developer settings → <b>Personal access tokens → Fine-grained tokens</b>.</li>
+      <li>Generate new token → acceso solo al repo <b>gearup_motors</b> → permiso <b>Contents: Read and write</b>.</li>
+      <li>Copia el token (empieza con <code>github_pat_…</code>) y pégalo aquí abajo.</li>
+    </ol>
+    <input type="password" id="tokenInput" placeholder="github_pat_… o ghp_…" />
+    <div class="drawer-foot" style="border:none;padding:0">
+      <button class="btn" id="tokenCancel">Cancelar</button>
+      <button class="btn danger" id="tokenClear">Borrar token</button>
+      <button class="btn primary" id="tokenSave">Guardar</button>
+    </div>
+    <div class="pub-log" id="tokenStatus"></div>
+  </div>
+</div>
+
+<!-- ===== PUBLISH MODAL ===== -->
+<div class="modal" id="pubModal">
+  <div class="modal-card">
+    <h3>Publicando…</h3>
+    <p>Subiendo archivos y actualizando el inventario. No cierres esta ventana.</p>
+    <div class="pub-log" id="pubLog"></div>
+    <div class="drawer-foot" style="border:none;padding:0">
+      <button class="btn" id="pubClose" disabled>Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ===================== CONFIG ===================== */
+const OWNER='carlosmontano-adsproject', REPO='gearup_motors', BRANCH='main';
+const DATA_PATH='data/inventario.json';
+const RAW_URL=`https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${DATA_PATH}`;
+const PASSWORD='Adsproject2026';
+const TYPES=['Adventure','Naked','Sport','Scrambler','Cruiser','Enduro','Touring'];
+const FACTURAS=['Original','Carta factura','Factura de agencia'];
+const PROCEDENCIAS=['Nacional','Importado'];
+const MP_CATS=['Cascos','Equipo','Touring','Seguridad','Electrónica','Vehículos','Otros'];
+
+/* ===================== STATE ===================== */
+let data={motos:[],marketplace:[]};
+let dataSha=null;
+let tab='motos';
+let editing=null;           // {type:'moto'|'mp', index:number|null, item:{}}
+const uploads={};           // path -> {b64, dataUrl}  (pendientes de subir)
+let dirty=false;
+
+/* ===================== UTILES ===================== */
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=n=>'$'+Number(n||0).toLocaleString('es-MX');
+const token=()=>localStorage.getItem('gearup-gh-token')||'';
+function toast(msg,kind){const t=$('toast');t.textContent=msg;t.className=(kind||'')+' show';setTimeout(()=>t.className=t.className.replace('show',''),3200);}
+function b64Unicode(str){return btoa(unescape(encodeURIComponent(str)));}
+function monthlyEstimate(price){const p=price*0.9,r=0.16/12,n=36;const pay=p*(r*Math.pow(1+r,n))/(Math.pow(1+r,n)-1);return Math.round(pay/100)*100;}
+function slugify(s){return String(s||'item').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40);}
+
+/* ===================== GITHUB API ===================== */
+function ghHeaders(){return{'Authorization':'Bearer '+token(),'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};}
+async function ghGetFile(path){
+  const r=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}?ref=${BRANCH}`,{headers:ghHeaders(),cache:'no-store'});
+  if(r.status===404)return null;
+  if(!r.ok)throw new Error('GitHub '+r.status+': '+(await r.text()).slice(0,140));
+  return await r.json();
+}
+async function ghPutFile(path,b64,message,sha){
+  const body={message,content:b64,branch:BRANCH};
+  if(sha)body.sha=sha;
+  const r=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}`,{method:'PUT',headers:ghHeaders(),body:JSON.stringify(body)});
+  if(!r.ok)throw new Error('GitHub '+r.status+': '+(await r.text()).slice(0,160));
+  return await r.json();
+}
+
+/* ===================== CARGA DE DATOS ===================== */
+async function loadData(){
+  try{
+    if(token()){
+      const f=await ghGetFile(DATA_PATH);
+      if(f){dataSha=f.sha;data=JSON.parse(decodeURIComponent(escape(atob(f.content.replace(/\n/g,'')))));}
+    }else{
+      const r=await fetch(RAW_URL+'?t='+Date.now(),{cache:'no-store'});
+      if(r.ok)data=await r.json();
+    }
+  }catch(e){toast('No se pudo cargar el inventario: '+e.message,'err');}
+  data.motos=data.motos||[]; data.marketplace=data.marketplace||[];
+  renderList();
+}
+
+/* ===================== LISTAS ===================== */
+function nextMotoId(){return data.motos.reduce((m,x)=>Math.max(m,x.id||0),0)+1;}
+function renderList(){
+  const q=($('search').value||'').toLowerCase();
+  const host=$('list');
+  if(tab==='motos'){
+    const items=data.motos.map((m,i)=>({m,i})).filter(({m})=>(m.brand+' '+m.model+' '+m.year).toLowerCase().includes(q));
+    host.innerHTML=items.length?items.map(({m,i})=>motoRow(m,i)).join(''):'<div class="empty">No hay motos. Usa “＋ Agregar”.</div>';
+  }else{
+    const items=data.marketplace.map((m,i)=>({m,i})).filter(({m})=>(m.name+' '+m.cat).toLowerCase().includes(q));
+    host.innerHTML=items.length?items.map(({m,i})=>mpRow(m,i)).join(''):'<div class="empty">No hay productos. Usa “＋ Agregar”.</div>';
+  }
+}
+function thumbBg(item){
+  if(item.images&&item.images[0]){const u=uploads[item.images[0]];return `style="background-image:url('${u?u.dataUrl:('../'+item.images[0]).replace('../','')}')"`;}
+  if(item.image){const u=uploads[item.image];return `style="background-image:url('${u?u.dataUrl:item.image}')"`;}
+  return '';
+}
+function motoRow(m,i){
+  return `<div class="row ${m.sold?'sold':''}">
+    <div class="thumb" ${thumbBg(m)}>${(m.images&&m.images[0])?'':'sin foto'}</div>
+    <div class="info"><b>${esc(m.brand)} ${esc(m.model)}</b>
+      <div class="meta">${m.year} · ${m.cc}cc · ${Number(m.km).toLocaleString('es-MX')} km · ${esc(m.factura||'')}
+      ${m.featured?'<span class="tag-feat">Destacada</span>':''} ${m.sold?'<span class="tag-sold">Vendido</span>':''}</div>
+    </div>
+    <div class="price">${fmt(m.price)}</div>
+    <div class="acts">
+      <button class="btn small" onclick="openEditor('moto',${i})">Editar</button>
+      <button class="btn small" onclick="toggleSold(${i})">${m.sold?'Marcar disponible':'Marcar vendido'}</button>
+      <button class="btn small danger" onclick="removeItem('moto',${i})">Eliminar</button>
+    </div>
+  </div>`;
+}
+function mpRow(m,i){
+  return `<div class="row">
+    <div class="thumb" ${thumbBg(m)}>${m.image?'':'🛒'}</div>
+    <div class="info"><b>${esc(m.name)}</b><div class="meta">${esc(m.cat||'')}</div></div>
+    <div class="price">${fmt(m.price)}</div>
+    <div class="acts">
+      <button class="btn small" onclick="openEditor('mp',${i})">Editar</button>
+      <button class="btn small danger" onclick="removeItem('mp',${i})">Eliminar</button>
+    </div>
+  </div>`;
+}
+function toggleSold(i){data.motos[i].sold=!data.motos[i].sold;dirty=true;renderList();toast(data.motos[i].sold?'Marcada como vendida (recuerda Publicar)':'Marcada disponible');}
+function removeItem(type,i){
+  const arr=type==='moto'?data.motos:data.marketplace;
+  if(!confirm('¿Eliminar "'+(arr[i].model||arr[i].name)+'"? Se aplicará al Publicar.'))return;
+  arr.splice(i,1);dirty=true;renderList();
+}
+
+/* ===================== EDITOR ===================== */
+function openEditor(type,index){
+  const isNew=index==null;
+  let item;
+  if(type==='moto'){
+    item=isNew?{id:nextMotoId(),brand:'',model:'',year:new Date().getFullYear(),type:'Naked',cc:0,km:0,owners:1,procedencia:'Nacional',factura:'Original',financiamiento:true,motoswitch:true,tomaCuenta:true,tdc:false,featured:false,sold:false,price:0,mensualidad:'',driveUrl:'',images:[],video:''}:JSON.parse(JSON.stringify(data.motos[index]));
+  }else{
+    item=isNew?{name:'',cat:'Equipo',price:0,image:'',icon:'',driveUrl:''}:JSON.parse(JSON.stringify(data.marketplace[index]));
+  }
+  editing={type,index,item};
+  $('drawerTitle').textContent=(isNew?'Agregar ':'Editar ')+(type==='moto'?'moto':'producto');
+  $('formCol').innerHTML=type==='moto'?motoForm(item):mpForm(item);
+  bindForm();
+  updatePreview();
+  $('overlay').classList.add('open');$('drawer').classList.add('open');
+}
+function closeEditor(){$('overlay').classList.remove('open');$('drawer').classList.remove('open');editing=null;}
+
+function opt(list,val){return list.map(o=>`<option ${o===val?'selected':''}>${o}</option>`).join('');}
+function motoForm(m){
+  return `
+  <div class="fgrid">
+    <div class="field"><label>Marca</label><input data-f="brand" value="${esc(m.brand)}" placeholder="BMW, Ducati…"></div>
+    <div class="field"><label>Modelo</label><input data-f="model" value="${esc(m.model)}" placeholder="R1250 GS"></div>
+    <div class="field"><label>Año</label><input data-f="year" type="number" value="${m.year||''}"></div>
+    <div class="field"><label>Tipo</label><select data-f="type">${opt(TYPES,m.type)}</select></div>
+    <div class="field"><label>Cilindrada (cc)</label><input data-f="cc" type="number" value="${m.cc||''}"></div>
+    <div class="field"><label>Kilometraje</label><input data-f="km" type="number" value="${m.km||''}"></div>
+    <div class="field"><label>Dueños</label><input data-f="owners" type="number" value="${m.owners||1}"></div>
+    <div class="field"><label>Procedencia</label><select data-f="procedencia">${opt(PROCEDENCIAS,m.procedencia)}</select></div>
+    <div class="field"><label>Factura</label><select data-f="factura">${opt(FACTURAS,m.factura)}</select></div>
+    <div class="field"><label>Precio (MXN)</label><input data-f="price" type="number" value="${m.price||''}"></div>
+    <div class="field"><label>Mensualidad (opcional)</label><input data-f="mensualidad" type="number" value="${m.mensualidad||''}" placeholder="auto: ${fmt(monthlyEstimate(m.price||0))}"></div>
+    <div class="field"><label>Link / carpeta de Drive (opcional)</label><input data-f="driveUrl" value="${esc(m.driveUrl)}" placeholder="https://drive.google.com/…"></div>
+  </div>
+  <div class="checks">
+    <label class="check"><input type="checkbox" data-f="financiamiento" ${m.financiamiento?'checked':''}> Financiamiento</label>
+    <label class="check"><input type="checkbox" data-f="motoswitch" ${m.motoswitch?'checked':''}> MotoSwitch</label>
+    <label class="check"><input type="checkbox" data-f="tomaCuenta" ${m.tomaCuenta?'checked':''}> Toma a cuenta</label>
+    <label class="check"><input type="checkbox" data-f="tdc" ${m.tdc?'checked':''}> Aparta con TDC</label>
+    <label class="check"><input type="checkbox" data-f="featured" ${m.featured?'checked':''}> Destacada</label>
+    <label class="check"><input type="checkbox" data-f="sold" ${m.sold?'checked':''}> Vendida</label>
+  </div>
+  <div class="section-label">Fotos</div>
+  <div class="drop" id="dropImg">Haz clic o arrastra imágenes aquí (JPG/PNG)</div>
+  <input type="file" id="fileImg" accept="image/*" multiple hidden>
+  <div class="thumbs" id="thumbsImg"></div>
+  <div class="section-label">Video (opcional)</div>
+  <div class="drop" id="dropVid">Haz clic para subir un video (MP4)</div>
+  <input type="file" id="fileVid" accept="video/*" hidden>
+  <div class="hint" id="vidName">${m.video?('Actual: '+m.video.split('/').pop()):''}</div>
+  <div class="hint warn">⚠ Videos de más de ~25 MB pueden no subir por el panel. Para esos, usa el link de Drive o compártelos comprimidos.</div>`;
+}
+function mpForm(m){
+  return `
+  <div class="field"><label>Nombre del producto</label><input data-f="name" value="${esc(m.name)}" placeholder="Casco AGV K6"></div>
+  <div class="fgrid">
+    <div class="field"><label>Categoría</label><select data-f="cat">${opt(MP_CATS,m.cat)}</select></div>
+    <div class="field"><label>Precio (MXN)</label><input data-f="price" type="number" value="${m.price||''}"></div>
+  </div>
+  <div class="field"><label>Link / carpeta de Drive (opcional)</label><input data-f="driveUrl" value="${esc(m.driveUrl)}" placeholder="https://drive.google.com/…"></div>
+  <div class="section-label">Foto</div>
+  <div class="drop" id="dropMpImg">Haz clic o arrastra una imagen</div>
+  <input type="file" id="fileMpImg" accept="image/*" hidden>
+  <div class="thumbs" id="thumbsMpImg"></div>`;
+}
+
+function bindForm(){
+  document.querySelectorAll('#formCol [data-f]').forEach(el=>{
+    const ev=el.type==='checkbox'?'change':'input';
+    el.addEventListener(ev,()=>{
+      const f=el.dataset.f;let v=el.type==='checkbox'?el.checked:el.value;
+      if(['year','cc','km','owners','price'].includes(f))v=v===''?0:Number(v);
+      if(f==='mensualidad')v=v===''?'':Number(v);
+      editing.item[f]=v;updatePreview();
+    });
+  });
+  if(editing.type==='moto'){
+    $('dropImg').onclick=()=>$('fileImg').click();
+    $('fileImg').onchange=e=>addImages(e.target.files);
+    $('dropVid').onclick=()=>$('fileVid').click();
+    $('fileVid').onchange=e=>addVideo(e.target.files[0]);
+    renderImgThumbs();
+  }else{
+    $('dropMpImg').onclick=()=>$('fileMpImg').click();
+    $('fileMpImg').onchange=e=>addMpImage(e.target.files[0]);
+    renderMpThumbs();
+  }
+}
+function fileToData(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file);});}
+async function addImages(files){
+  for(const file of files){
+    const ext=(file.name.split('.').pop()||'jpg').toLowerCase();
+    const path=`img/inv/${slugify(editing.item.brand+'-'+editing.item.model)||'moto'}-${Date.now()}-${Math.floor(Math.random()*1e4)}.${ext}`;
+    const dataUrl=await fileToData(file);
+    uploads[path]={b64:dataUrl.split(',')[1],dataUrl};
+    editing.item.images=editing.item.images||[];editing.item.images.push(path);
+  }
+  renderImgThumbs();updatePreview();
+}
+async function addVideo(file){
+  if(!file)return;
+  if(file.size>40*1024*1024){toast('El video pesa '+(file.size/1048576).toFixed(0)+' MB; puede fallar al publicar. Mejor usa Drive.','err');}
+  const ext=(file.name.split('.').pop()||'mp4').toLowerCase();
+  const path=`img/inv/${slugify(editing.item.brand+'-'+editing.item.model)||'moto'}-${Date.now()}.${ext}`;
+  const dataUrl=await fileToData(file);
+  uploads[path]={b64:dataUrl.split(',')[1],dataUrl};
+  editing.item.video=path;$('vidName').textContent='Nuevo: '+file.name;updatePreview();
+}
+async function addMpImage(file){
+  if(!file)return;
+  const ext=(file.name.split('.').pop()||'jpg').toLowerCase();
+  const path=`img/mp/${slugify(editing.item.name)||'producto'}-${Date.now()}.${ext}`;
+  const dataUrl=await fileToData(file);
+  uploads[path]={b64:dataUrl.split(',')[1],dataUrl};
+  editing.item.image=path;renderMpThumbs();updatePreview();
+}
+function imgSrc(p){return uploads[p]?uploads[p].dataUrl:p;}
+function renderImgThumbs(){
+  const host=$('thumbsImg');if(!host)return;
+  host.innerHTML=(editing.item.images||[]).map((p,i)=>`<div class="t" style="background-image:url('${imgSrc(p)}')"><button onclick="delImg(${i})">✕</button></div>`).join('');
+}
+function delImg(i){editing.item.images.splice(i,1);renderImgThumbs();updatePreview();}
+function renderMpThumbs(){
+  const host=$('thumbsMpImg');if(!host)return;
+  host.innerHTML=editing.item.image?`<div class="t" style="background-image:url('${imgSrc(editing.item.image)}')"><button onclick="delMpImg()">✕</button></div>`:'';
+}
+function delMpImg(){editing.item.image='';renderMpThumbs();updatePreview();}
+
+/* ===================== PREVIEW ===================== */
+function updatePreview(){
+  const m=editing.item;
+  if(editing.type==='moto'){
+    const monthly=m.mensualidad||monthlyEstimate(m.price||0);
+    const perks=[];if(m.financiamiento)perks.push('Financiamiento');if(m.motoswitch)perks.push('MotoSwitch');if(m.tomaCuenta)perks.push('Toma a cuenta');if(m.tdc)perks.push('Aparta con TDC');
+    const img=(m.images&&m.images[0])?`<img src="${imgSrc(m.images[0])}" alt="">`:`<div class="ph">${esc(m.model||'Sin foto')}<br><span style="font-size:14px">${m.cc||0} cc</span></div>`;
+    $('preview').innerHTML=`<div class="pv-card">
+      <div class="pv-img">${img}
+        <span class="pv-tag pv-brand">${esc(m.brand||'MARCA')}</span>
+        <span class="pv-tag pv-year">${m.year||''}</span>
+        <span class="pv-tag pv-type">${esc(m.type||'')}</span>
+        ${m.featured?'<span class="pv-tag pv-feat">★ Destacada</span>':''}
+        ${m.sold?'<span class="pv-sold">Vendido</span>':''}
+      </div>
+      <div class="pv-body">
+        <div class="pv-name">${esc(m.model||'Modelo')}</div>
+        <div class="pv-cc">${m.cc||0} cc · ${Number(m.km||0).toLocaleString('es-MX')} km · ${m.owners||1} dueño${m.owners>1?'s':''}</div>
+        <div class="pv-specs">
+          <div class="pv-spec"><div class="v">${m.cc||0}cc</div><div class="l">Motor</div></div>
+          <div class="pv-spec"><div class="v">${((m.km||0)/1000).toFixed(1)}k</div><div class="l">Km</div></div>
+          <div class="pv-spec"><div class="v">${esc((m.factura||'—').split(' ')[0])}</div><div class="l">Factura</div></div>
+        </div>
+        <div class="pv-perks">${perks.map(p=>`<span class="pv-perk">${p}</span>`).join('')}</div>
+        <div class="pv-price-row">
+          <div><div class="pv-plabel">Precio</div><div class="pv-price">${fmt(m.price)}</div></div>
+          <div class="pv-fin">o desde<br><b>${fmt(monthly)}/mes</b></div>
+        </div>
+        ${m.sold?'<div class="pv-cta sold">Vendida</div>':'<div class="pv-cta">💬 Preguntar por esta moto</div>'}
+        ${m.driveUrl?`<a class="pv-drive" href="${esc(m.driveUrl)}" target="_blank">📁 Ver carpeta en Drive</a>`:''}
+      </div>
+    </div>`;
+  }else{
+    const img=m.image?`<img src="${imgSrc(m.image)}" alt="">`:`<div class="ph">🛒</div>`;
+    $('preview').innerHTML=`<div class="pv-card"><div class="pv-img">${img}</div>
+      <div class="pv-body"><div class="pv-cc" style="margin:0 0 4px">${esc(m.cat||'')}</div>
+      <div class="pv-name" style="font-size:20px">${esc(m.name||'Producto')}</div>
+      <div class="pv-price" style="margin-top:8px">${fmt(m.price)} <span style="font-size:13px;color:var(--muted)">MXN</span></div>
+      ${m.driveUrl?`<a class="pv-drive" href="${esc(m.driveUrl)}" target="_blank">📁 Ver en Drive</a>`:''}</div></div>`;
+  }
+}
+
+/* ===================== GUARDAR LOCAL ===================== */
+function saveLocal(){
+  const m=editing.item;
+  if(editing.type==='moto'){
+    if(!m.brand||!m.model){toast('Falta marca o modelo','err');return;}
+    if(editing.index==null)data.motos.push(m);else data.motos[editing.index]=m;
+  }else{
+    if(!m.name){toast('Falta el nombre','err');return;}
+    if(editing.index==null)data.marketplace.push(m);else data.marketplace[editing.index]=m;
+  }
+  dirty=true;closeEditor();renderList();toast('Guardado. Pulsa “Publicar cambios” para subirlo al sitio.');
+}
+
+/* ===================== PUBLICAR ===================== */
+async function publish(){
+  if(!token()){openTokenModal();toast('Primero conecta tu token de GitHub','err');return;}
+  const log=[];const pl=$('pubLog');$('pubModal').classList.add('open');$('pubClose').disabled=true;
+  const say=s=>{log.push(s);pl.textContent=log.join('\n');};
+  try{
+    const pending=Object.entries(uploads);
+    say(`Archivos por subir: ${pending.length}`);
+    for(const [path,obj] of pending){
+      say('Subiendo '+path+' …');
+      await ghPutFile(path,obj.b64,'Panel: sube '+path);
+      delete uploads[path];
+    }
+    say('Actualizando inventario…');
+    data.updatedAt=new Date().toISOString();
+    const json=JSON.stringify(data,null,2);
+    try{
+      const res=await ghPutFile(DATA_PATH,b64Unicode(json),'Panel: actualiza inventario',dataSha);
+      dataSha=res.content.sha;
+    }catch(e){
+      if(String(e.message).includes('409')){ // sha desactualizado → reintenta
+        say('Conflicto de versión, reintentando…');
+        const f=await ghGetFile(DATA_PATH);dataSha=f?f.sha:null;
+        const res=await ghPutFile(DATA_PATH,b64Unicode(json),'Panel: actualiza inventario',dataSha);
+        dataSha=res.content.sha;
+      }else throw e;
+    }
+    dirty=false;
+    say('✅ ¡Listo! El sitio se actualizará en 1–2 minutos.');
+    toast('Publicado ✅','ok');
+  }catch(e){
+    say('❌ Error: '+e.message);
+    toast('Error al publicar: '+e.message,'err');
+  }finally{
+    $('pubClose').disabled=false;
+  }
+}
+
+/* ===================== TOKEN MODAL ===================== */
+function openTokenModal(){$('tokenInput').value=token();$('tokenStatus').textContent=token()?'Token guardado en este navegador.':'';$('tokenModal').classList.add('open');}
+async function saveToken(){
+  const v=$('tokenInput').value.trim();
+  if(!v){toast('Pega un token','err');return;}
+  localStorage.setItem('gearup-gh-token',v);
+  $('tokenStatus').textContent='Verificando…';
+  try{const f=await ghGetFile(DATA_PATH);$('tokenStatus').textContent='✅ Conectado correctamente.';if(f){dataSha=f.sha;data=JSON.parse(decodeURIComponent(escape(atob(f.content.replace(/\n/g,'')))));renderList();}toast('Conectado ✅','ok');}
+  catch(e){$('tokenStatus').textContent='❌ '+e.message;}
+}
+
+/* ===================== INIT ===================== */
+$('gateForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  if($('gatePass').value===PASSWORD){sessionStorage.setItem('gearup-admin-ok','1');startApp();}
+  else{$('gateErr').textContent='Contraseña incorrecta';}
+});
+function startApp(){
+  $('gate').style.display='none';$('app').hidden=false;
+  loadData();
+}
+function bindUI(){
+  document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{tab=t.dataset.tab;document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===t));renderList();});
+  $('search').oninput=renderList;
+  $('btnAdd').onclick=()=>openEditor(tab==='motos'?'moto':'mp',null);
+  $('btnSaveLocal').onclick=saveLocal;
+  $('btnCancel').onclick=closeEditor;$('drawerClose').onclick=closeEditor;$('overlay').onclick=closeEditor;
+  $('btnPublish').onclick=publish;
+  $('btnToken').onclick=openTokenModal;
+  $('tokenSave').onclick=saveToken;
+  $('tokenCancel').onclick=()=>$('tokenModal').classList.remove('open');
+  $('tokenClear').onclick=()=>{localStorage.removeItem('gearup-gh-token');$('tokenInput').value='';$('tokenStatus').textContent='Token borrado.';};
+  $('pubClose').onclick=()=>$('pubModal').classList.remove('open');
+  window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
+}
+bindUI();
+if(sessionStorage.getItem('gearup-admin-ok')==='1')startApp();
+</script>
+</body>
+</html>

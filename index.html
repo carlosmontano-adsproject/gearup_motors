@@ -3379,7 +3379,7 @@ function renderMarketplace() {
   const grid = document.getElementById('mpGrid');
   grid.innerHTML = marketplace.map(item => `
     <div class="mp-card anim-card">
-      <div class="mp-img">${MP_ICONS[item.icon] || ''}</div>
+      <div class="mp-img">${item.image ? `<img src="${item.image}" alt="${item.name}" loading="lazy" style="width:100%;height:100%;object-fit:cover;" />` : (MP_ICONS[item.icon] || '')}</div>
       <div class="mp-body">
         <div class="mp-cat">${item.cat}</div>
         <div class="mp-name">${item.name}</div>
