@@ -312,6 +312,52 @@
     .scroll-progress { display: none; }
   }
 
+  /* ===== Tablero interactivo (tacómetro + acelerador) ===== */
+  .tach-section { background: var(--carbon); text-align: center; }
+  .tach {
+    max-width: 460px;
+    margin: 28px auto 0;
+    background: linear-gradient(180deg, var(--graphite), var(--black));
+    border: 1px solid var(--border-mid);
+    border-radius: var(--radius-lg);
+    padding: 26px 26px 30px;
+    box-shadow: var(--shadow-card);
+  }
+  .tach-gauge { position: relative; }
+  .tach-gauge svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .tach-track { fill: none; stroke: var(--steel); stroke-width: 14; stroke-linecap: round; }
+  .tach-redline { fill: none; stroke: var(--danger); stroke-width: 14; stroke-linecap: round; opacity: 0.9; }
+  .tach-needle { fill: var(--purple-electric); transition: fill 0.2s; }
+  .tach.redline .tach-needle { fill: var(--danger); }
+  .tach-hub { fill: var(--white); stroke: var(--purple-electric); stroke-width: 3; transition: stroke 0.2s; }
+  .tach.redline .tach-hub { stroke: var(--danger); }
+  .tach-readout { position: relative; margin-top: -44px; }
+  .tach-rpm {
+    font-family: var(--font-display);
+    font-size: clamp(40px, 12vw, 62px);
+    line-height: 1; color: var(--white); letter-spacing: 1px;
+  }
+  .tach.redline .tach-rpm { color: var(--danger); }
+  .tach-rpm-label { font-size: 11px; letter-spacing: 1.5px; color: var(--silver); text-transform: uppercase; margin-top: 4px; }
+  .tach-rpm-label span { color: var(--purple-glow); font-weight: 700; }
+  .tach.redline .tach-rpm-label span { color: var(--danger); }
+  .tach-throttle {
+    margin-top: 24px;
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--font-condensed); font-weight: 800; font-size: 19px;
+    letter-spacing: 2px; text-transform: uppercase; color: #fff;
+    background: linear-gradient(135deg, var(--purple-electric), var(--blue-electric));
+    border: none; border-radius: 999px;
+    padding: 15px 38px; cursor: pointer;
+    box-shadow: 0 12px 30px rgba(8,77,249,0.4);
+    user-select: none; -webkit-user-select: none; touch-action: none;
+    transition: transform 0.08s ease, box-shadow 0.2s ease;
+  }
+  .tach-throttle:hover { box-shadow: 0 16px 40px rgba(8,77,249,0.55); }
+  .tach-throttle.pressing { transform: scale(0.96); box-shadow: 0 6px 16px rgba(8,77,249,0.5), inset 0 3px 10px rgba(0,0,0,0.35); }
+  .tach-throttle-ic { font-size: 18px; }
+  @media (prefers-reduced-motion: reduce) { .tach-throttle { transition: none; } }
+
   /* Nav link animated underline */
   .nav-link {
     position: relative;
@@ -2393,6 +2439,36 @@
   </div>
 </div>
 
+<!-- ============ TABLERO INTERACTIVO ============ -->
+<section class="block tach-section" id="enciende">
+  <div class="container">
+    <div class="reveal" style="max-width:640px; margin:0 auto;">
+      <div class="section-eyebrow">▸ Enciende motores</div>
+      <h2 class="section-title">Dale <span class="accent">gas.</span></h2>
+      <p class="section-sub" style="margin:10px auto 0;">Mantén presionado el acelerador y siente subir las revoluciones. Así se siente estrenar moto con GEAR UP.</p>
+    </div>
+    <div class="tach reveal" id="tach">
+      <div class="tach-gauge">
+        <svg viewBox="0 0 300 160" role="img" aria-label="Tacómetro interactivo">
+          <path class="tach-track" d="M 20 150 A 130 130 0 0 1 280 150" />
+          <path class="tach-redline" d="M 255.2 73.6 A 130 130 0 0 1 280 150" />
+          <g id="tachNeedle" transform="rotate(16 150 150)">
+            <polygon class="tach-needle" points="42,150 150,145 150,155" />
+          </g>
+          <circle class="tach-hub" cx="150" cy="150" r="9" />
+        </svg>
+        <div class="tach-readout">
+          <div class="tach-rpm" id="tachRpm">900</div>
+          <div class="tach-rpm-label">RPM · <span id="tachState">Ralentí</span></div>
+        </div>
+      </div>
+      <button class="tach-throttle" id="tachThrottle" type="button" aria-label="Mantén presionado para acelerar">
+        <span class="tach-throttle-ic" aria-hidden="true">⚡</span> Dale gas
+      </button>
+    </div>
+  </div>
+</section>
+
 <!-- ============ CATÁLOGO ============ -->
 <section class="block" id="catalogo">
   <div class="container">
@@ -3435,11 +3511,51 @@ document.getElementById('lightbox').addEventListener('click', (e) => {
 });
 
 /* ============ INIT ============ */
+function initTach() {
+  const tach = document.getElementById('tach');
+  if (!tach) return;
+  const needle = document.getElementById('tachNeedle');
+  const rpmEl = document.getElementById('tachRpm');
+  const stateEl = document.getElementById('tachState');
+  const btn = document.getElementById('tachThrottle');
+  if (!needle || !rpmEl || !stateEl || !btn) return;
+  const MAX = 10, IDLE = 0.9;
+  let rpm = IDLE, target = IDLE, pressing = false, running = false;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const fmt = (n) => Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  function render(val) {
+    const frac = Math.max(0, Math.min(1, val / MAX));
+    needle.setAttribute('transform', 'rotate(' + (180 * frac).toFixed(2) + ' 150 150)');
+    rpmEl.textContent = fmt(val * 1000);
+    tach.classList.toggle('redline', frac >= 0.8);
+    stateEl.textContent = frac < 0.14 ? 'Ralentí' : frac < 0.5 ? 'Acelerando' : frac < 0.8 ? 'A fondo' : '¡Redline!';
+  }
+  function frame() {
+    rpm += (target - rpm) * (pressing ? 0.16 : 0.07);
+    if (!pressing && Math.abs(rpm - IDLE) < 0.015) { rpm = IDLE; render(rpm); running = false; return; }
+    render(rpm + (pressing ? (Math.random() - 0.5) * 0.18 : 0));
+    requestAnimationFrame(frame);
+  }
+  function loop() { if (!running) { running = true; requestAnimationFrame(frame); } }
+  function press(v) {
+    pressing = v; target = v ? MAX : IDLE; btn.classList.toggle('pressing', v);
+    if (reduce) { rpm = target; render(rpm); } else { loop(); }
+  }
+  btn.addEventListener('pointerdown', (e) => { e.preventDefault(); press(true); });
+  btn.addEventListener('pointercancel', () => press(false));
+  window.addEventListener('pointerup', () => { if (pressing) press(false); });
+  btn.addEventListener('keydown', (e) => { if ((e.key === ' ' || e.key === 'Enter') && !pressing) { e.preventDefault(); press(true); } });
+  btn.addEventListener('keyup', (e) => { if (e.key === ' ' || e.key === 'Enter') press(false); });
+  render(IDLE);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   renderMotos();
   renderMarketplace();
   populateFinancingMotos();
   bindFilters();
+  initTach();
 
   const nav = document.querySelector('.nav');
   if (nav) {
