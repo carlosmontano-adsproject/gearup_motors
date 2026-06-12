@@ -10,6 +10,74 @@
 <meta property="og:title" content="GEAR UP Motorcycles — Seminuevas certificadas" />
 <meta property="og:description" content="Encuentra la moto de tus sueños. Revisión de 24 puntos, financiamiento y garantía." />
 <meta property="og:type" content="website" />
+<meta property="og:site_name" content="GEAR UP Motorcycles" />
+<meta property="og:locale" content="es_MX" />
+<meta property="og:url" content="https://carlosmontano-adsproject.github.io/gearup_motors/" />
+<meta property="og:image" content="https://carlosmontano-adsproject.github.io/gearup_motors/img/og-cover.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="GEAR UP Motorcycles — Seminuevas certificadas" />
+<meta name="twitter:description" content="Encuentra la moto de tus sueños. Revisión de 24 puntos, financiamiento y garantía." />
+<meta name="twitter:image" content="https://carlosmontano-adsproject.github.io/gearup_motors/img/og-cover.png" />
+
+<!-- SEO / indexación -->
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<meta name="author" content="GEAR UP Motorcycles" />
+<meta name="theme-color" content="#084DF9" />
+<meta name="geo.region" content="MX-QUE" />
+<meta name="geo.placename" content="Santiago de Querétaro" />
+<link rel="canonical" href="https://carlosmontano-adsproject.github.io/gearup_motors/" />
+<link rel="icon" type="image/png" href="favicon.png" />
+<link rel="apple-touch-icon" href="favicon.png" />
+
+<!-- Datos estructurados: negocio (schema.org) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MotorcycleDealer",
+  "name": "GEAR UP Motorcycles",
+  "description": "Agencia de motocicletas seminuevas certificadas en Santiago de Querétaro. Compra, venta, consignación y financiamiento de motos BMW, Ducati, Aprilia, KTM, Triumph, Kawasaki, Honda y más, con revisión de 24 puntos y garantía.",
+  "url": "https://carlosmontano-adsproject.github.io/gearup_motors/",
+  "logo": "https://carlosmontano-adsproject.github.io/gearup_motors/favicon.png",
+  "image": "https://carlosmontano-adsproject.github.io/gearup_motors/img/og-cover.png",
+  "telephone": "+524421224793",
+  "email": "info@gearupmotos.com",
+  "priceRange": "$$",
+  "currenciesAccepted": "MXN",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "San Juan 618, Salitre",
+    "addressLocality": "Santiago de Querétaro",
+    "addressRegion": "Querétaro",
+    "postalCode": "76127",
+    "addressCountry": "MX"
+  },
+  "openingHoursSpecification": [{
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+    "opens": "09:30",
+    "closes": "16:30"
+  }],
+  "sameAs": [
+    "https://www.instagram.com/gear_upmotos",
+    "https://www.facebook.com/profile.php?id=61583947101872",
+    "https://www.tiktok.com/@gear_upmotos"
+  ],
+  "areaServed": { "@type": "City", "name": "Santiago de Querétaro" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "GEAR UP Motorcycles",
+  "url": "https://carlosmontano-adsproject.github.io/gearup_motors/",
+  "inLanguage": "es-MX"
+}
+</script>
 
 <!-- Fonts: Bebas Neue (display racing) + Outfit (body) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2924,10 +2992,10 @@
     </div>
 
     <div class="footer-bottom">
-      <div>© 2026 GEAR UP Motorcycles. Todos los derechos reservados.</div>
+      <div>© 2026 GEAR UP Motorcycles. Todos los derechos reservados.<br/>Desarrollado por <a href="https://www.adsproject.mx" target="_blank" rel="noopener" style="color:var(--silver); text-decoration:underline;">Adsproject Media</a></div>
       <div style="display:flex; gap:24px;">
-        <a href="#" style="color:var(--silver);">Aviso de privacidad</a>
-        <a href="#" style="color:var(--silver);">Términos y condiciones</a>
+        <a href="aviso-privacidad.html" style="color:var(--silver);">Aviso de privacidad</a>
+        <a href="terminos-y-condiciones.html" style="color:var(--silver);">Términos y condiciones</a>
       </div>
     </div>
   </div>
@@ -3589,10 +3657,45 @@ function initHeroParallax() {
   }, 1400);
 }
 
+function injectVehicleSchema() {
+  if (typeof motos === 'undefined' || !Array.isArray(motos)) return;
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Catálogo de motocicletas seminuevas — GEAR UP Motorcycles",
+    "numberOfItems": motos.length,
+    "itemListElement": motos.map((m, i) => ({
+      "@type": "ListItem",
+      "position": i + 1,
+      "item": {
+        "@type": "Motorcycle",
+        "name": m.brand + " " + m.model + " " + m.year,
+        "brand": { "@type": "Brand", "name": m.brand },
+        "vehicleModelDate": String(m.year),
+        "mileageFromOdometer": { "@type": "QuantitativeValue", "value": m.km, "unitCode": "KMT" },
+        "vehicleEngine": { "@type": "EngineSpecification", "engineDisplacement": { "@type": "QuantitativeValue", "value": m.cc, "unitCode": "CMQ" } },
+        "offers": {
+          "@type": "Offer",
+          "price": m.price,
+          "priceCurrency": "MXN",
+          "availability": "https://schema.org/InStock",
+          "itemCondition": "https://schema.org/UsedCondition",
+          "seller": { "@type": "MotorcycleDealer", "name": "GEAR UP Motorcycles" }
+        }
+      }
+    }))
+  };
+  const s = document.createElement('script');
+  s.type = 'application/ld+json';
+  s.textContent = JSON.stringify(data);
+  document.head.appendChild(s);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   renderMotos();
   renderMarketplace();
   populateFinancingMotos();
+  injectVehicleSchema();
   bindFilters();
   initTach();
   initHeroParallax();

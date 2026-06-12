@@ -1,0 +1,6 @@
+# robots.txt — GEAR UP Motorcycles
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://carlosmontano-adsproject.github.io/gearup_motors/sitemap.xml
