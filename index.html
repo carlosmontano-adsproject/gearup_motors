@@ -586,7 +586,7 @@
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; overflow-x: clip; }
   body {
     font-family: var(--font-body);
     background: var(--black);
@@ -3665,7 +3665,11 @@ function initCursor() {
   document.body.appendChild(dot); document.body.appendChild(ring);
   document.body.classList.add('cursor-on');
   const HOV = 'a,button,input,select,textarea,label,.moto-card,.mp-card,.tach-throttle,.theme-toggle,.chip,.filter-select,[onclick]';
-  let mx = 0, my = 0, rx = 0, ry = 0, raf = null;
+  let mx = 0, my = 0, rx = 0, ry = 0, raf = null, hoverTimer = null;
+  function setHover(on) {
+    if (on) { if (hoverTimer) { clearTimeout(hoverTimer); hoverTimer = null; } ring.classList.add('hover'); }
+    else if (!hoverTimer) { hoverTimer = setTimeout(() => { ring.classList.remove('hover'); hoverTimer = null; }, 90); }
+  }
   function loop() {
     rx += (mx - rx) * 0.18; ry += (my - ry) * 0.18;
     ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
@@ -3674,7 +3678,7 @@ function initCursor() {
   window.addEventListener('pointermove', (e) => {
     mx = e.clientX; my = e.clientY;
     dot.style.left = mx + 'px'; dot.style.top = my + 'px';
-    if (e.target && e.target.closest) ring.classList.toggle('hover', !!e.target.closest(HOV));
+    if (e.target && e.target.closest) setHover(!!e.target.closest(HOV));
     if (!raf) raf = requestAnimationFrame(loop);
   }, { passive: true });
   window.addEventListener('pointerdown', () => ring.classList.add('down'));
