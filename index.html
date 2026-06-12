@@ -281,6 +281,37 @@
   .reveal-stagger.in > *:nth-child(5) { transition-delay: 0.45s; }
   .reveal-stagger.in > *:nth-child(6) { transition-delay: 0.55s; }
 
+  /* Card reveal-on-scroll (catálogo + marketplace) */
+  @keyframes card-in {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .anim-card { opacity: 0; }
+  .anim-card.in {
+    opacity: 1;
+    animation: card-in 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+  }
+
+  /* Scroll progress bar */
+  .scroll-progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px; width: 0;
+    background: linear-gradient(90deg, var(--purple-electric), var(--blue-electric));
+    z-index: 200;
+    transition: width 0.1s linear;
+    pointer-events: none;
+  }
+
+  /* Active nav link (scroll-spy) */
+  .nav-link.active { color: var(--white); }
+  .nav-link.active::after { transform: scaleX(1); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .anim-card { opacity: 1 !important; animation: none !important; }
+    .scroll-progress { display: none; }
+  }
+
   /* Nav link animated underline */
   .nav-link {
     position: relative;
@@ -2189,6 +2220,7 @@
 </style>
 </head>
 <body>
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
 
 <!-- ============ NAV ============ -->
 <nav class="nav">
@@ -3029,6 +3061,30 @@ function monthlyEstimate(price) {
   return Math.round(payment / 100) * 100;
 }
 
+let _cardObserver = null;
+function observeCards() {
+  const cards = document.querySelectorAll('.anim-card:not(.in)');
+  if (!cards.length) return;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce || !('IntersectionObserver' in window)) {
+    cards.forEach(c => c.classList.add('in'));
+    return;
+  }
+  if (!_cardObserver) {
+    _cardObserver = new IntersectionObserver((entries) => {
+      let i = 0;
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target;
+        el.style.animationDelay = (i++ * 55) + 'ms';
+        el.classList.add('in');
+        _cardObserver.unobserve(el);
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  }
+  cards.forEach(c => _cardObserver.observe(c));
+}
+
 function renderMotos() {
   const grid = document.getElementById('motoGrid');
   const noRes = document.getElementById('noResults');
@@ -3115,7 +3171,7 @@ function renderMotos() {
         </div>`;
 
     return `
-      <div class="moto-card">
+      <div class="moto-card anim-card">
         ${imgSection}
         <div class="moto-body">
           <div class="moto-name">${m.model}</div>
@@ -3153,12 +3209,13 @@ function renderMotos() {
       </div>
     `;
   }).join('');
+  observeCards();
 }
 
 function renderMarketplace() {
   const grid = document.getElementById('mpGrid');
   grid.innerHTML = marketplace.map(item => `
-    <div class="mp-card">
+    <div class="mp-card anim-card">
       <div class="mp-img">${MP_ICONS[item.icon] || ''}</div>
       <div class="mp-body">
         <div class="mp-cat">${item.cat}</div>
@@ -3167,6 +3224,7 @@ function renderMarketplace() {
       </div>
     </div>
   `).join('');
+  observeCards();
 }
 
 function populateFinancingMotos() {
@@ -3431,6 +3489,34 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }, { threshold: 0.4 });
     document.querySelectorAll('.stat-num, .fin-stat-num').forEach(el => statObserver.observe(el));
+  }
+
+  // Scroll progress bar
+  const progress = document.getElementById('scrollProgress');
+  if (progress && !prefersReducedMotion) {
+    const updateProgress = () => {
+      const root = document.documentElement;
+      const max = root.scrollHeight - root.clientHeight;
+      progress.style.width = max > 0 ? (root.scrollTop / max * 100) + '%' : '0%';
+    };
+    updateProgress();
+    window.addEventListener('scroll', updateProgress, { passive: true });
+  }
+
+  // Scroll-spy: resalta el enlace del menú según la sección visible
+  const spyLinks = Array.from(document.querySelectorAll('.nav-link'));
+  const spySections = spyLinks
+    .map(a => { const h = a.getAttribute('href'); return h && h.charAt(0) === '#' ? document.querySelector(h) : null; })
+    .filter(Boolean);
+  if (spySections.length && 'IntersectionObserver' in window) {
+    const spy = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const id = '#' + entry.target.id;
+        spyLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === id));
+      });
+    }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+    spySections.forEach(s => spy.observe(s));
   }
 
   const themeBtn = document.getElementById('themeToggle');
