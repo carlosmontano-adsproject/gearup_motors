@@ -3670,14 +3670,18 @@ function initCursor() {
     if (on) { if (hoverTimer) { clearTimeout(hoverTimer); hoverTimer = null; } ring.classList.add('hover'); }
     else if (!hoverTimer) { hoverTimer = setTimeout(() => { ring.classList.remove('hover'); hoverTimer = null; }, 90); }
   }
+  const clamp = (v, max) => Math.max(4, Math.min(max - 4, v));
   function loop() {
     rx += (mx - rx) * 0.18; ry += (my - ry) * 0.18;
-    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    const h = ring.classList.contains('hover') ? 30 : 19;
+    ring.style.left = Math.max(h, Math.min(window.innerWidth - h, rx)) + 'px';
+    ring.style.top = Math.max(h, Math.min(window.innerHeight - h, ry)) + 'px';
     if (Math.abs(mx - rx) > 0.4 || Math.abs(my - ry) > 0.4) raf = requestAnimationFrame(loop); else raf = null;
   }
   window.addEventListener('pointermove', (e) => {
     mx = e.clientX; my = e.clientY;
-    dot.style.left = mx + 'px'; dot.style.top = my + 'px';
+    dot.style.left = clamp(mx, window.innerWidth) + 'px';
+    dot.style.top = clamp(my, window.innerHeight) + 'px';
     if (e.target && e.target.closest) setHover(!!e.target.closest(HOV));
     if (!raf) raf = requestAnimationFrame(loop);
   }, { passive: true });
