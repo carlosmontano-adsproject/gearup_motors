@@ -1,15 +1,17 @@
 <?php
 // ============================================================
 //  Subida de archivos (fotos / videos) — GEAR UP Motorcycles
+//  Optimiza automáticamente las imágenes al subirlas.
 // ============================================================
 require __DIR__ . '/config.php';
+require __DIR__ . '/lib.php';
 session_start();
 header('Content-Type: application/json; charset=utf-8');
 function out($a){ echo json_encode($a, JSON_UNESCAPED_UNICODE); exit; }
 
-if (empty($_SESSION['gearup_auth']))       { http_response_code(401); out(['ok'=>false,'error'=>'No autorizado']); }
+if (empty($_SESSION['gearup_auth']))        { http_response_code(401); out(['ok'=>false,'error'=>'No autorizado']); }
 if (empty($_SERVER['HTTP_X_GEARUP_PANEL'])) { http_response_code(403); out(['ok'=>false,'error'=>'Solicitud no permitida']); }
-if (empty($_FILES['file']))                { http_response_code(400); out(['ok'=>false,'error'=>'No se recibió ningún archivo']); }
+if (empty($_FILES['file']))                 { http_response_code(400); out(['ok'=>false,'error'=>'No se recibió ningún archivo']); }
 
 $f = $_FILES['file'];
 if ($f['error'] !== UPLOAD_ERR_OK) {
@@ -37,4 +39,8 @@ $dest = $dir . '/' . $name;
 if (!move_uploaded_file($f['tmp_name'], $dest)) {
   http_response_code(500); out(['ok'=>false,'error'=>'No se pudo guardar el archivo. Revisa permisos de la carpeta img/.']);
 }
+
+// Optimiza si es imagen (los videos se dejan tal cual)
+if (in_array($ext, ['jpg','jpeg','png','webp'], true)) { @gearup_optimize_image($dest); }
+
 out(['ok'=>true, 'path'=>'img/'.$kind.'/'.$name]);
