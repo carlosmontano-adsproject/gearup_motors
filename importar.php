@@ -126,6 +126,14 @@ if (!$go) {
 
 // ---------- IMPORTAR (procesa: copia + optimiza + arma catálogo) ----------
 @mkdir($OUT_BASE,0775,true);
+// Carga datos previos para CONSERVAR precio/km/cc/flags (merge por slug)
+$prevMotos=[];
+if(is_file(DATA_FILE)){ $pj=json_decode(file_get_contents(DATA_FILE),true);
+  if(isset($pj['motos'])&&is_array($pj['motos'])) foreach($pj['motos'] as $pm){
+    $k=isset($pm['slug'])&&$pm['slug']!==''?$pm['slug']:gu_slug(($pm['brand']??'').' '.($pm['model']??'').' '.($pm['year']??''));
+    if($k) $prevMotos[$k]=$pm;
+  }
+}
 foreach($dirs as $idx=>$dir){
   $name=basename($dir);
   [$sel,$cnt]=gu_select_images($dir,$MAX_FOTOS);
@@ -151,8 +159,15 @@ foreach($dirs as $idx=>$dir){
     $log[]="<div class='row ok'>🛒 ".htmlspecialchars($name)." → marketplace (".count($paths)." fotos)</div>";
   } else {
     [$brand,$model,$year]=gu_parse($name,$BRANDS);
-    $motos[]=['id'=>count($motos)+1,'brand'=>$brand,'model'=>$model,'year'=>$year?(int)$year:0,'type'=>gu_type($model),'cc'=>0,'km'=>0,'owners'=>1,'procedencia'=>'Nacional','factura'=>'Original','financiamiento'=>true,'motoswitch'=>true,'tomaCuenta'=>true,'tdc'=>false,'featured'=>false,'sold'=>false,'price'=>0,'mensualidad'=>'','driveUrl'=>'','images'=>$paths,'video'=>''];
-    $log[]="<div class='row ok'>🏍️ ".htmlspecialchars(trim("$brand $model $year"))." (".count($paths)." fotos)</div>";
+    if(isset($prevMotos[$slug])){
+      $m=$prevMotos[$slug];                 // conserva precio/km/cc/factura/flags ya capturados
+    } else {
+      $m=['brand'=>$brand,'model'=>$model,'year'=>$year?(int)$year:0,'type'=>gu_type($model),'cc'=>0,'km'=>0,'owners'=>1,'procedencia'=>'Nacional','factura'=>'Original','financiamiento'=>true,'motoswitch'=>true,'tomaCuenta'=>true,'tdc'=>false,'featured'=>false,'sold'=>false,'price'=>0,'mensualidad'=>'','driveUrl'=>''];
+    }
+    $m['slug']=$slug; $m['images']=$paths; if(!isset($m['video'])) $m['video']='';
+    $m['id']=count($motos)+1;
+    $motos[]=$m;
+    $log[]="<div class='row ok'>🏍️ ".htmlspecialchars(trim(($m['brand']??'').' '.($m['model']??'').' '.($m['year']??'')))." (".count($paths)." fotos)".(isset($prevMotos[$slug])?" · datos conservados":"")."</div>";
   }
 }
 
