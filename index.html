@@ -3230,6 +3230,7 @@ const state = {
 };
 
 /* ============ RENDER ============ */
+function eh(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function fmtPrice(n) {
   return '$' + n.toLocaleString('es-MX');
 }
@@ -3323,15 +3324,16 @@ function renderMotos() {
 
     const waMsg = encodeURIComponent(`Hola GEAR UP, me interesa la ${m.brand} ${m.model} ${m.year} (ID #${m.id}) que tienen en $${m.price.toLocaleString('es-MX')}. ¿Sigue disponible? ¿Puedo ir a verla?`);
 
+    const B = eh(m.brand), M = eh(m.model), T = eh(m.type);
     const hasPhotos = Array.isArray(m.images) && m.images.length > 0;
     const imgSection = hasPhotos
       ? `<div class="moto-img has-photo" onclick="openGallery(${m.id})">
-          <img class="moto-img-photo" src="${m.images[0]}" alt="${m.brand} ${m.model} ${m.year}" loading="lazy" />
+          <img class="moto-img-photo" src="${m.images[0]}" alt="${B} ${M} ${m.year}" loading="lazy" />
           <div class="moto-img-photo-shade"></div>
-          <span class="moto-brand-tag">${m.brand}</span>
+          <span class="moto-brand-tag">${B}</span>
           <span class="moto-year-tag">${m.year}</span>
           ${m.featured ? '<span class="moto-featured">★ Destacada</span>' : ''}
-          <span class="moto-type-tag">${m.type}</span>
+          <span class="moto-type-tag">${T}</span>
           ${m.sold ? '<span class="moto-sold">Vendido</span>' : ''}
           ${m.images.length > 1 ? `<span class="moto-img-gallery-count">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="14" rx="2"/><circle cx="9" cy="9" r="1.5" fill="currentColor"/><path d="M21 14l-5-5L5 17"/></svg>
@@ -3344,13 +3346,13 @@ function renderMotos() {
         </div>`
       : `<div class="moto-img">
           <div class="moto-img-bg" style="background:${gradient};"></div>
-          <span class="moto-brand-tag">${m.brand}</span>
+          <span class="moto-brand-tag">${B}</span>
           <span class="moto-year-tag">${m.year}</span>
           ${m.featured ? '<span class="moto-featured">★ Destacada</span>' : ''}
-          <span class="moto-type-tag">${m.type}</span>
+          <span class="moto-type-tag">${T}</span>
           ${m.sold ? '<span class="moto-sold">Vendido</span>' : ''}
           <div class="moto-hero-display">
-            <div class="moto-hero-model">${m.model}</div>
+            <div class="moto-hero-model">${M}</div>
             <div class="moto-hero-cc">${m.cc} cc</div>
           </div>
           <div class="moto-icon-wm">${MOTO_ICON}</div>
@@ -3360,7 +3362,7 @@ function renderMotos() {
       <div class="moto-card anim-card${m.sold ? ' sold' : ''}">
         ${imgSection}
         <div class="moto-body">
-          <div class="moto-name">${m.model}</div>
+          <div class="moto-name">${M}</div>
           <div class="moto-cc">${m.cc} cc · ${fmtKM(m.km)} · ${m.owners} dueño${m.owners>1?'s':''}</div>
           <div class="moto-specs">
             <div class="spec-mini">
@@ -3372,7 +3374,7 @@ function renderMotos() {
               <div class="spec-mini-label">Km</div>
             </div>
             <div class="spec-mini">
-              <div class="spec-mini-value">${m.factura.split(' ')[0]}</div>
+              <div class="spec-mini-value">${eh((m.factura||'').split(' ')[0])}</div>
               <div class="spec-mini-label">Factura</div>
             </div>
           </div>
@@ -3400,12 +3402,13 @@ function renderMotos() {
 
 function renderMarketplace() {
   const grid = document.getElementById('mpGrid');
+  if (!grid) return;
   grid.innerHTML = marketplace.map(item => `
     <div class="mp-card anim-card">
-      <div class="mp-img">${item.image ? `<img src="${item.image}" alt="${item.name}" loading="lazy" style="width:100%;height:100%;object-fit:cover;" />` : (MP_ICONS[item.icon] || '')}</div>
+      <div class="mp-img">${item.image ? `<img src="${item.image}" alt="${eh(item.name)}" loading="lazy" style="width:100%;height:100%;object-fit:cover;" />` : (MP_ICONS[item.icon] || MP_ICONS.case || '')}</div>
       <div class="mp-body">
-        <div class="mp-cat">${item.cat}</div>
-        <div class="mp-name">${item.name}</div>
+        <div class="mp-cat">${eh(item.cat)}</div>
+        <div class="mp-name">${eh(item.name)}</div>
         <div class="mp-price">${fmtPrice(item.price)} <small>MXN</small></div>
       </div>
     </div>
@@ -3737,10 +3740,10 @@ let marketplace = (typeof marketplace_DEFAULT !== 'undefined') ? marketplace_DEF
 
 async function loadData() {
   try {
-    const r = await fetch('data/inventario.json', { cache: 'no-store' });
+    const r = await fetch('data/inventario.json?t=' + Date.now(), { cache: 'no-store' });
     if (r.ok) {
       const d = await r.json();
-      if (Array.isArray(d.motos) && d.motos.length) motos = d.motos;
+      if (Array.isArray(d.motos)) motos = d.motos;
       if (Array.isArray(d.marketplace)) marketplace = d.marketplace;
     }
   } catch (e) {
@@ -3788,10 +3791,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initHeroParallax();
   initCursor();
   loadData().then(() => {
-    renderMotos();
-    renderMarketplace();
-    populateFinancingMotos();
-    injectVehicleSchema();
+    try { renderMotos(); } catch (e) { console.error('renderMotos:', e); }
+    try { renderMarketplace(); } catch (e) { console.error('renderMarketplace:', e); }
+    try { populateFinancingMotos(); } catch (e) { console.error('populateFinancingMotos:', e); }
+    try { injectVehicleSchema(); } catch (e) { console.error('injectVehicleSchema:', e); }
   });
 
   const nav = document.querySelector('.nav');
