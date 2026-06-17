@@ -90,7 +90,14 @@ function gu_select_images($dir, $max){
   return [$sel, count($imgs)];
 }
 
-$dirs = array_values(array_filter(glob($INV_DIR.'/*'), 'is_dir'));
+// Junta las carpetas de motos. Soporta img/inv/<MOTO>/ y también el wrapper
+// "drive-download-.../<MOTO>/" que genera Google Drive (lo aplana solo).
+function gu_has_images($d){ foreach(glob($d.'/*') as $f){ if(is_file($f)){ $e=strtolower(pathinfo($f,PATHINFO_EXTENSION)); if(in_array($e,['jpg','jpeg','png','webp'],true)) return true; } } return false; }
+$dirs=[];
+foreach(array_filter(glob($INV_DIR.'/*'),'is_dir') as $c){
+  if(gu_has_images($c)) $dirs[]=$c;
+  else { foreach(array_filter(glob($c.'/*'),'is_dir') as $sub) $dirs[]=$sub; }
+}
 sort($dirs);
 
 if (empty($dirs)) {
