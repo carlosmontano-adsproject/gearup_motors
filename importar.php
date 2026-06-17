@@ -134,6 +134,7 @@ if(is_file(DATA_FILE)){ $pj=json_decode(file_get_contents(DATA_FILE),true);
     if($k) $prevMotos[$k]=$pm;
   }
 }
+$processedSlugs=[];
 foreach($dirs as $idx=>$dir){
   $name=basename($dir);
   [$sel,$cnt]=gu_select_images($dir,$MAX_FOTOS);
@@ -167,8 +168,21 @@ foreach($dirs as $idx=>$dir){
     $m['slug']=$slug; $m['images']=$paths; if(!isset($m['video'])) $m['video']='';
     $m['id']=count($motos)+1;
     $motos[]=$m;
+    $processedSlugs[$slug]=true;
     $log[]="<div class='row ok'>🏍️ ".htmlspecialchars(trim(($m['brand']??'').' '.($m['model']??'').' '.($m['year']??'')))." (".count($paths)." fotos)".(isset($prevMotos[$slug])?" · datos conservados":"")."</div>";
   }
+}
+
+// Conserva las motos que existen en los datos pero NO tienen carpeta en img/inv/
+// (p. ej. "Consultar" sin fotos, o "Próximamente"). Mantienen sus datos e imágenes.
+foreach($prevMotos as $pslug=>$pm){
+  if(isset($processedSlugs[$pslug])) continue;
+  $pm['slug']=$pslug;
+  if(!isset($pm['images'])||!is_array($pm['images'])) $pm['images']=[];
+  if(!isset($pm['video'])) $pm['video']='';
+  $pm['id']=count($motos)+1;
+  $motos[]=$pm;
+  $log[]="<div class='row ok'>📄 ".htmlspecialchars(trim(($pm['brand']??'').' '.($pm['model']??'').' '.($pm['year']??'')))." · sin carpeta, datos conservados</div>";
 }
 
 // Conserva el marketplace existente (accesorios genéricos) y agrega los no-motos
