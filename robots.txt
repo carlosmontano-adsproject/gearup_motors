@@ -3,4 +3,4 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://carlosmontano-adsproject.github.io/gearup_motors/sitemap.xml
+Sitemap: https://gearupmotos.com/sitemap.xml
