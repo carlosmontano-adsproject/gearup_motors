@@ -443,6 +443,21 @@
     text-transform: uppercase; border-radius: 10px; padding: 13px; font-size: 14px; cursor: not-allowed;
   }
 
+  /* ===== Estado "Próximamente" en tarjetas de moto ===== */
+  .moto-soon {
+    position: absolute; top: 14px; left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, var(--blue, #084DF9), var(--purple-glow, #8B5CF6));
+    color: #fff; z-index: 3;
+    font-family: var(--font-condensed); font-weight: 800; letter-spacing: 2px;
+    text-transform: uppercase; font-size: 13px; padding: 6px 18px; border-radius: 30px;
+    box-shadow: 0 6px 18px rgba(8,77,249,0.45); border: 1px solid rgba(255,255,255,0.5);
+  }
+  .moto-price-consultar {
+    color: var(--purple-glow, #8B5CF6);
+    font-size: 22px;
+  }
+
   /* ===== Cursor personalizado ===== */
   @media (hover: hover) and (pointer: fine) {
     body.cursor-on, body.cursor-on * { cursor: none; }
@@ -3315,14 +3330,17 @@ function renderMotos() {
 
   grid.innerHTML = filtered.map(m => {
     const gradient = TYPE_GRADIENTS[m.type] || TYPE_GRADIENTS.Naked;
-    const monthly = m.mensualidad || monthlyEstimate(m.price);
+    const hasPrice = Number(m.price) > 0;
+    const monthly = m.mensualidad || (hasPrice ? monthlyEstimate(m.price) : 0);
     const perks = [];
     if (m.financiamiento) perks.push('<span class="perk fin">Financiamiento</span>');
     if (m.motoswitch) perks.push('<span class="perk switch">MotoSwitch</span>');
     if (m.tomaCuenta) perks.push('<span class="perk toma">Toma a cuenta</span>');
     if (m.tdc) perks.push('<span class="perk tdc">Aparta con TDC</span>');
 
-    const waMsg = encodeURIComponent(`Hola GEAR UP, me interesa la ${m.brand} ${m.model} ${m.year} (ID #${m.id}) que tienen en $${m.price.toLocaleString('es-MX')}. ¿Sigue disponible? ¿Puedo ir a verla?`);
+    const waMsg = m.soon
+      ? encodeURIComponent(`Hola GEAR UP, me interesa la ${m.brand} ${m.model} ${m.year} que viene en camino (Próximamente). ¿Me pueden dar más información?`)
+      : encodeURIComponent(`Hola GEAR UP, me interesa la ${m.brand} ${m.model} ${m.year} (ID #${m.id})${hasPrice ? ` que tienen en $${m.price.toLocaleString('es-MX')}` : ''}. ¿Sigue disponible? ¿Puedo ir a verla?`);
 
     const B = eh(m.brand), M = eh(m.model), T = eh(m.type);
     const hasPhotos = Array.isArray(m.images) && m.images.length > 0;
@@ -3335,6 +3353,7 @@ function renderMotos() {
           ${m.featured ? '<span class="moto-featured">★ Destacada</span>' : ''}
           <span class="moto-type-tag">${T}</span>
           ${m.sold ? '<span class="moto-sold">Vendido</span>' : ''}
+          ${m.soon ? '<span class="moto-soon">Próximamente</span>' : ''}
           ${m.images.length > 1 ? `<span class="moto-img-gallery-count">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="14" rx="2"/><circle cx="9" cy="9" r="1.5" fill="currentColor"/><path d="M21 14l-5-5L5 17"/></svg>
             ${m.images.length} fotos
@@ -3351,6 +3370,7 @@ function renderMotos() {
           ${m.featured ? '<span class="moto-featured">★ Destacada</span>' : ''}
           <span class="moto-type-tag">${T}</span>
           ${m.sold ? '<span class="moto-sold">Vendido</span>' : ''}
+          ${m.soon ? '<span class="moto-soon">Próximamente</span>' : ''}
           <div class="moto-hero-display">
             <div class="moto-hero-model">${M}</div>
             <div class="moto-hero-cc">${m.cc} cc</div>
@@ -3382,16 +3402,16 @@ function renderMotos() {
           <div class="moto-price-row">
             <div>
               <div class="moto-price-label">Precio</div>
-              <div class="moto-price">${fmtPrice(m.price)}</div>
+              ${hasPrice ? `<div class="moto-price">${fmtPrice(m.price)}</div>` : `<div class="moto-price moto-price-consultar">Consultar</div>`}
             </div>
-            <div class="moto-financing">
+            ${hasPrice ? `<div class="moto-financing">
               o desde<br/>
               <strong>${fmtPrice(monthly)}/mes</strong>
-            </div>
+            </div>` : ''}
           </div>
           ${m.sold ? `<div class="moto-cta moto-cta-sold">Vendida</div>` : `<a class="moto-cta" href="https://wa.me/${WA_PHONE}?text=${waMsg}" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.48A11.94 11.94 0 0 0 12.04 0C5.46 0 .12 5.34.12 11.92c0 2.1.55 4.15 1.6 5.96L0 24l6.27-1.64a11.92 11.92 0 0 0 5.77 1.47h.01c6.58 0 11.92-5.34 11.92-11.92 0-3.18-1.24-6.17-3.45-8.43Z"/></svg>
-            Preguntar por esta moto
+            ${m.soon ? 'Pregunta por disponibilidad' : 'Preguntar por esta moto'}
           </a>`}
         </div>
       </div>
@@ -3419,6 +3439,7 @@ function renderMarketplace() {
 function populateFinancingMotos() {
   const sel = document.getElementById('finMoto');
   motos.forEach(m => {
+    if (Number(m.price) <= 0 || m.sold || m.soon) return; // sin precio / vendida / próximamente no se financian
     const opt = document.createElement('option');
     opt.value = `${m.brand} ${m.model} ${m.year}`;
     opt.textContent = `${m.brand} ${m.model} (${m.year}) — ${fmtPrice(m.price)}`;
@@ -3548,8 +3569,9 @@ function openGallery(motoId) {
   lbState.index = 0;
   document.getElementById('lbTitle').textContent = `${m.brand} ${m.model}`;
   document.getElementById('lbMeta').textContent = `${m.year} · ${m.cc}cc · ${fmtKM(m.km)} · ${m.owners} dueño${m.owners>1?'s':''} · Factura ${m.factura}`;
-  document.getElementById('lbPrice').textContent = fmtPrice(m.price);
-  const waMsg = encodeURIComponent(`Hola GEAR UP, me interesa la ${m.brand} ${m.model} ${m.year} (ID #${m.id}) en $${m.price.toLocaleString('es-MX')}. ¿Sigue disponible?`);
+  const lbHasPrice = Number(m.price) > 0;
+  document.getElementById('lbPrice').textContent = lbHasPrice ? fmtPrice(m.price) : 'Consultar';
+  const waMsg = encodeURIComponent(`Hola GEAR UP, me interesa la ${m.brand} ${m.model} ${m.year} (ID #${m.id})${lbHasPrice ? ` en $${m.price.toLocaleString('es-MX')}` : ''}. ¿Sigue disponible?`);
   document.getElementById('lbWa').href = `https://wa.me/${WA_PHONE}?text=${waMsg}`;
   // Render thumbs
   const thumbs = document.getElementById('lbThumbs');

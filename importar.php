@@ -1,10 +1,12 @@
 <?php
 // ============================================================
 //  importar.php — Importación masiva del inventario desde
-//  carpetas subidas a /img/inv/ (una carpeta por moto).
-//  - Excluye PDFs y archivos no-imagen.
+//  /img/inv/ (un .zip o una carpeta por moto).
+//  - Descomprime los .zip automáticamente.
+//  - Excluye PDFs y archivos no-imagen (y basura de macOS: ._* / __MACOSX).
 //  - Portada = "Photoroom" (fondo recortado) + fotos originales.
 //  - Optimiza cada foto para web. Reanudable (puedes recargar).
+//  - Conserva precio/km/datos por slug y NO borra motos sin carpeta.
 // ============================================================
 require __DIR__ . '/config.php';
 require __DIR__ . '/lib.php';
@@ -18,7 +20,7 @@ $passQS = isset($_GET['pass']) ? '&pass=' . urlencode($_GET['pass']) : '';
 
 echo '<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Importar inventario — GEAR UP</title>';
 echo '<style>body{font-family:system-ui,-apple-system,sans-serif;background:#0d0d10;color:#e8e8ea;max-width:920px;margin:0 auto;padding:24px;line-height:1.55}h1{font-size:22px;margin-bottom:6px}.ok{color:#22c55e}.warn{color:#fbbf24}.err{color:#ef4444}.box{background:#15151a;border:1px solid #2a2a32;border-radius:10px;padding:14px 16px;margin:12px 0}a{color:#6f9bff}a.btn{display:inline-block;background:linear-gradient(135deg,#084DF9,#4F7CFF);color:#fff;text-decoration:none;padding:13px 26px;border-radius:10px;font-weight:700;letter-spacing:.3px}code{background:#1d1d24;padding:2px 6px;border-radius:4px}.row{padding:3px 0;border-bottom:1px solid #1d1d24;font-size:14px}</style></head><body>';
-echo '<h1>🏍️ Importar inventario desde carpetas</h1>';
+echo '<h1>🏍️ Importar inventario desde /img/inv/</h1>';
 
 if (!$authed) {
   echo '<div class="box">🔒 <b>Acceso restringido.</b><br>Entra primero al panel <a href="admin.html">admin.html</a> e inicia sesión, luego vuelve a abrir esta página.<br>O abre la URL con <code>?pass=TU_CONTRASEÑA</code> al final.</div></body></html>';
@@ -31,7 +33,7 @@ $MAX_FOTOS = 9;
 $BRANDS = ['BMW','DUCATI','APRILIA','KTM','TRIUMPH','KAWASAKI','HONDA','HUSQVARNA','SUZUKI','YAMAHA','CFMOTO','BENELLI','ROYAL ENFIELD','INDIAN','HARLEY','ZONTES','VESPA','ITALIKA','FORD'];
 
 if (!is_dir($INV_DIR)) {
-  echo '<div class="box err">No encuentro la carpeta <code>img/inv/</code>.<br>Sube ahí las carpetas de las motos (una carpeta por moto, tal como están en Drive) y recarga esta página.</div></body></html>';
+  echo '<div class="box err">No encuentro la carpeta <code>img/inv/</code>.<br>Sube ahí las motos (un <b>.zip</b> o una carpeta por moto) y recarga esta página.</div></body></html>';
   exit;
 }
 
@@ -70,13 +72,44 @@ function gu_is_nonmoto($name){
   return (strpos($up,'REFACC')!==false || strpos($up,'ACCESORIO')!==false || strpos($up,'FORD')!==false || strpos($up,'EXPEDITION')!==false);
 }
 
+// ¿Es una imagen real? (descarta ._resource forks de macOS, .DS_Store, etc.)
+function gu_is_real_image($f){
+  if(!is_file($f)) return false;
+  $bn=basename($f);
+  if($bn==='' || $bn[0]==='.') return false;
+  $e=strtolower(pathinfo($f,PATHINFO_EXTENSION));
+  return in_array($e,['jpg','jpeg','png','webp'],true);
+}
+function gu_has_images($d){ foreach(glob($d.'/*') as $f){ if(gu_is_real_image($f)) return true; } return false; }
+
+// Encuentra (recursivamente) la carpeta que realmente contiene las fotos.
+function gu_find_image_dir($d){
+  if(gu_has_images($d)) return $d;
+  foreach(array_filter(glob($d.'/*'),'is_dir') as $sub){
+    if(basename($sub)==='__MACOSX') continue;
+    $r=gu_find_image_dir($sub);
+    if($r) return $r;
+  }
+  return null;
+}
+// Nombre "limpio" para slug/marca/modelo: usa la carpeta de nivel superior,
+// salvo que sea un envoltorio "drive-download-..." (entonces baja al nombre real).
+function gu_clean_name($topDir,$imgDir){
+  $top=basename($topDir);
+  if(stripos($top,'drive-download')===false) return $top;
+  $d=$imgDir;
+  while($d && strlen($d)>=strlen($topDir)){
+    $b=basename($d);
+    if($b!=='' && stripos($b,'drive-download')===false) return $b;
+    if(rtrim($d,'/')===rtrim($topDir,'/')) break;
+    $d=dirname($d);
+  }
+  return $top;
+}
+
 // Recolecta y selecciona fotos de una carpeta
 function gu_select_images($dir, $max){
-  $imgs=[]; foreach(glob($dir.'/*') as $f){
-    if(!is_file($f)) continue;
-    $e=strtolower(pathinfo($f,PATHINFO_EXTENSION));
-    if(in_array($e,['jpg','jpeg','png','webp'],true)) $imgs[]=$f;
-  }
+  $imgs=[]; foreach(glob($dir.'/*') as $f){ if(gu_is_real_image($f)) $imgs[]=$f; }
   $photoroom=[]; $orig=[];
   foreach($imgs as $f){
     $bn=strtolower(basename($f));
@@ -90,18 +123,37 @@ function gu_select_images($dir, $max){
   return [$sel, count($imgs)];
 }
 
-// Junta las carpetas de motos. Soporta img/inv/<MOTO>/ y también el wrapper
-// "drive-download-.../<MOTO>/" que genera Google Drive (lo aplana solo).
-function gu_has_images($d){ foreach(glob($d.'/*') as $f){ if(is_file($f)){ $e=strtolower(pathinfo($f,PATHINFO_EXTENSION)); if(in_array($e,['jpg','jpeg','png','webp'],true)) return true; } } return false; }
-$dirs=[];
-foreach(array_filter(glob($INV_DIR.'/*'),'is_dir') as $c){
-  if(gu_has_images($c)) $dirs[]=$c;
-  else { foreach(array_filter(glob($c.'/*'),'is_dir') as $sub) $dirs[]=$sub; }
+// ---------- 1) Descomprime los .zip subidos a img/inv/ ----------
+$zipMsgs=[];
+$zips=glob($INV_DIR.'/*.{zip,ZIP}', GLOB_BRACE);
+if($zips){
+  if(!class_exists('ZipArchive')){
+    $zipMsgs[]="<div class='row warn'>⚠ Tu servidor no tiene <code>ZipArchive</code>. Extrae los .zip a mano (clic derecho → Extract en el File Manager).</div>";
+  } else {
+    foreach($zips as $zip){
+      $base=preg_replace('/\.zip$/i','',basename($zip));
+      $dest=$INV_DIR.'/'.$base;
+      if(is_dir($dest)){ continue; } // ya descomprimido en una corrida anterior
+      @mkdir($dest,0775,true);
+      $za=new ZipArchive();
+      if($za->open($zip)===true){ @$za->extractTo($dest); $za->close(); $zipMsgs[]="<div class='row ok'>📦 ".htmlspecialchars(basename($zip))." → descomprimido</div>"; }
+      else { $zipMsgs[]="<div class='row warn'>⚠ No pude abrir ".htmlspecialchars(basename($zip))."</div>"; }
+    }
+  }
 }
-sort($dirs);
 
-if (empty($dirs)) {
-  echo '<div class="box warn">La carpeta <code>img/inv/</code> está vacía. Sube ahí las carpetas de las motos y recarga.</div></body></html>';
+// ---------- 2) Arma la lista de motos (carpeta + fotos) ----------
+$items=[]; // cada uno: ['name'=>nombre, 'dir'=>carpeta con imágenes]
+foreach(array_filter(glob($INV_DIR.'/*'),'is_dir') as $c){
+  if(basename($c)==='__MACOSX') continue;
+  $imgDir=gu_find_image_dir($c);
+  if($imgDir) $items[]=['name'=>gu_clean_name($c,$imgDir),'dir'=>$imgDir];
+}
+usort($items, function($a,$b){ return strcmp($a['name'],$b['name']); });
+
+if (empty($items)) {
+  echo '<div class="box">'.implode('',$zipMsgs).'</div>';
+  echo '<div class="box warn">No encontré fotos en <code>img/inv/</code>. Sube ahí las motos (un .zip o una carpeta por moto) y recarga.</div></body></html>';
   exit;
 }
 
@@ -109,14 +161,15 @@ $go = isset($_GET['go']) && $_GET['go']==='1';
 $motos=[]; $mp=[]; $log=[]; $totalImgs=0;
 
 if (!$go) {
-  // ---------- VISTA PREVIA (sin tocar archivos) ----------
+  // ---------- VISTA PREVIA ----------
   $nMotos=0; $nNon=0;
-  foreach($dirs as $dir){
-    $name=basename($dir);
-    [$sel,$cnt]=gu_select_images($dir,$MAX_FOTOS); $totalImgs+=$cnt;
+  foreach($items as $it){
+    $name=$it['name'];
+    [$sel,$cnt]=gu_select_images($it['dir'],$MAX_FOTOS); $totalImgs+=$cnt;
     if(gu_is_nonmoto($name)){ $nNon++; $log[]="<div class='row'>🛒 <b>".htmlspecialchars($name)."</b> → marketplace · ".$cnt." fotos (usaré ".count($sel).")</div>"; }
     else { [$b,$mo,$y]=gu_parse($name,$BRANDS); $nMotos++; $log[]="<div class='row'>🏍️ <b>".htmlspecialchars($name)."</b> → ".htmlspecialchars(trim("$b $mo $y"))." · ".$cnt." fotos (usaré ".count($sel).")</div>"; }
   }
+  if($zipMsgs) echo '<div class="box">'.implode('',$zipMsgs).'</div>';
   echo '<div class="box">Detecté <b>'.$nMotos.' motos</b> y <b>'.$nNon.' no-motos</b> (irán al marketplace), con <b>'.$totalImgs.' fotos</b> en total.<br>Voy a usar hasta <b>'.$MAX_FOTOS.'</b> por carpeta (portada Photoroom + originales), <b>optimizadas</b> y <b>sin PDFs</b>.</div>';
   echo '<div class="box">'.implode('',$log).'</div>';
   echo '<p><a class="btn" href="?go=1'.$passQS.'">▶ Importar y optimizar ahora</a></p>';
@@ -124,7 +177,7 @@ if (!$go) {
   echo '</body></html>'; exit;
 }
 
-// ---------- IMPORTAR (procesa: copia + optimiza + arma catálogo) ----------
+// ---------- 3) IMPORTAR (copia + optimiza + arma catálogo) ----------
 @mkdir($OUT_BASE,0775,true);
 // Carga datos previos para CONSERVAR precio/km/cc/flags (merge por slug)
 $prevMotos=[];
@@ -134,9 +187,10 @@ if(is_file(DATA_FILE)){ $pj=json_decode(file_get_contents(DATA_FILE),true);
     if($k) $prevMotos[$k]=$pm;
   }
 }
-foreach($dirs as $idx=>$dir){
-  $name=basename($dir);
-  [$sel,$cnt]=gu_select_images($dir,$MAX_FOTOS);
+$processedSlugs=[];
+foreach($items as $idx=>$it){
+  $name=$it['name'];
+  [$sel,$cnt]=gu_select_images($it['dir'],$MAX_FOTOS);
   if(empty($sel)){ $log[]="<div class='row warn'>⚠ ".htmlspecialchars($name).": sin imágenes, se omite.</div>"; continue; }
   $slug=gu_slug($name); if($slug==='') $slug='item-'.$idx;
   $outDir=$OUT_BASE.'/'.$slug; @mkdir($outDir,0775,true);
@@ -162,13 +216,26 @@ foreach($dirs as $idx=>$dir){
     if(isset($prevMotos[$slug])){
       $m=$prevMotos[$slug];                 // conserva precio/km/cc/factura/flags ya capturados
     } else {
-      $m=['brand'=>$brand,'model'=>$model,'year'=>$year?(int)$year:0,'type'=>gu_type($model),'cc'=>0,'km'=>0,'owners'=>1,'procedencia'=>'Nacional','factura'=>'Original','financiamiento'=>true,'motoswitch'=>true,'tomaCuenta'=>true,'tdc'=>false,'featured'=>false,'sold'=>false,'price'=>0,'mensualidad'=>'','driveUrl'=>''];
+      $m=['brand'=>$brand,'model'=>$model,'year'=>$year?(int)$year:0,'type'=>gu_type($model),'cc'=>0,'km'=>0,'owners'=>1,'procedencia'=>'Nacional','factura'=>'Original','financiamiento'=>true,'motoswitch'=>false,'tomaCuenta'=>true,'tdc'=>true,'featured'=>false,'sold'=>false,'soon'=>false,'price'=>0,'mensualidad'=>'','driveUrl'=>''];
     }
     $m['slug']=$slug; $m['images']=$paths; if(!isset($m['video'])) $m['video']='';
     $m['id']=count($motos)+1;
     $motos[]=$m;
+    $processedSlugs[$slug]=true;
     $log[]="<div class='row ok'>🏍️ ".htmlspecialchars(trim(($m['brand']??'').' '.($m['model']??'').' '.($m['year']??'')))." (".count($paths)." fotos)".(isset($prevMotos[$slug])?" · datos conservados":"")."</div>";
   }
+}
+
+// Conserva las motos que existen en los datos pero NO tienen carpeta en img/inv/
+// (p. ej. "Consultar" sin fotos, o "Próximamente"). Mantienen sus datos e imágenes.
+foreach($prevMotos as $pslug=>$pm){
+  if(isset($processedSlugs[$pslug])) continue;
+  $pm['slug']=$pslug;
+  if(!isset($pm['images'])||!is_array($pm['images'])) $pm['images']=[];
+  if(!isset($pm['video'])) $pm['video']='';
+  $pm['id']=count($motos)+1;
+  $motos[]=$pm;
+  $log[]="<div class='row ok'>📄 ".htmlspecialchars(trim(($pm['brand']??'').' '.($pm['model']??'').' '.($pm['year']??'')))." · sin carpeta, datos conservados</div>";
 }
 
 // Conserva el marketplace existente (accesorios genéricos) y agrega los no-motos
@@ -182,11 +249,12 @@ $data=['motos'=>$motos,'marketplace'=>array_merge($baseMp,$mp),'updatedAt'=>date
 if(is_file(DATA_FILE)) @copy(DATA_FILE, DATA_FILE.'.bak');
 $json=json_encode($data, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
 
+if($zipMsgs) echo '<div class="box">'.implode('',$zipMsgs).'</div>';
 if(file_put_contents(DATA_FILE,$json)!==false){
-  echo '<div class="box ok">✅ <b>¡Importado!</b> '.count($motos).' motos y '.count($mp).' productos al marketplace.<br>Ahora abre el <a href="admin.html">panel</a> para completar <b>precio, km, cilindrada y factura</b> de cada moto, y luego <b>Publicar</b>.</div>';
+  echo '<div class="box ok">✅ <b>¡Importado!</b> '.count($motos).' motos y '.count($mp).' productos al marketplace.<br>Abre el <a href="admin.html">panel</a> para revisar <b>km, cilindrada y factura</b> de cada moto si hace falta, y luego <b>Publicar</b>.</div>';
 } else {
   echo '<div class="box err">❌ No se pudo escribir <code>data/inventario.json</code>. Revisa permisos (carpeta data: 755, archivo: 644).</div>';
 }
 echo '<div class="box">'.implode('',$log).'</div>';
-echo '<p>💡 Cuando ya esté todo bien en el panel, puedes <b>borrar la carpeta <code>img/inv/</code></b> (los originales pesados) para liberar espacio — las versiones optimizadas viven en <code>img/motos/</code>.</p>';
+echo '<p>💡 Cuando ya esté todo bien, puedes <b>borrar el contenido de <code>img/inv/</code></b> (zips y carpetas originales pesadas) para liberar espacio — las versiones optimizadas viven en <code>img/motos/</code>.</p>';
 echo '</body></html>';
