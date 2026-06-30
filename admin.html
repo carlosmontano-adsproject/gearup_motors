@@ -113,6 +113,10 @@
   .pv-sold{position:absolute;top:46%;left:50%;transform:translate(-50%,-50%) rotate(-8deg);background:var(--danger);color:#fff;font-family:'Bebas Neue',sans-serif;font-weight:800;letter-spacing:3px;font-size:22px;padding:8px 26px;border-radius:8px;border:2px solid rgba(255,255,255,.85)}
   .pv-soon{top:12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#084DF9,#8B5CF6);color:#fff;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;border:1px solid rgba(255,255,255,.5)}
   .pv-apartada{top:12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#ea580c,#f59e0b);color:#fff;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;border:1px solid rgba(255,255,255,.5)}
+  .pv-oportunidad{top:12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#dc2626,#f97316);color:#fff;font-weight:800;letter-spacing:1px;text-transform:uppercase;border:1px solid rgba(255,255,255,.5)}
+  .pv-anchor{text-decoration:line-through;color:var(--muted);font-size:14px;font-weight:600;margin-bottom:2px}
+  .pv-opp{margin:-6px 0 12px;padding:8px 10px;border-radius:10px;background:rgba(220,38,38,.10);border:1px solid rgba(249,115,22,.35);font-size:12px;color:#fb923c}
+  .pv-opp b{color:#fff;font-variant-numeric:tabular-nums}
   .pv-price.consultar{color:#a78bfa}
   .pv-body{padding:16px}
   .pv-name{font-family:var(--display);font-size:24px;letter-spacing:.5px}
@@ -349,7 +353,7 @@ function motoRow(m,i){
     <div class="thumb" ${thumbBg(m)}>${(m.images&&m.images[0])?'':'sin foto'}</div>
     <div class="info"><b>${esc(m.brand)} ${esc(m.model)}</b>
       <div class="meta">${m.year} · ${m.cc}cc · ${Number(m.km).toLocaleString('es-MX')} km · ${esc(m.factura||'')}
-      ${m.featured?'<span class="tag-feat">Destacada</span>':''} ${m.sold?'<span class="tag-sold">Vendido</span>':''} ${m.soon?'<span class="tag-feat" style="background:#6d5efc;color:#fff">Próximamente</span>':''} ${m.apartada?'<span class="tag-feat" style="background:#ea580c;color:#fff">Apartada</span>':''}</div>
+      ${m.featured?'<span class="tag-feat">Destacada</span>':''} ${m.sold?'<span class="tag-sold">Vendido</span>':''} ${m.soon?'<span class="tag-feat" style="background:#6d5efc;color:#fff">Próximamente</span>':''} ${m.apartada?'<span class="tag-feat" style="background:#ea580c;color:#fff">Apartada</span>':''} ${m.oportunidad?'<span class="tag-feat" style="background:#dc2626;color:#fff">🔥 Oportunidad</span>':''}</div>
     </div>
     <div class="price">${Number(m.price)>0?fmt(m.price):'Consultar'}</div>
     <div class="acts">
@@ -386,7 +390,7 @@ function openEditor(type,index){
   const isNew=index==null;
   let item;
   if(type==='moto'){
-    item=isNew?{id:nextMotoId(),brand:'',model:'',year:new Date().getFullYear(),type:'Naked',cc:0,km:0,owners:1,procedencia:'Nacional',factura:'Original',financiamiento:true,motoswitch:false,tomaCuenta:true,tdc:true,featured:false,sold:false,soon:false,apartada:false,price:0,mensualidad:'',driveUrl:'',images:[],video:''}:JSON.parse(JSON.stringify(data.motos[index]));
+    item=isNew?{id:nextMotoId(),brand:'',model:'',year:new Date().getFullYear(),type:'Naked',cc:0,km:0,owners:1,procedencia:'Nacional',factura:'Original',financiamiento:true,motoswitch:false,tomaCuenta:true,tdc:true,featured:false,sold:false,soon:false,apartada:false,oportunidad:false,precioAnterior:0,oportunidadHoras:0,oportunidadFin:'',price:0,mensualidad:'',driveUrl:'',images:[],video:''}:JSON.parse(JSON.stringify(data.motos[index]));
   }else{
     item=isNew?{name:'',cat:'Equipo',price:0,image:'',icon:'',driveUrl:''}:JSON.parse(JSON.stringify(data.marketplace[index]));
   }
@@ -441,7 +445,14 @@ function motoForm(m){
     <label class="check"><input type="checkbox" data-f="sold" ${m.sold?'checked':''}> Vendida</label>
     <label class="check"><input type="checkbox" data-f="soon" ${m.soon?'checked':''}> Próximamente</label>
     <label class="check"><input type="checkbox" data-f="apartada" ${m.apartada?'checked':''}> Apartada</label>
+    <label class="check"><input type="checkbox" data-f="oportunidad" ${m.oportunidad?'checked':''}> 🔥 Oportunidad</label>
   </div>
+  <div class="section-label">🔥 Oportunidad</div>
+  <div class="fgrid">
+    <div class="field"><label>Precio anterior (se tacha)</label><input data-f="precioAnterior" type="number" value="${m.precioAnterior||''}" placeholder="Ej. precio original más alto"></div>
+    <div class="field"><label>Duración de la oferta (horas)</label><input data-f="oportunidadHoras" type="number" value="${m.oportunidadHoras||''}" placeholder="72"></div>
+  </div>
+  <div class="hint">Activa <b>🔥 Oportunidad</b> y pon un <b>precio anterior</b> (se mostrará tachado sobre el precio actual) y las <b>horas</b> de la oferta. La cuenta regresiva arranca al guardar las horas, y el sitio muestra solo “personas viendo en tiempo real”.${m.oportunidadFin?(' <br>⏱ Termina: '+esc(new Date(m.oportunidadFin).toLocaleString('es-MX'))):''}</div>
   <div class="section-label">Fotos</div>
   <div class="drop" id="dropImg">Haz clic o arrastra imágenes aquí (JPG/PNG). Se suben al instante.</div>
   <input type="file" id="fileImg" accept="image/*" multiple hidden>
@@ -480,9 +491,16 @@ function bindForm(){
         return;
       }
       let v=el.type==='checkbox'?el.checked:el.value;
-      if(['year','cc','km','owners','price'].includes(f))v=v===''?0:Number(v);
+      if(['year','cc','km','owners','price','precioAnterior','oportunidadHoras'].includes(f))v=v===''?0:Number(v);
       if(f==='mensualidad')v=v===''?'':Number(v);
-      editing.item[f]=v;updatePreview();
+      editing.item[f]=v;
+      // Oportunidad: al fijar/cambiar horas (o activarla) se reinicia la cuenta regresiva
+      if(f==='oportunidadHoras' || (f==='oportunidad' && v===true)){
+        const hrs=Number(editing.item.oportunidadHoras)||72;
+        editing.item.oportunidadHoras=hrs;
+        editing.item.oportunidadFin=new Date(Date.now()+hrs*3600000).toISOString();
+      }
+      updatePreview();
     });
   });
   if(editing.type==='moto'){
@@ -548,6 +566,7 @@ function updatePreview(){
   const m=editing.item;
   if(editing.type==='moto'){
     const hasPrice=Number(m.price)>0;
+    const isOpp=!!m.oportunidad&&hasPrice&&!m.sold&&!m.soon;
     const monthly=m.mensualidad||(hasPrice?monthlyEstimate(m.price):0);
     const perks=[];if(m.financiamiento)perks.push('Financiamiento');if(m.motoswitch)perks.push('MotoSwitch');if(m.tomaCuenta)perks.push('Toma a cuenta');if(m.tdc)perks.push('Aparta con TDC');
     const img=(m.images&&m.images[0])?`<img src="${imgSrc(m.images[0])}" alt="">`:`<div class="ph">${esc(m.model||'Sin foto')}<br><span style="font-size:14px">${m.cc||0} cc</span></div>`;
@@ -560,6 +579,7 @@ function updatePreview(){
         ${m.sold?'<span class="pv-sold">Vendido</span>':''}
         ${m.soon?'<span class="pv-tag pv-soon">Próximamente</span>':''}
         ${m.apartada?'<span class="pv-tag pv-apartada">Apartada</span>':''}
+        ${isOpp?'<span class="pv-tag pv-oportunidad">🔥 Oportunidad</span>':''}
       </div>
       <div class="pv-body">
         <div class="pv-name">${esc(m.model||'Modelo')}</div>
@@ -571,9 +591,14 @@ function updatePreview(){
         </div>
         <div class="pv-perks">${perks.map(p=>`<span class="pv-perk">${p}</span>`).join('')}</div>
         <div class="pv-price-row">
-          <div><div class="pv-plabel">Precio</div><div class="pv-price${hasPrice?'':' consultar'}">${hasPrice?fmt(m.price):'Consultar'}</div></div>
+          <div>
+            <div class="pv-plabel">${isOpp?'Precio de oportunidad':'Precio'}</div>
+            ${(isOpp&&Number(m.precioAnterior)>0)?`<div class="pv-anchor">${fmt(m.precioAnterior)}</div>`:''}
+            <div class="pv-price${hasPrice?'':' consultar'}"${isOpp?' style="color:#f97316"':''}>${hasPrice?fmt(m.price):'Consultar'}</div>
+          </div>
           ${hasPrice?`<div class="pv-fin">o desde<br><b>${fmt(monthly)}/mes</b></div>`:''}
         </div>
+        ${isOpp?`<div class="pv-opp">⏳ Termina en <b>${Number(m.oportunidadHoras)||72}:00:00</b> · 👁 4 personas viendo ahora</div>`:''}
         ${m.sold?'<div class="pv-cta sold">Vendida</div>':'<div class="pv-cta">💬 Preguntar por esta moto</div>'}
         ${m.driveUrl?`<a class="pv-drive" href="${esc(m.driveUrl)}" target="_blank">📁 Ver carpeta en Drive</a>`:''}
       </div>

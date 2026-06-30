@@ -467,6 +467,39 @@
     color: var(--purple-glow, #8B5CF6);
     font-size: 22px;
   }
+  /* ===== Estado "Oportunidad" (anclaje + urgencia + prueba social) ===== */
+  .moto-oportunidad {
+    position: absolute; top: 14px; left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #dc2626, #f97316);
+    color: #fff; z-index: 3;
+    font-family: var(--font-condensed); font-weight: 800; letter-spacing: 1.5px;
+    text-transform: uppercase; font-size: 13px; padding: 6px 16px; border-radius: 30px;
+    box-shadow: 0 6px 18px rgba(220,38,38,0.5); border: 1px solid rgba(255,255,255,0.5);
+    animation: oppPulse 1.8s ease-in-out infinite;
+  }
+  @keyframes oppPulse { 0%,100%{ box-shadow:0 6px 18px rgba(220,38,38,0.5);} 50%{ box-shadow:0 6px 26px rgba(249,115,22,0.85);} }
+  @media (prefers-reduced-motion: reduce){ .moto-oportunidad{ animation:none; } }
+  .moto-price-anchor {
+    text-decoration: line-through;
+    color: var(--silver, #9a9aa6);
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+  .moto-price-deal { color: #f97316; }
+  .opp-bar {
+    display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between;
+    margin: -4px 0 14px;
+    padding: 8px 10px; border-radius: 10px;
+    background: rgba(220,38,38,0.10); border: 1px solid rgba(249,115,22,0.35);
+    font-size: 12px;
+  }
+  .opp-countdown { color: #fb923c; font-weight: 600; }
+  .opp-countdown strong { color: #fff; font-variant-numeric: tabular-nums; }
+  .opp-viewers { color: var(--fog, #c9c9d2); }
+  .opp-viewers strong { color: #fff; }
 
   /* ===== Cursor personalizado ===== */
   @media (hover: hover) and (pointer: fine) {
@@ -3332,6 +3365,7 @@ function renderMotos() {
   grid.innerHTML = filtered.map(m => {
     const gradient = TYPE_GRADIENTS[m.type] || TYPE_GRADIENTS.Naked;
     const hasPrice = Number(m.price) > 0;
+    const isOpp = !!m.oportunidad && hasPrice && !m.sold && !m.soon;
     const monthly = m.mensualidad || (hasPrice ? monthlyEstimate(m.price) : 0);
     const perks = [];
     if (m.financiamiento) perks.push('<span class="perk fin">Financiamiento</span>');
@@ -3356,6 +3390,7 @@ function renderMotos() {
           ${m.sold ? '<span class="moto-sold">Vendido</span>' : ''}
           ${m.soon ? '<span class="moto-soon">Próximamente</span>' : ''}
           ${m.apartada ? '<span class="moto-apartada">Apartada</span>' : ''}
+          ${isOpp ? '<span class="moto-oportunidad">🔥 Oportunidad</span>' : ''}
           ${m.images.length > 1 ? `<span class="moto-img-gallery-count">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="14" rx="2"/><circle cx="9" cy="9" r="1.5" fill="currentColor"/><path d="M21 14l-5-5L5 17"/></svg>
             ${m.images.length} fotos
@@ -3374,6 +3409,7 @@ function renderMotos() {
           ${m.sold ? '<span class="moto-sold">Vendido</span>' : ''}
           ${m.soon ? '<span class="moto-soon">Próximamente</span>' : ''}
           ${m.apartada ? '<span class="moto-apartada">Apartada</span>' : ''}
+          ${isOpp ? '<span class="moto-oportunidad">🔥 Oportunidad</span>' : ''}
           <div class="moto-hero-display">
             <div class="moto-hero-model">${M}</div>
             <div class="moto-hero-cc">${m.cc} cc</div>
@@ -3404,14 +3440,19 @@ function renderMotos() {
           <div class="moto-perks">${perks.join('')}</div>
           <div class="moto-price-row">
             <div>
-              <div class="moto-price-label">Precio</div>
-              ${hasPrice ? `<div class="moto-price">${fmtPrice(m.price)}</div>` : `<div class="moto-price moto-price-consultar">Consultar</div>`}
+              <div class="moto-price-label">${isOpp ? 'Precio de oportunidad' : 'Precio'}</div>
+              ${(isOpp && Number(m.precioAnterior) > 0) ? `<div class="moto-price-anchor">${fmtPrice(m.precioAnterior)}</div>` : ''}
+              ${hasPrice ? `<div class="moto-price${isOpp ? ' moto-price-deal' : ''}">${fmtPrice(m.price)}</div>` : `<div class="moto-price moto-price-consultar">Consultar</div>`}
             </div>
             ${hasPrice ? `<div class="moto-financing">
               o desde<br/>
               <strong>${fmtPrice(monthly)}/mes</strong>
             </div>` : ''}
           </div>
+          ${isOpp ? `<div class="opp-bar">
+            <span class="opp-countdown" data-fin="${eh(m.oportunidadFin||'')}">⏳ Oportunidad por tiempo limitado</span>
+            <span class="opp-viewers" data-vid="${m.id}">👁 personas viendo</span>
+          </div>` : ''}
           ${m.sold ? `<div class="moto-cta moto-cta-sold">Vendida</div>` : `<a class="moto-cta" href="https://wa.me/${WA_PHONE}?text=${waMsg}" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.48A11.94 11.94 0 0 0 12.04 0C5.46 0 .12 5.34.12 11.92c0 2.1.55 4.15 1.6 5.96L0 24l6.27-1.64a11.92 11.92 0 0 0 5.77 1.47h.01c6.58 0 11.92-5.34 11.92-11.92 0-3.18-1.24-6.17-3.45-8.43Z"/></svg>
             ${m.soon ? 'Pregunta por disponibilidad' : 'Preguntar por esta moto'}
@@ -3421,6 +3462,40 @@ function renderMotos() {
     `;
   }).join('');
   observeCards();
+  startOppTickers();
+}
+
+// ===== Oportunidad: cuenta regresiva (72hrs) + prueba social (1-7 viendo) =====
+let _oppTimer = null;
+function _oppRenderViewers(el) {
+  const n = el._n || 1;
+  el.innerHTML = '👁 <strong>' + n + '</strong> ' + (n === 1 ? 'persona viendo ahora' : 'personas viendo ahora');
+}
+function startOppTickers() {
+  if (_oppTimer) { clearInterval(_oppTimer); _oppTimer = null; }
+  const countdowns = Array.from(document.querySelectorAll('.opp-countdown'));
+  const viewers = Array.from(document.querySelectorAll('.opp-viewers'));
+  if (!countdowns.length && !viewers.length) return;
+  viewers.forEach(v => { v._n = 2 + Math.floor(Math.random() * 5); _oppRenderViewers(v); }); // arranca 2-6
+  let tick = 0;
+  const update = () => {
+    tick++;
+    countdowns.forEach(c => {
+      const finStr = c.dataset.fin;
+      const fin = finStr ? new Date(finStr).getTime() : 0;
+      if (!fin || isNaN(fin)) { c.innerHTML = '⏳ Oportunidad por tiempo limitado'; return; }
+      let ms = fin - Date.now();
+      if (ms <= 0) { c.innerHTML = '🔥 ¡Última oportunidad!'; return; }
+      const h = Math.floor(ms / 3600000), mi = Math.floor(ms % 3600000 / 60000), s = Math.floor(ms % 60000 / 1000);
+      const p = x => String(x).padStart(2, '0');
+      c.innerHTML = '⏳ Termina en <strong>' + p(h) + ':' + p(mi) + ':' + p(s) + '</strong>';
+    });
+    if (tick % 6 === 0) { // cada ~6s, variación natural de 1-7
+      viewers.forEach(v => { let n = (v._n || 3) + (Math.random() < 0.5 ? -1 : 1); if (n < 1) n = 1; if (n > 7) n = 7; v._n = n; _oppRenderViewers(v); });
+    }
+  };
+  update();
+  _oppTimer = setInterval(update, 1000);
 }
 
 function renderMarketplace() {
