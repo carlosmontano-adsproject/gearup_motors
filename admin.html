@@ -65,6 +65,9 @@
   .tag-sold{background:var(--danger);color:#fff;font-size:10px;font-weight:800;letter-spacing:1px;padding:3px 8px;border-radius:6px;text-transform:uppercase}
   .tag-feat{background:var(--warn);color:#3a2a00;font-size:10px;font-weight:800;letter-spacing:.5px;padding:3px 8px;border-radius:6px}
   .empty{color:var(--muted);text-align:center;padding:48px 0}
+  .opt-chip{display:inline-flex;align-items:center;gap:6px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:13px}
+  .opt-chip button{border:none;background:transparent;color:var(--muted);font-size:12px;cursor:pointer;padding:2px;line-height:1}
+  .opt-chip button:hover{color:var(--white)}
 
   /* ===== EDITOR (drawer) ===== */
   .overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:40;display:none}
@@ -108,6 +111,8 @@
   .pv-type{bottom:12px;left:12px;background:rgba(0,0,0,.55);color:#fff}
   .pv-feat{bottom:12px;right:12px;background:var(--warn);color:#3a2a00}
   .pv-sold{position:absolute;top:46%;left:50%;transform:translate(-50%,-50%) rotate(-8deg);background:var(--danger);color:#fff;font-family:'Bebas Neue',sans-serif;font-weight:800;letter-spacing:3px;font-size:22px;padding:8px 26px;border-radius:8px;border:2px solid rgba(255,255,255,.85)}
+  .pv-soon{top:12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#084DF9,#8B5CF6);color:#fff;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;border:1px solid rgba(255,255,255,.5)}
+  .pv-price.consultar{color:#a78bfa}
   .pv-body{padding:16px}
   .pv-name{font-family:var(--display);font-size:24px;letter-spacing:.5px}
   .pv-cc{color:var(--muted);font-size:13px;margin:2px 0 12px}
@@ -165,6 +170,8 @@
     <div class="tabs">
       <button class="tab active" data-tab="motos">🏍️ Motos</button>
       <button class="tab" data-tab="mp">🛒 Marketplace</button>
+      <button class="tab" data-tab="opciones">⚙️ Opciones</button>
+      <button class="tab" data-tab="sitio">🖥️ Sitio</button>
     </div>
 
     <div class="toolbar">
@@ -212,10 +219,12 @@
 
 <script>
 /* ===================== CONFIG ===================== */
-const TYPES=['Adventure','Naked','Sport','Scrambler','Cruiser','Enduro','Touring'];
-const FACTURAS=['Original','Carta factura','Factura de agencia'];
-const PROCEDENCIAS=['Nacional','Importado'];
-const MP_CATS=['Cascos','Equipo','Touring','Seguridad','Electrónica','Vehículos','Otros'];
+const TYPES=['Adventure','Naked','Sport','Scrambler','Cruiser','Enduro','Touring']; // FIJO: afecta filtros y colores del sitio
+// Catálogos EDITABLES por el cliente (solo se usan como valores por defecto si no hay nada guardado)
+const PROCEDENCIAS_DEFAULT=['Nacional','Legalizada'];
+const FACTURAS_DEFAULT=['Original','Carta factura','Factura de agencia'];
+const MP_CATS_DEFAULT=['Cascos','Equipo','Touring','Seguridad','Electrónica','Vehículos','Otros'];
+const CATALOGS={procedencia:{label:'Procedencia',def:PROCEDENCIAS_DEFAULT},factura:{label:'Factura',def:FACTURAS_DEFAULT},mpCat:{label:'Categorías del Marketplace',def:MP_CATS_DEFAULT}};
 
 /* ===================== STATE ===================== */
 let data={motos:[],marketplace:[]};
@@ -261,14 +270,23 @@ async function loadData(){
     if(r.ok)data=await r.json();
   }catch(e){toast('No se pudo cargar el inventario: '+e.message,'err');}
   data.motos=data.motos||[]; data.marketplace=data.marketplace||[];
+  // Catálogos editables: usa lo guardado o los valores por defecto
+  data.opciones=data.opciones||{};
+  for(const k in CATALOGS){ if(!Array.isArray(data.opciones[k])||!data.opciones[k].length) data.opciones[k]=CATALOGS[k].def.slice(); }
+  // Config del sitio (media del hero "En vivo")
+  data.site=data.site||{}; if(typeof data.site.heroMedia!=='string') data.site.heroMedia='';
   renderList();
 }
 
 /* ===================== LISTAS ===================== */
 function nextMotoId(){return data.motos.reduce((m,x)=>Math.max(m,x.id||0),0)+1;}
 function renderList(){
-  const q=($('search').value||'').toLowerCase();
   const host=$('list');
+  const tb=document.querySelector('.toolbar');
+  if(tab==='opciones'){ if(tb)tb.style.display='none'; renderOpciones(host); return; }
+  if(tab==='sitio'){ if(tb)tb.style.display='none'; renderSite(host); return; }
+  if(tb)tb.style.display='';
+  const q=($('search').value||'').toLowerCase();
   if(tab==='motos'){
     const items=data.motos.map((m,i)=>({m,i})).filter(({m})=>(m.brand+' '+m.model+' '+m.year).toLowerCase().includes(q));
     host.innerHTML=items.length?items.map(({m,i})=>motoRow(m,i)).join(''):'<div class="empty">No hay motos. Usa “＋ Agregar”.</div>';
@@ -277,6 +295,50 @@ function renderList(){
     host.innerHTML=items.length?items.map(({m,i})=>mpRow(m,i)).join(''):'<div class="empty">No hay productos. Usa “＋ Agregar”.</div>';
   }
 }
+
+/* ===================== OPCIONES (catálogos editables) ===================== */
+function renderOpciones(host){
+  host.innerHTML='<div class="hint" style="margin-bottom:14px">Agrega, renombra o elimina las opciones de los menús del panel. El <b>Tipo</b> de moto y la <b>Marca</b> no se editan aquí porque afectan los filtros del sitio (la marca se arma sola con tus motos). Recuerda pulsar <b>“⬆ Publicar cambios”</b> para guardar.</div>'+
+    Object.keys(CATALOGS).map(k=>{
+      const list=data.opciones[k]||[];
+      return `<div class="row" style="display:block">
+        <b style="font-size:15px">${esc(CATALOGS[k].label)}</b>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px">
+          ${list.map((o,idx)=>`<span class="opt-chip">${esc(o)} <button title="Renombrar" onclick="renOpt('${k}',${idx})">✎</button><button title="Eliminar" onclick="delOpt('${k}',${idx})">✕</button></span>`).join('')||'<span class="hint">Sin opciones todavía.</span>'}
+        </div>
+        <button class="btn small primary" style="margin-top:12px" onclick="addOpt('${k}')">＋ Agregar opción</button>
+      </div>`;
+    }).join('');
+}
+function addOpt(k){const nv=(prompt('Nueva opción para '+CATALOGS[k].label+':')||'').trim();if(!nv)return;data.opciones[k]=data.opciones[k]||[];if(data.opciones[k].includes(nv)){toast('Esa opción ya existe','err');return;}data.opciones[k].push(nv);dirty=true;renderList();toast('Agregado (recuerda Publicar)');}
+function renOpt(k,idx){const cur=data.opciones[k][idx];const nv=(prompt('Renombrar opción:',cur)||'').trim();if(!nv||nv===cur)return;data.opciones[k][idx]=nv;dirty=true;renderList();toast('Renombrado (recuerda Publicar)');}
+function delOpt(k,idx){const cur=data.opciones[k][idx];if(!confirm('¿Eliminar la opción "'+cur+'"? Las motos que ya la usaban conservarán su valor.'))return;data.opciones[k].splice(idx,1);dirty=true;renderList();toast('Eliminado (recuerda Publicar)');}
+
+/* ===================== SITIO (media del hero "En vivo") ===================== */
+function renderSite(host){
+  const v=data.site.heroMedia||'';
+  const isVid=/\.(mp4|webm|mov|m4v|ogg)(\?|$)/i.test(v);
+  const media=v?(isVid?`<video src="${esc(v)}" autoplay muted loop playsinline style="width:100%;border-radius:10px;display:block"></video>`:`<img src="${esc(v)}" alt="" style="width:100%;border-radius:10px;display:block">`):'<div class="hint">Actualmente se usa el video por defecto del sitio.</div>';
+  host.innerHTML=`<div class="row" style="display:block">
+    <b style="font-size:15px">Media del hero — “En vivo”</b>
+    <p class="hint" style="margin:6px 0 12px">Es la imagen o video que se ve en la portada principal del sitio. Puedes subir un <b>video (MP4)</b> o una <b>imagen</b>; lo que prefieras.</p>
+    <div style="max-width:360px">${media}</div>
+    <div class="drop" id="dropHero" style="margin-top:12px;max-width:360px">Haz clic para subir o cambiar (imagen o video)</div>
+    <input type="file" id="fileHero" accept="image/*,video/*" hidden>
+    ${v?`<div style="margin-top:10px"><button class="btn small danger" onclick="delHero()">✕ Quitar (volver al video por defecto)</button></div>`:''}
+  </div>`;
+  $('dropHero').onclick=()=>$('fileHero').click();
+  $('fileHero').onchange=e=>addHero(e.target.files[0]);
+}
+async function addHero(file){
+  if(!file)return;
+  try{
+    toast('Subiendo media del hero… (puede tardar si es video)');
+    const path=await uploadFile(file,'site','hero');
+    data.site.heroMedia=path;dirty=true;renderList();toast('Media actualizada (recuerda Publicar) ✅','ok');
+  }catch(e){toast('No se pudo subir: '+e.message,'err');}
+}
+function delHero(){if(!confirm('¿Quitar la media del hero y volver al video por defecto del sitio?'))return;data.site.heroMedia='';dirty=true;renderList();toast('Media del hero quitada (recuerda Publicar)');}
 function thumbBg(item){
   const p=(item.images&&item.images[0])||item.image;
   return p?`style="background-image:url('${p}')"`:'';
@@ -286,9 +348,9 @@ function motoRow(m,i){
     <div class="thumb" ${thumbBg(m)}>${(m.images&&m.images[0])?'':'sin foto'}</div>
     <div class="info"><b>${esc(m.brand)} ${esc(m.model)}</b>
       <div class="meta">${m.year} · ${m.cc}cc · ${Number(m.km).toLocaleString('es-MX')} km · ${esc(m.factura||'')}
-      ${m.featured?'<span class="tag-feat">Destacada</span>':''} ${m.sold?'<span class="tag-sold">Vendido</span>':''}</div>
+      ${m.featured?'<span class="tag-feat">Destacada</span>':''} ${m.sold?'<span class="tag-sold">Vendido</span>':''} ${m.soon?'<span class="tag-feat" style="background:#6d5efc;color:#fff">Próximamente</span>':''}</div>
     </div>
-    <div class="price">${fmt(m.price)}</div>
+    <div class="price">${Number(m.price)>0?fmt(m.price):'Consultar'}</div>
     <div class="acts">
       <button class="btn small" onclick="openEditor('moto',${i})">Editar</button>
       <button class="btn small" onclick="toggleSold(${i})">${m.sold?'Marcar disponible':'Marcar vendido'}</button>
@@ -319,20 +381,36 @@ function openEditor(type,index){
   const isNew=index==null;
   let item;
   if(type==='moto'){
-    item=isNew?{id:nextMotoId(),brand:'',model:'',year:new Date().getFullYear(),type:'Naked',cc:0,km:0,owners:1,procedencia:'Nacional',factura:'Original',financiamiento:true,motoswitch:true,tomaCuenta:true,tdc:false,featured:false,sold:false,price:0,mensualidad:'',driveUrl:'',images:[],video:''}:JSON.parse(JSON.stringify(data.motos[index]));
+    item=isNew?{id:nextMotoId(),brand:'',model:'',year:new Date().getFullYear(),type:'Naked',cc:0,km:0,owners:1,procedencia:'Nacional',factura:'Original',financiamiento:true,motoswitch:false,tomaCuenta:true,tdc:true,featured:false,sold:false,soon:false,price:0,mensualidad:'',driveUrl:'',images:[],video:''}:JSON.parse(JSON.stringify(data.motos[index]));
   }else{
     item=isNew?{name:'',cat:'Equipo',price:0,image:'',icon:'',driveUrl:''}:JSON.parse(JSON.stringify(data.marketplace[index]));
   }
   editing={type,index,item};
   $('drawerTitle').textContent=(isNew?'Agregar ':'Editar ')+(type==='moto'?'moto':'producto');
+  renderEditorForm();
+  $('overlay').classList.add('open');$('drawer').classList.add('open');
+}
+function renderEditorForm(){
+  const {type,item}=editing;
   $('formCol').innerHTML=type==='moto'?motoForm(item):mpForm(item);
   bindForm();
   updatePreview();
-  $('overlay').classList.add('open');$('drawer').classList.add('open');
 }
 function closeEditor(){$('overlay').classList.remove('open');$('drawer').classList.remove('open');editing=null;}
 
-function opt(list,val){return list.map(o=>`<option ${o===val?'selected':''}>${o}</option>`).join('');}
+function opt(list,val){
+  const arr=(list||[]).slice();
+  if(val&&!arr.includes(val))arr.push(val); // conserva el valor actual aunque no esté en la lista
+  return arr.map(o=>`<option ${o===val?'selected':''}>${esc(o)}</option>`).join('');
+}
+// Select editable: lista del catálogo + opción "➕ Agregar otra…"
+function catalogSelect(field,catKey,val){
+  const arr=(data.opciones[catKey]||[]).slice();
+  if(val&&!arr.includes(val))arr.push(val);
+  return `<select data-f="${field}" data-catalog="${catKey}">`+
+    arr.map(o=>`<option ${o===val?'selected':''}>${esc(o)}</option>`).join('')+
+    `<option value="__add__">➕ Agregar otra…</option></select>`;
+}
 function motoForm(m){
   return `
   <div class="fgrid">
@@ -343,9 +421,9 @@ function motoForm(m){
     <div class="field"><label>Cilindrada (cc)</label><input data-f="cc" type="number" value="${m.cc||''}"></div>
     <div class="field"><label>Kilometraje</label><input data-f="km" type="number" value="${m.km||''}"></div>
     <div class="field"><label>Dueños</label><input data-f="owners" type="number" value="${m.owners||1}"></div>
-    <div class="field"><label>Procedencia</label><select data-f="procedencia">${opt(PROCEDENCIAS,m.procedencia)}</select></div>
-    <div class="field"><label>Factura</label><select data-f="factura">${opt(FACTURAS,m.factura)}</select></div>
-    <div class="field"><label>Precio (MXN)</label><input data-f="price" type="number" value="${m.price||''}"></div>
+    <div class="field"><label>Procedencia</label>${catalogSelect('procedencia','procedencia',m.procedencia)}</div>
+    <div class="field"><label>Factura</label>${catalogSelect('factura','factura',m.factura)}</div>
+    <div class="field"><label>Precio (MXN)</label><input data-f="price" type="number" value="${m.price||''}"><div class="hint">Déjalo en <b>0</b> para mostrar <b>“Consultar”</b> (sin precio).</div></div>
     <div class="field"><label>Mensualidad (opcional)</label><input data-f="mensualidad" type="number" value="${m.mensualidad||''}" placeholder="auto: ${fmt(monthlyEstimate(m.price||0))}"></div>
     <div class="field"><label>Link / carpeta de Drive (opcional)</label><input data-f="driveUrl" value="${esc(m.driveUrl)}" placeholder="https://drive.google.com/…"></div>
   </div>
@@ -356,22 +434,23 @@ function motoForm(m){
     <label class="check"><input type="checkbox" data-f="tdc" ${m.tdc?'checked':''}> Aparta con TDC</label>
     <label class="check"><input type="checkbox" data-f="featured" ${m.featured?'checked':''}> Destacada</label>
     <label class="check"><input type="checkbox" data-f="sold" ${m.sold?'checked':''}> Vendida</label>
+    <label class="check"><input type="checkbox" data-f="soon" ${m.soon?'checked':''}> Próximamente</label>
   </div>
   <div class="section-label">Fotos</div>
   <div class="drop" id="dropImg">Haz clic o arrastra imágenes aquí (JPG/PNG). Se suben al instante.</div>
   <input type="file" id="fileImg" accept="image/*" multiple hidden>
   <div class="thumbs" id="thumbsImg"></div>
   <div class="section-label">Video (opcional)</div>
-  <div class="drop" id="dropVid">Haz clic para subir un video (MP4)</div>
+  <div class="drop" id="dropVid">Haz clic para subir o cambiar el video (MP4)</div>
   <input type="file" id="fileVid" accept="video/*" hidden>
-  <div class="hint" id="vidName">${m.video?('Actual: '+m.video.split('/').pop()):''}</div>
+  <div id="vidBox"></div>
   <div class="hint warn">⚠ Los videos se suben al servidor. Si uno muy pesado falla, comprímelo o usa el link de Drive.</div>`;
 }
 function mpForm(m){
   return `
   <div class="field"><label>Nombre del producto</label><input data-f="name" value="${esc(m.name)}" placeholder="Casco AGV K6"></div>
   <div class="fgrid">
-    <div class="field"><label>Categoría</label><select data-f="cat">${opt(MP_CATS,m.cat)}</select></div>
+    <div class="field"><label>Categoría</label>${catalogSelect('cat','mpCat',m.cat)}</div>
     <div class="field"><label>Precio (MXN)</label><input data-f="price" type="number" value="${m.price||''}"></div>
   </div>
   <div class="field"><label>Link / carpeta de Drive (opcional)</label><input data-f="driveUrl" value="${esc(m.driveUrl)}" placeholder="https://drive.google.com/…"></div>
@@ -385,7 +464,16 @@ function bindForm(){
   document.querySelectorAll('#formCol [data-f]').forEach(el=>{
     const ev=el.type==='checkbox'?'change':'input';
     el.addEventListener(ev,()=>{
-      const f=el.dataset.f;let v=el.type==='checkbox'?el.checked:el.value;
+      const f=el.dataset.f;
+      // Catálogo editable: opción "➕ Agregar otra…"
+      if(el.tagName==='SELECT'&&el.dataset.catalog&&el.value==='__add__'){
+        const catKey=el.dataset.catalog;
+        const nv=(prompt('Nueva opción para '+((CATALOGS[catKey]&&CATALOGS[catKey].label)||catKey)+':')||'').trim();
+        if(nv){ data.opciones[catKey]=data.opciones[catKey]||[]; if(!data.opciones[catKey].includes(nv))data.opciones[catKey].push(nv); editing.item[f]=nv; dirty=true; toast('Opción agregada (recuerda Publicar)'); }
+        renderEditorForm();
+        return;
+      }
+      let v=el.type==='checkbox'?el.checked:el.value;
       if(['year','cc','km','owners','price'].includes(f))v=v===''?0:Number(v);
       if(f==='mensualidad')v=v===''?'':Number(v);
       editing.item[f]=v;updatePreview();
@@ -397,6 +485,7 @@ function bindForm(){
     $('dropVid').onclick=()=>$('fileVid').click();
     $('fileVid').onchange=e=>addVideo(e.target.files[0]);
     renderImgThumbs();
+    renderVidBox();
   }else{
     $('dropMpImg').onclick=()=>$('fileMpImg').click();
     $('fileMpImg').onchange=e=>addMpImage(e.target.files[0]);
@@ -418,10 +507,16 @@ async function addVideo(file){
   try{
     toast('Subiendo video… (puede tardar)');
     const path=await uploadFile(file,'inv',(editing.item.brand+'-'+editing.item.model)||'moto');
-    editing.item.video=path;$('vidName').textContent='Video: '+path.split('/').pop();updatePreview();
+    editing.item.video=path;renderVidBox();updatePreview();
     toast('Video subido ✅','ok');
   }catch(e){toast('No se pudo subir el video: '+e.message,'err');}
 }
+function renderVidBox(){
+  const host=$('vidBox');if(!host)return;
+  const v=editing.item.video;
+  host.innerHTML=v?`<div class="thumbs"><div class="t" style="background:#0c0c10;display:grid;place-items:center;color:#9a9aa6;font-size:24px">🎬<button onclick="delVideo()" title="Quitar video">✕</button></div></div><div class="hint">Actual: ${esc(v.split('/').pop())}</div>`:'';
+}
+function delVideo(){editing.item.video='';renderVidBox();updatePreview();toast('Video quitado (recuerda Publicar)');}
 async function addMpImage(file){
   if(!file)return;
   try{
@@ -446,7 +541,8 @@ function delMpImg(){editing.item.image='';renderMpThumbs();updatePreview();}
 function updatePreview(){
   const m=editing.item;
   if(editing.type==='moto'){
-    const monthly=m.mensualidad||monthlyEstimate(m.price||0);
+    const hasPrice=Number(m.price)>0;
+    const monthly=m.mensualidad||(hasPrice?monthlyEstimate(m.price):0);
     const perks=[];if(m.financiamiento)perks.push('Financiamiento');if(m.motoswitch)perks.push('MotoSwitch');if(m.tomaCuenta)perks.push('Toma a cuenta');if(m.tdc)perks.push('Aparta con TDC');
     const img=(m.images&&m.images[0])?`<img src="${imgSrc(m.images[0])}" alt="">`:`<div class="ph">${esc(m.model||'Sin foto')}<br><span style="font-size:14px">${m.cc||0} cc</span></div>`;
     $('preview').innerHTML=`<div class="pv-card">
@@ -456,6 +552,7 @@ function updatePreview(){
         <span class="pv-tag pv-type">${esc(m.type||'')}</span>
         ${m.featured?'<span class="pv-tag pv-feat">★ Destacada</span>':''}
         ${m.sold?'<span class="pv-sold">Vendido</span>':''}
+        ${m.soon?'<span class="pv-tag pv-soon">Próximamente</span>':''}
       </div>
       <div class="pv-body">
         <div class="pv-name">${esc(m.model||'Modelo')}</div>
@@ -467,8 +564,8 @@ function updatePreview(){
         </div>
         <div class="pv-perks">${perks.map(p=>`<span class="pv-perk">${p}</span>`).join('')}</div>
         <div class="pv-price-row">
-          <div><div class="pv-plabel">Precio</div><div class="pv-price">${fmt(m.price)}</div></div>
-          <div class="pv-fin">o desde<br><b>${fmt(monthly)}/mes</b></div>
+          <div><div class="pv-plabel">Precio</div><div class="pv-price${hasPrice?'':' consultar'}">${hasPrice?fmt(m.price):'Consultar'}</div></div>
+          ${hasPrice?`<div class="pv-fin">o desde<br><b>${fmt(monthly)}/mes</b></div>`:''}
         </div>
         ${m.sold?'<div class="pv-cta sold">Vendida</div>':'<div class="pv-cta">💬 Preguntar por esta moto</div>'}
         ${m.driveUrl?`<a class="pv-drive" href="${esc(m.driveUrl)}" target="_blank">📁 Ver carpeta en Drive</a>`:''}

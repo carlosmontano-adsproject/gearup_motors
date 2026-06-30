@@ -23,7 +23,8 @@ $allowed = explode(',', ALLOWED_EXT);
 $ext = strtolower(pathinfo($f['name'], PATHINFO_EXTENSION));
 if (!in_array($ext, $allowed, true)) { http_response_code(400); out(['ok'=>false,'error'=>'Tipo de archivo no permitido (.'.$ext.')']); }
 
-$kind = (isset($_POST['kind']) && $_POST['kind'] === 'mp') ? 'mp' : 'inv';
+$k    = isset($_POST['kind']) ? $_POST['kind'] : 'inv';
+$kind = in_array($k, ['mp','inv','site'], true) ? $k : 'inv';
 $dir  = IMG_DIR . '/' . $kind;
 if (!is_dir($dir)) @mkdir($dir, 0775, true);
 
