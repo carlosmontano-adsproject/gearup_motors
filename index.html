@@ -1345,45 +1345,54 @@
     top: 12px;
     left: 12px;
     z-index: 3;
-    padding: 5px 10px;
-    background: rgba(10, 10, 11, 0.78);
+    padding: 5px 11px;
+    background: rgba(10, 10, 11, 0.92);
     backdrop-filter: blur(8px);
-    border: 1px solid rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.22);
     border-radius: 6px;
     font-family: var(--font-condensed);
     font-weight: 700;
     font-size: 10.5px;
     letter-spacing: 1.5px;
     text-transform: uppercase;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.7);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.45);
   }
   .moto-year-tag {
     position: absolute;
     top: 12px;
     right: 12px;
     z-index: 3;
-    padding: 5px 10px;
-    background: rgba(8, 77, 249, 0.92);
+    padding: 5px 11px;
+    background: rgba(8, 77, 249, 0.95);
     backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.25);
     border-radius: 6px;
     font-weight: 700;
     font-size: 11.5px;
     letter-spacing: 0.5px;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.4);
   }
   .moto-type-tag {
     position: absolute;
     bottom: 12px;
     left: 12px;
     z-index: 3;
-    padding: 4px 10px;
-    background: rgba(10, 10, 11, 0.78);
+    padding: 4px 11px;
+    background: rgba(10, 10, 11, 0.92);
     backdrop-filter: blur(8px);
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.22);
     border-radius: 999px;
     font-size: 10px;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: 1.2px;
     text-transform: uppercase;
-    color: var(--fog);
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.7);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.45);
   }
   /* Featured ribbon */
   .moto-featured {
@@ -2457,7 +2466,8 @@
           <option value="">Todos los tipos</option>
           <option value="Sport">Sport / Deportiva</option>
           <option value="Naked">Naked</option>
-          <option value="Adventure">Adventure / Touring</option>
+          <option value="Adventure">Adventure</option>
+          <option value="Touring">Touring</option>
           <option value="Cruiser">Cruiser</option>
           <option value="Enduro">Enduro / Doble propósito</option>
           <option value="Scrambler">Scrambler / Café Racer</option>
@@ -2467,17 +2477,6 @@
         <label>Marca</label>
         <select id="heroBrand">
           <option value="">Todas las marcas</option>
-          <option>APRILIA</option>
-          <option>BMW</option>
-          <option>CFMOTO</option>
-          <option>DUCATI</option>
-          <option>HONDA</option>
-          <option>HUSQVARNA</option>
-          <option>KAWASAKI</option>
-          <option>KTM</option>
-          <option>SUZUKI</option>
-          <option>TRIUMPH</option>
-          <option>YAMAHA</option>
         </select>
       </div>
       <div class="search-field">
@@ -2621,6 +2620,7 @@
             <button class="chip" data-type="Cruiser">Cruiser</button>
             <button class="chip" data-type="Enduro">Enduro</button>
             <button class="chip" data-type="Scrambler">Scrambler</button>
+            <button class="chip" data-type="Touring">Touring</button>
           </div>
         </div>
 
@@ -2628,17 +2628,6 @@
           <label class="filter-label">Marca</label>
           <select class="filter-select" id="filterBrand">
             <option value="">Todas las marcas</option>
-            <option>APRILIA</option>
-            <option>BMW</option>
-            <option>CFMOTO</option>
-            <option>DUCATI</option>
-            <option>HONDA</option>
-            <option>HUSQVARNA</option>
-            <option>KAWASAKI</option>
-            <option>KTM</option>
-            <option>SUZUKI</option>
-            <option>TRIUMPH</option>
-            <option>YAMAHA</option>
           </select>
         </div>
 
@@ -3138,7 +3127,8 @@ const TYPE_GRADIENTS = {
   Adventure: 'linear-gradient(135deg, #14100a 0%, #4a2e10 45%, #1a1408 100%)',
   Cruiser:   'linear-gradient(135deg, #14140e 0%, #3a3a30 45%, #1a1a14 100%)',
   Enduro:    'linear-gradient(135deg, #0a1a14 0%, #144a36 45%, #0a1410 100%)',
-  Scrambler: 'linear-gradient(135deg, #14081a 0%, #3a1858 45%, #1a0a24 100%)'
+  Scrambler: 'linear-gradient(135deg, #14081a 0%, #3a1858 45%, #1a0a24 100%)',
+  Touring:   'linear-gradient(135deg, #0a1020 0%, #14305a 45%, #0a1424 100%)'
 };
 
 // Accent color per type — used for type-tag border and small accents
@@ -3148,7 +3138,8 @@ const TYPE_COLOR = {
   Adventure: '#f59e0b',
   Cruiser:   '#d4d4d8',
   Enduro:    '#34d399',
-  Scrambler: '#c084fc'
+  Scrambler: '#c084fc',
+  Touring:   '#60a5fa'
 };
 
 
@@ -3759,6 +3750,7 @@ function initHeroParallax() {
 }
 
 let marketplace = (typeof marketplace_DEFAULT !== 'undefined') ? marketplace_DEFAULT.slice() : [];
+let siteCfg = {};
 
 async function loadData() {
   try {
@@ -3767,10 +3759,41 @@ async function loadData() {
       const d = await r.json();
       if (Array.isArray(d.motos)) motos = d.motos;
       if (Array.isArray(d.marketplace)) marketplace = d.marketplace;
+      if (d.site && typeof d.site === 'object') siteCfg = d.site;
     }
   } catch (e) {
     console.warn('No se pudo cargar data/inventario.json; se usan los datos por defecto.', e);
   }
+}
+
+// Media del hero ("En vivo") configurable desde el panel: video o imagen.
+function applyHeroMedia() {
+  const host = document.querySelector('.hero-media');
+  if (!host || !siteCfg || !siteCfg.heroMedia) return; // sin config: se queda el video por defecto
+  const url = String(siteCfg.heroMedia);
+  const tag = '<span class="hero-media-tag">En vivo</span>';
+  if (/\.(mp4|webm|mov|m4v|ogg)(\?|$)/i.test(url)) {
+    const t = /\.webm(\?|$)/i.test(url) ? 'video/webm' : (/\.ogg(\?|$)/i.test(url) ? 'video/ogg' : 'video/mp4');
+    host.innerHTML = tag + '<video autoplay muted loop playsinline preload="metadata" poster="img/gearup-logo.png"><source src="' + eh(url) + '" type="' + t + '" /></video>';
+  } else {
+    host.innerHTML = tag + '<img src="' + eh(url) + '" alt="GEAR UP Motorcycles" style="width:100%;height:100%;object-fit:cover;" />';
+  }
+}
+
+// Arma las opciones de marca (catálogo + hero) a partir del inventario real,
+// para que una marca nueva aparezca sola en el filtro sin tocar el código.
+function populateBrandFilters() {
+  if (!Array.isArray(motos)) return;
+  const brands = [...new Set(motos.map(m => (m.brand || '').trim()).filter(Boolean))]
+    .sort((a, b) => a.localeCompare(b, 'es'));
+  ['filterBrand', 'heroBrand'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    const cur = sel.value;
+    sel.innerHTML = '<option value="">Todas las marcas</option>' +
+      brands.map(b => `<option value="${eh(b)}">${eh(b)}</option>`).join('');
+    if (cur && brands.includes(cur)) sel.value = cur;
+  });
 }
 
 function injectVehicleSchema() {
@@ -3813,6 +3836,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initHeroParallax();
   initCursor();
   loadData().then(() => {
+    try { populateBrandFilters(); } catch (e) { console.error('populateBrandFilters:', e); }
+    try { applyHeroMedia(); } catch (e) { console.error('applyHeroMedia:', e); }
     try { renderMotos(); } catch (e) { console.error('renderMotos:', e); }
     try { renderMarketplace(); } catch (e) { console.error('renderMarketplace:', e); }
     try { populateFinancingMotos(); } catch (e) { console.error('populateFinancingMotos:', e); }
