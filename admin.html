@@ -354,6 +354,7 @@ function motoRow(m,i){
     <div class="acts">
       <button class="btn small" onclick="openEditor('moto',${i})">Editar</button>
       <button class="btn small" onclick="toggleSold(${i})">${m.sold?'Marcar disponible':'Marcar vendido'}</button>
+      <button class="btn small" onclick="toggleSoon(${i})">${m.soon?'Quitar próximamente':'Marcar próximamente'}</button>
       <button class="btn small danger" onclick="removeItem('moto',${i})">Eliminar</button>
     </div>
   </div>`;
@@ -370,6 +371,7 @@ function mpRow(m,i){
   </div>`;
 }
 function toggleSold(i){data.motos[i].sold=!data.motos[i].sold;dirty=true;renderList();toast(data.motos[i].sold?'Marcada como vendida (recuerda Publicar)':'Marcada disponible');}
+function toggleSoon(i){data.motos[i].soon=!data.motos[i].soon;dirty=true;renderList();toast(data.motos[i].soon?'Marcada como Próximamente (recuerda Publicar)':'Quitada de Próximamente');}
 function removeItem(type,i){
   const arr=type==='moto'?data.motos:data.marketplace;
   if(!confirm('¿Eliminar "'+(arr[i].model||arr[i].name)+'"? Se aplicará al Publicar.'))return;
