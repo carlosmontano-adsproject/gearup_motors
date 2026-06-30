@@ -112,6 +112,7 @@
   .pv-feat{bottom:12px;right:12px;background:var(--warn);color:#3a2a00}
   .pv-sold{position:absolute;top:46%;left:50%;transform:translate(-50%,-50%) rotate(-8deg);background:var(--danger);color:#fff;font-family:'Bebas Neue',sans-serif;font-weight:800;letter-spacing:3px;font-size:22px;padding:8px 26px;border-radius:8px;border:2px solid rgba(255,255,255,.85)}
   .pv-soon{top:12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#084DF9,#8B5CF6);color:#fff;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;border:1px solid rgba(255,255,255,.5)}
+  .pv-apartada{top:12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#ea580c,#f59e0b);color:#fff;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;border:1px solid rgba(255,255,255,.5)}
   .pv-price.consultar{color:#a78bfa}
   .pv-body{padding:16px}
   .pv-name{font-family:var(--display);font-size:24px;letter-spacing:.5px}
@@ -348,12 +349,14 @@ function motoRow(m,i){
     <div class="thumb" ${thumbBg(m)}>${(m.images&&m.images[0])?'':'sin foto'}</div>
     <div class="info"><b>${esc(m.brand)} ${esc(m.model)}</b>
       <div class="meta">${m.year} · ${m.cc}cc · ${Number(m.km).toLocaleString('es-MX')} km · ${esc(m.factura||'')}
-      ${m.featured?'<span class="tag-feat">Destacada</span>':''} ${m.sold?'<span class="tag-sold">Vendido</span>':''} ${m.soon?'<span class="tag-feat" style="background:#6d5efc;color:#fff">Próximamente</span>':''}</div>
+      ${m.featured?'<span class="tag-feat">Destacada</span>':''} ${m.sold?'<span class="tag-sold">Vendido</span>':''} ${m.soon?'<span class="tag-feat" style="background:#6d5efc;color:#fff">Próximamente</span>':''} ${m.apartada?'<span class="tag-feat" style="background:#ea580c;color:#fff">Apartada</span>':''}</div>
     </div>
     <div class="price">${Number(m.price)>0?fmt(m.price):'Consultar'}</div>
     <div class="acts">
       <button class="btn small" onclick="openEditor('moto',${i})">Editar</button>
       <button class="btn small" onclick="toggleSold(${i})">${m.sold?'Marcar disponible':'Marcar vendido'}</button>
+      <button class="btn small" onclick="toggleSoon(${i})">${m.soon?'Quitar próximamente':'Marcar próximamente'}</button>
+      <button class="btn small" onclick="toggleApartada(${i})">${m.apartada?'Quitar apartada':'Marcar apartada'}</button>
       <button class="btn small danger" onclick="removeItem('moto',${i})">Eliminar</button>
     </div>
   </div>`;
@@ -370,6 +373,8 @@ function mpRow(m,i){
   </div>`;
 }
 function toggleSold(i){data.motos[i].sold=!data.motos[i].sold;dirty=true;renderList();toast(data.motos[i].sold?'Marcada como vendida (recuerda Publicar)':'Marcada disponible');}
+function toggleSoon(i){data.motos[i].soon=!data.motos[i].soon;dirty=true;renderList();toast(data.motos[i].soon?'Marcada como Próximamente (recuerda Publicar)':'Quitada de Próximamente');}
+function toggleApartada(i){data.motos[i].apartada=!data.motos[i].apartada;dirty=true;renderList();toast(data.motos[i].apartada?'Marcada como Apartada (recuerda Publicar)':'Quitada de Apartada');}
 function removeItem(type,i){
   const arr=type==='moto'?data.motos:data.marketplace;
   if(!confirm('¿Eliminar "'+(arr[i].model||arr[i].name)+'"? Se aplicará al Publicar.'))return;
@@ -381,7 +386,7 @@ function openEditor(type,index){
   const isNew=index==null;
   let item;
   if(type==='moto'){
-    item=isNew?{id:nextMotoId(),brand:'',model:'',year:new Date().getFullYear(),type:'Naked',cc:0,km:0,owners:1,procedencia:'Nacional',factura:'Original',financiamiento:true,motoswitch:false,tomaCuenta:true,tdc:true,featured:false,sold:false,soon:false,price:0,mensualidad:'',driveUrl:'',images:[],video:''}:JSON.parse(JSON.stringify(data.motos[index]));
+    item=isNew?{id:nextMotoId(),brand:'',model:'',year:new Date().getFullYear(),type:'Naked',cc:0,km:0,owners:1,procedencia:'Nacional',factura:'Original',financiamiento:true,motoswitch:false,tomaCuenta:true,tdc:true,featured:false,sold:false,soon:false,apartada:false,price:0,mensualidad:'',driveUrl:'',images:[],video:''}:JSON.parse(JSON.stringify(data.motos[index]));
   }else{
     item=isNew?{name:'',cat:'Equipo',price:0,image:'',icon:'',driveUrl:''}:JSON.parse(JSON.stringify(data.marketplace[index]));
   }
@@ -435,6 +440,7 @@ function motoForm(m){
     <label class="check"><input type="checkbox" data-f="featured" ${m.featured?'checked':''}> Destacada</label>
     <label class="check"><input type="checkbox" data-f="sold" ${m.sold?'checked':''}> Vendida</label>
     <label class="check"><input type="checkbox" data-f="soon" ${m.soon?'checked':''}> Próximamente</label>
+    <label class="check"><input type="checkbox" data-f="apartada" ${m.apartada?'checked':''}> Apartada</label>
   </div>
   <div class="section-label">Fotos</div>
   <div class="drop" id="dropImg">Haz clic o arrastra imágenes aquí (JPG/PNG). Se suben al instante.</div>
@@ -553,6 +559,7 @@ function updatePreview(){
         ${m.featured?'<span class="pv-tag pv-feat">★ Destacada</span>':''}
         ${m.sold?'<span class="pv-sold">Vendido</span>':''}
         ${m.soon?'<span class="pv-tag pv-soon">Próximamente</span>':''}
+        ${m.apartada?'<span class="pv-tag pv-apartada">Apartada</span>':''}
       </div>
       <div class="pv-body">
         <div class="pv-name">${esc(m.model||'Modelo')}</div>
