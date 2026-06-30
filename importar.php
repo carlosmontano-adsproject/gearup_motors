@@ -245,7 +245,11 @@ $baseMp = isset($existing['marketplace'])&&is_array($existing['marketplace']) ? 
 // evita duplicar no-motos en re-ejecuciones: quita los que tengan imagen en img/motos/
 $baseMp = array_values(array_filter($baseMp, function($it){ return empty($it['image']) || strpos($it['image'],'img/motos/')===false; }));
 
-$data=['motos'=>$motos,'marketplace'=>array_merge($baseMp,$mp),'updatedAt'=>date('c')];
+// Conserva claves de nivel superior ya existentes (p. ej. "site" = media del hero)
+$data = is_array($existing) ? $existing : [];
+$data['motos'] = $motos;
+$data['marketplace'] = array_merge($baseMp,$mp);
+$data['updatedAt'] = date('c');
 if(is_file(DATA_FILE)) @copy(DATA_FILE, DATA_FILE.'.bak');
 $json=json_encode($data, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
 
